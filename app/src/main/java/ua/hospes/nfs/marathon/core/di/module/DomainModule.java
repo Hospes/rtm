@@ -1,0 +1,60 @@
+package ua.hospes.nfs.marathon.core.di.module;
+
+import javax.inject.Singleton;
+
+import autodagger.AutoExpose;
+import dagger.Module;
+import dagger.Provides;
+import ua.hospes.nfs.marathon.App;
+import ua.hospes.nfs.marathon.data.drivers.DriversRepositoryImpl;
+import ua.hospes.nfs.marathon.data.team.TeamsRepositoryImpl;
+import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
+import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
+
+/**
+ * @author Andrew Khloponin
+ */
+@Module
+public class DomainModule {
+    @Singleton
+    @Provides
+    @AutoExpose(App.class)
+    public DriversRepository provideDriversRepository(DriversRepositoryImpl repository) {
+        return repository;
+    }
+
+    @Singleton
+    @Provides
+    @AutoExpose(App.class)
+    public TeamsRepository provideTeamsRepository(TeamsRepositoryImpl repository) {
+        return repository;
+    }
+
+//    @Singleton
+//    @Provides
+//    @AutoExpose(App.class)
+//    public UserRepository provideUserRepository(UserRepositoryImpl repository) {
+//        return repository;
+//    }
+//
+//    @Singleton
+//    @Provides
+//    @AutoExpose(App.class)
+//    public GameStatisticRepository provideGameStatisticRepository(GameStatisticRepositoryImpl repository) {
+//        return repository;
+//    }
+//
+//    @Singleton
+//    @Provides
+//    @AutoExpose(App.class)
+//    public TeamStatisticRepository provideTeamStatisticRepository(TeamStatisticRepositoryImpl repository) {
+//        return repository;
+//    }
+//
+//    @Singleton
+//    @Provides
+//    @AutoExpose(App.class)
+//    public SeasonStandingsRepository provideSeasonStandingsRepository(SeasonStandingsRepositoryImpl repository) {
+//        return repository;
+//    }
+}
