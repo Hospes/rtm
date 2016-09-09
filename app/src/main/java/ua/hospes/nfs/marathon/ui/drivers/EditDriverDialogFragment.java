@@ -27,7 +27,7 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
  * @author Andrew Khloponin
  */
 @AutoInjector(MainActivity.class)
-public class AddDriverDialogFragment extends DialogFragment {
+public class EditDriverDialogFragment extends DialogFragment {
     private static final String KEY_DRIVER = "driver";
 
     @Inject DriversRepository repository;
@@ -36,8 +36,8 @@ public class AddDriverDialogFragment extends DialogFragment {
     private Driver driver = null;
 
 
-    public static AddDriverDialogFragment newInstance(Driver driver) {
-        AddDriverDialogFragment frag = new AddDriverDialogFragment();
+    public static EditDriverDialogFragment newInstance(Driver driver) {
+        EditDriverDialogFragment frag = new EditDriverDialogFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_DRIVER, driver);
@@ -46,7 +46,7 @@ public class AddDriverDialogFragment extends DialogFragment {
         return frag;
     }
 
-    public AddDriverDialogFragment() {}
+    public EditDriverDialogFragment() {}
 
 
     @Override

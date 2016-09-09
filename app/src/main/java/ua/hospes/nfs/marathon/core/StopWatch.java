@@ -2,12 +2,9 @@ package ua.hospes.nfs.marathon.core;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import hugo.weaving.DebugLog;
 
 /**
  * @author Andrew Khloponin
@@ -79,7 +76,7 @@ public class StopWatch {
         this.startTime = System.nanoTime();
         this.startTimeMillis = System.currentTimeMillis();
         this.runningState = STATE_RUNNING;
-
+        dispatchStopWatchStateChanged();
         updateRunning();
     }
 
@@ -102,7 +99,7 @@ public class StopWatch {
             this.stopTime = System.nanoTime();
         }
         this.runningState = STATE_STOPPED;
-
+        dispatchStopWatchStateChanged();
         updateRunning();
     }
 
@@ -117,6 +114,7 @@ public class StopWatch {
      */
     public void reset() {
         this.runningState = STATE_UNSTARTED;
+        dispatchStopWatchStateChanged();
         this.splitState = STATE_UNSPLIT;
     }
 
@@ -177,6 +175,7 @@ public class StopWatch {
         }
         this.stopTime = System.nanoTime();
         this.runningState = STATE_SUSPENDED;
+        dispatchStopWatchStateChanged();
     }
 
     /**
@@ -197,6 +196,7 @@ public class StopWatch {
         }
         this.startTime += (System.nanoTime() - this.stopTime);
         this.runningState = STATE_RUNNING;
+        dispatchStopWatchStateChanged();
     }
 
     /**
@@ -291,30 +291,35 @@ public class StopWatch {
         return this.startTimeMillis;
     }
 
+    public boolean isStarted() {
+        return runningState == STATE_RUNNING || (runningState != STATE_UNSTARTED && runningState != STATE_STOPPED);
+    }
+
 
     /**
      * A callback that notifies when the chronometer has incremented on its own.
      */
-    public interface OnStopWatchTickListener {
+    public interface OnStopWatchListener {
+        void onStopWatchStateChanged(StopWatch stopWatch);
+
         /**
          * Notification that the chronometer has changed.
          */
         void onStopWatchTick(StopWatch stopWatch);
     }
 
-    private final List<OnStopWatchTickListener> listeners = new ArrayList<>();
+    private final List<OnStopWatchListener> listeners = new ArrayList<>();
 
     private static final int TICK_WHAT = 2;
 
-    @DebugLog
-    public void addOnChronometerTickListener(OnStopWatchTickListener listener) {
-        if (listeners.contains(listener)) return;
+    public void addOnChronometerTickListener(OnStopWatchListener listener) {
+        if (listeners.contains(listener) || listener == null) return;
         listeners.add(listener);
-        Log.d(TAG, "listeners count: " + listeners.size());
+
+        listener.onStopWatchStateChanged(this);
     }
 
-    @DebugLog
-    public void removeOnChronometerTickListener(OnStopWatchTickListener listener) {
+    public void removeOnChronometerTickListener(OnStopWatchListener listener) {
         listeners.remove(listener);
     }
 
@@ -340,8 +345,12 @@ public class StopWatch {
         }
     };
 
+    private void dispatchStopWatchStateChanged() {
+        for (OnStopWatchListener listener : listeners) listener.onStopWatchStateChanged(this);
+    }
+
     private void dispatchStopWatchTick() {
-        for (OnStopWatchTickListener listener : listeners) {
+        for (OnStopWatchListener listener : listeners) {
             listener.onStopWatchTick(this);
         }
     }

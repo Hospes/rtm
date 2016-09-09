@@ -9,6 +9,9 @@ public interface Sessions extends BaseColumns {
     String name = "Sessions";
 
     String TEAM_ID = "team_id";
-    String RIDER_ID = "rider_id";
-    String NAME = "name";
+    String DRIVER_ID = "driver_id";
+    String CAR_ID = "car_id";
+    String START_DURATION_TIME = "start_duration_time";
+    String END_DURATION_TIME = "end_duration_time";
+    String TYPE = "type";
 }

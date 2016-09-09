@@ -14,7 +14,8 @@
                   android:gravity="center_horizontal"
                   android:text="№" />
 
-        <TextView android:layout_width="match_parent"
+        <TextView android:id="@+id/tv_id"
+                  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:gravity="center"
                   android:text="5" />
@@ -29,7 +30,8 @@
                   android:layout_height="wrap_content"
                   android:text="Name" />
 
-        <TextView android:layout_width="match_parent"
+        <TextView android:id="@+id/tv_team_name"
+                  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:gravity="center_vertical"
                   android:text="Fortune" />
@@ -42,9 +44,10 @@
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Session rider" />
+                  android:text="Session driver" />
 
-        <TextView android:layout_width="match_parent"
+        <TextView android:id="@+id/tv_session_driver"
+                  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:gravity="center_vertical"
                   android:text="Andrew Khloponin" />
@@ -57,9 +60,10 @@
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Session time" />
+                  android:text="Session duration" />
 
-        <TextView android:layout_width="match_parent"
+        <TextView android:id="@+id/tv_session_duration"
+                  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:gravity="center_vertical"
                   android:text="14:58:345" />
@@ -70,11 +74,13 @@
                   android:gravity="center"
                   android:orientation="vertical">
 
-        <Button android:layout_width="wrap_content"
+        <Button android:id="@+id/btn_pit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PIT" />
 
-        <Button android:layout_width="wrap_content"
+        <Button android:id="@+id/btn_out"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GO"
                 android:visibility="gone" />

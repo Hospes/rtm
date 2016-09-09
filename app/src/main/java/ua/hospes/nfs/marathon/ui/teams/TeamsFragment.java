@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -44,6 +47,8 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
         super.onCreate(savedInstanceState);
 
         Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
+
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -66,10 +71,36 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter = new TeamAdapter());
-        adapter.setOnItemClickListener((item, position) -> showAddTeamDialog(item));
+        adapter.setOnItemClickListener((item, position) -> showEditTeamDialog(item));
 
         presenter.attachView(this);
     }
+
+
+    //region ActionBar Menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.teams, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_team:
+                showEditTeamDialog(null);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //endregion
+
 
     @Override
     public void onDestroyView() {
@@ -84,7 +115,7 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
     }
 
 
-    public void showAddTeamDialog(Team team) {
-        AddTeamDialogFragment.newInstance(team).show(getChildFragmentManager(), "add_team");
+    public void showEditTeamDialog(Team team) {
+        EditTeamDialogFragment.newInstance(team).show(getChildFragmentManager(), "add_team");
     }
 }

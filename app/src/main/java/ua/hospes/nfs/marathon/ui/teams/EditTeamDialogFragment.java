@@ -27,7 +27,7 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
  * @author Andrew Khloponin
  */
 @AutoInjector(MainActivity.class)
-public class AddTeamDialogFragment extends DialogFragment {
+public class EditTeamDialogFragment extends DialogFragment {
     private static final String KEY_TEAM = "team";
 
     @Inject TeamsRepository repository;
@@ -36,8 +36,8 @@ public class AddTeamDialogFragment extends DialogFragment {
     private Team team = null;
 
 
-    public static AddTeamDialogFragment newInstance(Team team) {
-        AddTeamDialogFragment frag = new AddTeamDialogFragment();
+    public static EditTeamDialogFragment newInstance(Team team) {
+        EditTeamDialogFragment frag = new EditTeamDialogFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_TEAM, team);
@@ -46,7 +46,7 @@ public class AddTeamDialogFragment extends DialogFragment {
         return frag;
     }
 
-    public AddTeamDialogFragment() {}
+    public EditTeamDialogFragment() {}
 
 
     @Override

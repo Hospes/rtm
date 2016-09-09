@@ -9,7 +9,7 @@ import ua.hospes.nfs.marathon.core.db.tables.Drivers;
  * @author Andrew Khloponin
  */
 public class DriverDb implements ModelBaseInterface {
-    private int id;
+    private final int id;
     private String name;
     private int teamId;
 

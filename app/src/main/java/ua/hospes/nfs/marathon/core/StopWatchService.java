@@ -29,49 +29,43 @@ public class StopWatchService extends Service {
     }
 
 
-    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    @DebugLog
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
 
-    @DebugLog
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(KEY_ACTION)) {
             String action = intent.getStringExtra(KEY_ACTION);
             if (KEY_START.equals(action)) {
+                stopWatch.reset();
                 stopWatch.start();
                 return START_STICKY;
             } else if (KEY_STOP.equals(action)) {
                 stopWatch.stop();
-                stopWatch.reset();
                 return START_NOT_STICKY;
             }
         }
         return START_NOT_STICKY;
     }
 
-    @DebugLog
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
     }
 
-    @DebugLog
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
     }
 
-    @DebugLog
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -79,12 +73,16 @@ public class StopWatchService extends Service {
 
 
     public class StopWatchBinder extends Binder {
-        public void addStopWatchListener(StopWatch.OnStopWatchTickListener listener) {
+        public void addStopWatchListener(StopWatch.OnStopWatchListener listener) {
             stopWatch.addOnChronometerTickListener(listener);
         }
 
-        public void removeStopWatchListener(StopWatch.OnStopWatchTickListener listener) {
+        public void removeStopWatchListener(StopWatch.OnStopWatchListener listener) {
             stopWatch.removeOnChronometerTickListener(listener);
+        }
+
+        public boolean isStopWatchStarted() {
+            return stopWatch.isStarted();
         }
     }
 }

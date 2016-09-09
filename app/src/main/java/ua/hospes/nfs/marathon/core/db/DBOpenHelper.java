@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import hugo.weaving.DebugLog;
 import ua.hospes.nfs.marathon.core.db.tables.Drivers;
+import ua.hospes.nfs.marathon.core.db.tables.Race;
+import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
@@ -40,6 +42,22 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             Teams.NAME + TEXT_TYPE +
             " );";
 
+    private static final String CREATE_SESSIONS_TABLE_SQL = CREATE_TABLE + Sessions.name + " (" +
+            Sessions._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
+            Sessions.TEAM_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+            Sessions.DRIVER_ID + INTEGER_TYPE + COMMA_SEP +
+            Sessions.CAR_ID + INTEGER_TYPE + COMMA_SEP +
+            Sessions.START_DURATION_TIME + INTEGER_TYPE + DEFAULT + "0" + COMMA_SEP +
+            Sessions.END_DURATION_TIME + INTEGER_TYPE + COMMA_SEP +
+            Sessions.TYPE + INTEGER_TYPE +
+            " );";
+
+    private static final String CREATE_RACE_TABLE_SQL = CREATE_TABLE + Race.name + " (" +
+            Race._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
+            Race.TEAM_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+            Race.ORDER + INTEGER_TYPE +
+            " );";
+
 
     public DBOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -51,6 +69,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_DRIVERS_TABLE_SQL);
         db.execSQL(CREATE_TEAMS_TABLE_SQL);
+        db.execSQL(CREATE_SESSIONS_TABLE_SQL);
+        db.execSQL(CREATE_RACE_TABLE_SQL);
     }
 
     @DebugLog
@@ -70,7 +90,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @DebugLog
     private void cleanupDatabase(SQLiteDatabase db) {
-        dropTables(db, new String[]{Drivers.name, Teams.name});
+        dropTables(db, new String[]{Drivers.name, Teams.name, Sessions.name, Race.name});
     }
 
     @DebugLog

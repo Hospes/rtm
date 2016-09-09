@@ -7,12 +7,10 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 
-import hugo.weaving.DebugLog;
-
 /**
  * @author Andrew Khloponin
  */
-public abstract class StopWatchFragment extends Fragment implements StopWatch.OnStopWatchTickListener {
+public abstract class StopWatchFragment extends Fragment implements StopWatch.OnStopWatchListener {
     private StopWatchService.StopWatchBinder binder;
 
     @Override
@@ -31,15 +29,18 @@ public abstract class StopWatchFragment extends Fragment implements StopWatch.On
     }
 
 
+    protected boolean isStopWatchStarted() {
+        return binder != null && binder.isStopWatchStarted();
+    }
+
+
     private ServiceConnection connection = new ServiceConnection() {
-        @DebugLog
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             binder = ((StopWatchService.StopWatchBinder) iBinder);
             binder.addStopWatchListener(StopWatchFragment.this);
         }
 
-        @DebugLog
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             if (binder == null) return;

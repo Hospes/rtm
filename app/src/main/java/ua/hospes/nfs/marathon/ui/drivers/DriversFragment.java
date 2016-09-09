@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -44,6 +47,8 @@ public class DriversFragment extends Fragment implements DriversContract.View {
         super.onCreate(savedInstanceState);
 
         Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
+
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -66,10 +71,36 @@ public class DriversFragment extends Fragment implements DriversContract.View {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter = new DriverAdapter());
-        adapter.setOnItemClickListener((item, position) -> showAddDriverDialog(item));
+        adapter.setOnItemClickListener((item, position) -> showEditDriverDialog(item));
 
         presenter.attachView(this);
     }
+
+
+    //region ActionBar Menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.drivers, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_driver:
+                showEditDriverDialog(null);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //endregion
+
 
     @Override
     public void onDestroyView() {
@@ -84,8 +115,8 @@ public class DriversFragment extends Fragment implements DriversContract.View {
     }
 
 
-    public void showAddDriverDialog(Driver driver) {
-        AddDriverDialogFragment dialog = AddDriverDialogFragment.newInstance(driver);
+    public void showEditDriverDialog(Driver driver) {
+        EditDriverDialogFragment dialog = EditDriverDialogFragment.newInstance(driver);
         dialog.show(getChildFragmentManager(), "add_driver");
     }
 }

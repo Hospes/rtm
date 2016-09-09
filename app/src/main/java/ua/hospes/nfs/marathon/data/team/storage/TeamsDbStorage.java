@@ -9,6 +9,7 @@ import ua.hospes.nfs.marathon.core.db.DbHelper;
 import ua.hospes.nfs.marathon.core.db.QueryBuilder;
 import ua.hospes.nfs.marathon.core.db.models.InsertResult;
 import ua.hospes.nfs.marathon.core.db.models.UpdateResult;
+import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 import ua.hospes.nfs.marathon.data.team.mapper.TeamsMapper;
 import ua.hospes.nfs.marathon.data.team.models.TeamDb;
@@ -36,6 +37,11 @@ public class TeamsDbStorage {
 
     public Observable<Integer> remove(TeamDb Team) {
         return dbHelper.delete(new QueryBuilder(Teams.name).where(Teams._ID + " = ?", String.valueOf(Team.getId())));
+    }
+
+
+    public Observable<TeamDb> getNotInRace() {
+        return dbHelper.singleQuery(TeamsMapper::map, "SELECT t1.* FROM " + Teams.name + " t1 LEFT JOIN " + Race.name + " t2 ON t2." + Race.TEAM_ID + " = t1." + Teams._ID + " WHERE t2." + Race.TEAM_ID + " IS NULL");
     }
 
 

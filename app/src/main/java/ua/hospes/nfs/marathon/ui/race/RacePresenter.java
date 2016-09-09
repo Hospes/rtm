@@ -1,8 +1,9 @@
 package ua.hospes.nfs.marathon.ui.race;
 
+import android.support.v4.app.FragmentManager;
+
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
@@ -25,8 +26,9 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     public void attachView(RaceContract.View view) {
         super.attachView(view);
 
-        Subscription subscription = Observable.empty()
-                .subscribe();
+        Subscription subscription = interactor.listen()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(list -> getView().update(list), Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
@@ -34,5 +36,13 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     public void detachView() {
         super.detachView();
         RxUtils.unsubscribe(this);
+    }
+
+    public void showAddTeamDialog(FragmentManager managerFragment) {
+        interactor.getNotInRace()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(teams -> {
+                    AddTeamToRaceDialogFragment.newInstance(teams).show(managerFragment, "add_team_to_race");
+                }, Throwable::printStackTrace);
     }
 }

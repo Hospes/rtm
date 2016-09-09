@@ -1,7 +1,5 @@
 package ua.hospes.nfs.marathon.domain.drivers;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,7 +20,6 @@ public class DriversInteractor {
         this.repository = repository;
     }
 
-    @RxLogObservable
     public Observable<List<Driver>> listen() {
         return repository.listen();
     }

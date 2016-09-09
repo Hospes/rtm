@@ -31,6 +31,11 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     }
 
     @Override
+    public Observable<Team> getNotInRace() {
+        return dbStorage.getNotInRace().map(TeamsMapper::map);
+    }
+
+    @Override
     public Observable<List<Team>> listen() {
         return dbStorage.listen().map(TeamsMapper::map);
     }

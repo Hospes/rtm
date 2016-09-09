@@ -1,7 +1,5 @@
 package ua.hospes.nfs.marathon.domain.team;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,12 +15,13 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
 public class TeamsInteractor {
     private final TeamsRepository repository;
 
+
     @Inject
     public TeamsInteractor(TeamsRepository repository) {
         this.repository = repository;
     }
 
-    @RxLogObservable
+
     public Observable<List<Team>> listen() {
         return repository.listen();
     }

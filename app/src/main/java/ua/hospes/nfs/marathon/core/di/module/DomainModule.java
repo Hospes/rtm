@@ -7,8 +7,12 @@ import dagger.Module;
 import dagger.Provides;
 import ua.hospes.nfs.marathon.App;
 import ua.hospes.nfs.marathon.data.drivers.DriversRepositoryImpl;
+import ua.hospes.nfs.marathon.data.race.RaceRepositoryImpl;
+import ua.hospes.nfs.marathon.data.sessions.SessionsRepositoryImpl;
 import ua.hospes.nfs.marathon.data.team.TeamsRepositoryImpl;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
+import ua.hospes.nfs.marathon.domain.race.RaceRepository;
+import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
 import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
 
 /**
@@ -27,6 +31,20 @@ public class DomainModule {
     @Provides
     @AutoExpose(App.class)
     public TeamsRepository provideTeamsRepository(TeamsRepositoryImpl repository) {
+        return repository;
+    }
+
+    @Singleton
+    @Provides
+    @AutoExpose(App.class)
+    public RaceRepository provideRaceRepository(RaceRepositoryImpl repository) {
+        return repository;
+    }
+
+    @Singleton
+    @Provides
+    @AutoExpose(App.class)
+    public SessionsRepository provideSessionsRepository(SessionsRepositoryImpl repository) {
         return repository;
     }
 
