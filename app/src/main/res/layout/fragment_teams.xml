@@ -11,9 +11,7 @@
                   android:orientation="horizontal"
                   android:padding="8dp">
 
-
-        <TextView android:id="@+id/id"
-                  android:layout_width="40dp"
+        <TextView android:layout_width="40dp"
                   android:layout_height="wrap_content"
                   android:gravity="center"
                   android:text="ID" />
@@ -21,11 +19,18 @@
         <Space android:layout_width="8dp"
                android:layout_height="wrap_content" />
 
-        <TextView android:id="@+id/name"
-                  android:layout_width="0dp"
+        <TextView android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:text="Name" />
+
+        <Space android:layout_width="8dp"
+               android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:text="Drivers" />
 
         <Space android:layout_width="70dp"
                android:layout_height="wrap_content" />

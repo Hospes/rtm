@@ -6,20 +6,32 @@ import java.util.Locale;
  * @author Andrew Khloponin
  */
 public class TimeUtils {
-    public static String format(long nanoTime) {
-        long second = (nanoTime / 1000) % 60;
-        long minute = (nanoTime / (1000 * 60)) % 60;
-        long hour = (nanoTime / (1000 * 60 * 60)) % 24;
+    private static final long NANO_2_MILLIS = 1000000L;
+
+    public static String format(long millisTime) {
+        long second = (millisTime / 1000) % 60;
+        long minute = (millisTime / (1000 * 60)) % 60;
+        long hour = (millisTime / (1000 * 60 * 60)) % 24;
 
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second);
     }
 
-    public static String formatWithMills(long nanoTime) {
-        long millis = nanoTime % 1000;
-        long second = (nanoTime / 1000) % 60;
-        long minute = (nanoTime / (1000 * 60)) % 60;
-        long hour = (nanoTime / (1000 * 60 * 60)) % 24;
+    public static String formatWithMills(long millisTime) {
+        long millis = millisTime % 1000;
+        long second = (millisTime / 1000) % 60;
+        long minute = (millisTime / (1000 * 60)) % 60;
+        long hour = (millisTime / (1000 * 60 * 60)) % 24;
 
         return String.format(Locale.getDefault(), "%02d:%02d:%02d.%03d", hour, minute, second, millis);
+    }
+
+
+    public static String formatNano(long nanoTime) {
+        long millisTime = nanoTime / NANO_2_MILLIS;
+        long second = (millisTime / 1000) % 60;
+        long minute = (millisTime / (1000 * 60)) % 60;
+        long hour = (millisTime / (1000 * 60 * 60)) % 24;
+
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second);
     }
 }

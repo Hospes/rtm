@@ -14,6 +14,8 @@ public interface TeamsRepository {
      */
     Observable<Team> get();
 
+    Observable<Team> get(int id);
+
     /**
      * Get teams that not yet in Race
      */

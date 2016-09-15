@@ -1,6 +1,7 @@
 package ua.hospes.nfs.marathon.ui.drivers;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHo
 
         holder.id.setText(String.valueOf(item.getId()));
         holder.name.setText(item.getName());
-        holder.team.setText(String.valueOf(item.getTeamId()));
+        holder.team.setText(TextUtils.isEmpty(item.getTeamName()) ? "no team" : item.getTeamName());
 
         holder.edit.setOnClickListener(view -> getOnItemClickListener().onItemClick(item, position));
     }

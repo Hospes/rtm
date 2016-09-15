@@ -11,5 +11,33 @@ import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 public interface SessionsRepository {
     Observable<Session> get();
 
+    Observable<Session> get(int... ids);
+
     Observable<List<Session>> listen();
+
+    Observable<List<Session>> listenByTeamId(int teamId);
+
+    Observable<Session> newSessions(Session.Type type, int... teamIds);
+
+    Observable<Session> setSessionDriver(int sessionId, int driverId);
+
+    /**
+     * Open list of sessions by team ids
+     *
+     * @param startTime Start time in nanoseconds
+     * @param teamIds   Array of teams that have to open sessions for
+     */
+    Observable<Session> startSessions(long startTime, int... sessionIds);
+
+    Observable<Session> startNewSessions(long startTime, Session.Type type, int... sessionIds);
+
+    /**
+     * Close list of sessions by ids
+     *
+     * @param stopTime   Stop time in nanoseconds
+     * @param sessionIds Array of sessions that should be closed
+     */
+    Observable<Session> closeSessions(long stopTime, int... sessionIds);
+
+    Observable<Void> clean();
 }

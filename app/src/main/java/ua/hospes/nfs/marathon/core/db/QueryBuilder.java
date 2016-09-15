@@ -2,10 +2,13 @@ package ua.hospes.nfs.marathon.core.db;
 
 import android.text.TextUtils;
 
+import com.google.common.collect.Iterators;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +58,20 @@ public class QueryBuilder {
             Collections.addAll(this.selectionArgs, selectionArgs);
         }
         return this;
+    }
+
+    public QueryBuilder whereIn(String column, String... values) {
+        StringBuilder selection = new StringBuilder();
+
+        selection.append(column).append(" IN (");
+        Iterator<String> itV = Iterators.forArray(values);
+        while (itV.hasNext()) {
+            selection.append("?");
+            itV.next();
+            if (itV.hasNext()) selection.append(",");
+        }
+        selection.append(")");
+        return where(selection.toString(), values);
     }
 
     public QueryBuilder mapToTable(String column, String table) {

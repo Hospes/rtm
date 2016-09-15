@@ -9,7 +9,7 @@ import ua.hospes.nfs.marathon.core.db.tables.Teams;
  * @author Andrew Khloponin
  */
 public class TeamDb implements ModelBaseInterface {
-    private int id;
+    private int id = -1;
     private String name;
 
 

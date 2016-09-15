@@ -27,13 +27,14 @@ public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> 
 
         holder.id.setText(String.valueOf(item.getId()));
         holder.name.setText(item.getName());
+        holder.drivers.setText(item.getDrivers().toString().replaceAll("(\\[|\\])", ""));
 
         holder.edit.setOnClickListener(view -> getOnItemClickListener().onItemClick(item, position));
     }
 
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView id, name;
+        private TextView id, name, drivers;
         private Button edit;
 
         public MyHolder(View itemView) {
@@ -41,6 +42,7 @@ public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> 
 
             id = UiUtils.findView(itemView, R.id.id);
             name = UiUtils.findView(itemView, R.id.name);
+            drivers = UiUtils.findView(itemView, R.id.drivers);
             edit = UiUtils.findView(itemView, R.id.edit);
         }
     }

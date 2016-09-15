@@ -50,6 +50,7 @@ public class StopWatch {
      * The stop time.
      */
     private long stopTime;
+    private long stopTimeMillis;
 
 
     public StopWatch() {}
@@ -76,7 +77,8 @@ public class StopWatch {
         this.startTime = System.nanoTime();
         this.startTimeMillis = System.currentTimeMillis();
         this.runningState = STATE_RUNNING;
-        dispatchStopWatchStateChanged();
+        dispatchStopWatchStarted(startTimeMillis, startTime);
+        dispatchStopWatchStateChanged(runningState);
         updateRunning();
     }
 
@@ -97,9 +99,11 @@ public class StopWatch {
         }
         if (this.runningState == STATE_RUNNING) {
             this.stopTime = System.nanoTime();
+            this.stopTimeMillis = System.currentTimeMillis();
         }
         this.runningState = STATE_STOPPED;
-        dispatchStopWatchStateChanged();
+        dispatchStopWatchStopped(stopTimeMillis, stopTime);
+        dispatchStopWatchStateChanged(runningState);
         updateRunning();
     }
 
@@ -114,7 +118,7 @@ public class StopWatch {
      */
     public void reset() {
         this.runningState = STATE_UNSTARTED;
-        dispatchStopWatchStateChanged();
+        dispatchStopWatchStateChanged(runningState);
         this.splitState = STATE_UNSPLIT;
     }
 
@@ -175,7 +179,7 @@ public class StopWatch {
         }
         this.stopTime = System.nanoTime();
         this.runningState = STATE_SUSPENDED;
-        dispatchStopWatchStateChanged();
+        dispatchStopWatchStateChanged(runningState);
     }
 
     /**
@@ -196,7 +200,7 @@ public class StopWatch {
         }
         this.startTime += (System.nanoTime() - this.stopTime);
         this.runningState = STATE_RUNNING;
-        dispatchStopWatchStateChanged();
+        dispatchStopWatchStateChanged(runningState);
     }
 
     /**
@@ -235,6 +239,22 @@ public class StopWatch {
             return 0;
         } else if (this.runningState == STATE_RUNNING) {
             return System.nanoTime() - this.startTime;
+        }
+        throw new RuntimeException("Illegal running state has occured. ");
+    }
+
+
+    public long getTime(long startTime) {
+        return getNanoTime(startTime) / NANO_2_MILLIS;
+    }
+
+    public long getNanoTime(long startTime) {
+        if (this.runningState == STATE_STOPPED || this.runningState == STATE_SUSPENDED) {
+            return this.stopTime - startTime;
+        } else if (this.runningState == STATE_UNSTARTED) {
+            return 0;
+        } else if (this.runningState == STATE_RUNNING) {
+            return System.nanoTime() - startTime;
         }
         throw new RuntimeException("Illegal running state has occured. ");
     }
@@ -291,6 +311,14 @@ public class StopWatch {
         return this.startTimeMillis;
     }
 
+    public long getNanoStartTime() {
+        if (this.runningState == STATE_UNSTARTED) {
+            throw new IllegalStateException("Stopwatch has not been started");
+        }
+        // System.nanoTime is for elapsed time
+        return this.startTime;
+    }
+
     public boolean isStarted() {
         return runningState == STATE_RUNNING || (runningState != STATE_UNSTARTED && runningState != STATE_STOPPED);
     }
@@ -300,12 +328,16 @@ public class StopWatch {
      * A callback that notifies when the chronometer has incremented on its own.
      */
     public interface OnStopWatchListener {
-        void onStopWatchStateChanged(StopWatch stopWatch);
+        void onStopWatchStarted(long startTime, long nanoStartTime);
+
+        void onStopWatchStopped(long stopTime, long nanoStopTime);
+
+        void onStopWatchStateChanged(int runningState);
 
         /**
          * Notification that the chronometer has changed.
          */
-        void onStopWatchTick(StopWatch stopWatch);
+        void onStopWatchTick(long time, long nanoTime, long currentNanoTime);
     }
 
     private final List<OnStopWatchListener> listeners = new ArrayList<>();
@@ -316,7 +348,7 @@ public class StopWatch {
         if (listeners.contains(listener) || listener == null) return;
         listeners.add(listener);
 
-        listener.onStopWatchStateChanged(this);
+        listener.onStopWatchStateChanged(runningState);
     }
 
     public void removeOnChronometerTickListener(OnStopWatchListener listener) {
@@ -326,7 +358,7 @@ public class StopWatch {
     private void updateRunning() {
         switch (runningState) {
             case STATE_RUNNING:
-                dispatchStopWatchTick();
+                dispatchStopWatchTick(getTime(), getNanoTime(), System.nanoTime());
                 mHandler.sendMessageDelayed(Message.obtain(mHandler, TICK_WHAT), TICK_DELAY);
                 break;
 
@@ -339,19 +371,25 @@ public class StopWatch {
     private Handler mHandler = new Handler() {
         public void handleMessage(Message m) {
             if (runningState == STATE_RUNNING) {
-                dispatchStopWatchTick();
+                dispatchStopWatchTick(getTime(), getNanoTime(), System.nanoTime());
                 sendMessageDelayed(Message.obtain(this, TICK_WHAT), TICK_DELAY);
             }
         }
     };
 
-    private void dispatchStopWatchStateChanged() {
-        for (OnStopWatchListener listener : listeners) listener.onStopWatchStateChanged(this);
+    private void dispatchStopWatchStarted(long startTime, long nanoStartTime) {
+        for (OnStopWatchListener listener : listeners) listener.onStopWatchStarted(startTime, nanoStartTime);
     }
 
-    private void dispatchStopWatchTick() {
-        for (OnStopWatchListener listener : listeners) {
-            listener.onStopWatchTick(this);
-        }
+    private void dispatchStopWatchStopped(long stopTime, long nanoStopTime) {
+        for (OnStopWatchListener listener : listeners) listener.onStopWatchStopped(stopTime, nanoStopTime);
+    }
+
+    private void dispatchStopWatchStateChanged(int runningState) {
+        for (OnStopWatchListener listener : listeners) listener.onStopWatchStateChanged(runningState);
+    }
+
+    private void dispatchStopWatchTick(long time, long nanoTime, long currentNanoTime) {
+        for (OnStopWatchListener listener : listeners) listener.onStopWatchTick(time, nanoTime, currentNanoTime);
     }
 }

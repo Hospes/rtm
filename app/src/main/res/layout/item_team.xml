@@ -20,7 +20,16 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:text="Andrew Khloponin" />
+              android:text="Fortune" />
+
+    <Space android:layout_width="8dp"
+           android:layout_height="wrap_content" />
+
+    <TextView android:id="@+id/drivers"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Andrew, Khloponin" />
 
     <Button android:id="@+id/edit"
             android:layout_width="70dp"

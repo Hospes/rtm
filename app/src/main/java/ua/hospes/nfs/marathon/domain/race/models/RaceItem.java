@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.domain.race.models;
 
+import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
 
 /**
@@ -8,6 +9,8 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
 public class RaceItem {
     private final int id;
     private final Team team;
+    private int teamNumber = -1;
+    private Session session;
 
 
     public RaceItem(Team team) {
@@ -29,6 +32,24 @@ public class RaceItem {
     public Team getTeam() {
         return team;
     }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public int getTeamNumber() {
+        return teamNumber;
+    }
+    //endregion
+
+    //region Setters
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public void setTeamNumber(int teamNumber) {
+        this.teamNumber = teamNumber;
+    }
     //endregion
 
 
@@ -37,6 +58,8 @@ public class RaceItem {
         return "RaceItem{" +
                 "id=" + id +
                 ", team=" + team +
+                ", teamNumber=" + teamNumber +
+                ", session=" + session +
                 '}';
     }
 }

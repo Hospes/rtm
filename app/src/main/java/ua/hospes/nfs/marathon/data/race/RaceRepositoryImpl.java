@@ -1,13 +1,16 @@
 package ua.hospes.nfs.marathon.data.race;
 
+import android.util.Pair;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import hugo.weaving.DebugLog;
 import rx.Observable;
+import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
+import ua.hospes.nfs.marathon.data.race.operations.UpdateRaceOperation;
 import ua.hospes.nfs.marathon.data.race.storage.RaceDbStorage;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
@@ -37,18 +40,17 @@ public class RaceRepositoryImpl implements RaceRepository {
     @Override
     public Observable<RaceItem> get() {
         return raceDbStorage.get()
-                .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), RaceMapper::map));
+                .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map));
     }
 
     @Override
     public Observable<List<RaceItem>> listen() {
         return raceDbStorage.listen()
                 .flatMap(raceItemDbs -> Observable.from(raceItemDbs)
-                        .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), RaceMapper::map))
+                        .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map))
                         .toList());
     }
 
-    @DebugLog
     @Override
     public Observable<Boolean> addNew(RaceItem... items) {
         return Observable.from(items)
@@ -59,16 +61,44 @@ public class RaceRepositoryImpl implements RaceRepository {
     }
 
     @Override
+    public Observable<Boolean> update(List<RaceItem> items) {
+        return Observable.from(items)
+                .map(RaceMapper::map)
+                .map(UpdateRaceOperation::new)
+                .toList()
+                .flatMap(raceDbStorage::updateRaces);
+    }
+
+    @Override
+    public Observable<Boolean> updateByTeamId(Iterable<Pair<Integer, ModelBaseInterface>> items) {
+        return Observable.from(items)
+                .map(UpdateRaceOperation::new)
+                .toList()
+                .flatMap(raceDbStorage::updateRaces);
+    }
+
+    @Override
     public Observable<Boolean> delete(RaceItem item) {
         return raceDbStorage.remove(RaceMapper.map(item)).map(integer -> integer > 0);
     }
 
 
+    @Override
+    public Observable<Void> reset() {
+        return raceDbStorage.reset();
+    }
+
+    @Override
+    public Observable<Void> clean() {
+        return raceDbStorage.clean();
+    }
+
+
     private Observable<Team> getTeamById(int id) {
-        return teamsRepository.get().takeFirst(team -> id == team.getId());
+        return teamsRepository.get(id).singleOrDefault(null, team -> id == team.getId());
     }
 
     private Observable<Session> getSessionById(int id) {
-        return sessionsRepository.get().takeFirst(session -> id == session.getId());
+        return sessionsRepository.get(id).singleOrDefault(null, session -> id == session.getId());
     }
 }

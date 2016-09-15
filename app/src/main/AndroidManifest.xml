@@ -19,6 +19,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.race.detail.RaceItemDetailActivity"
+                  android:theme="@style/AppTheme.DialogWhenLarge" />
+
         <service android:name=".core.StopWatchService" android:exported="false" />
     </application>
 </manifest>

@@ -6,6 +6,7 @@ public class UpdateResult<T> extends AbsDbResult<T> {
 
     public UpdateResult(long result, T data) {
         super(data);
+        this.result = result;
     }
 
 

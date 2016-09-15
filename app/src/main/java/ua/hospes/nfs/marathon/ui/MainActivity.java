@@ -20,6 +20,7 @@ import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import ua.hospes.nfs.marathon.App;
 import ua.hospes.nfs.marathon.R;
+import ua.hospes.nfs.marathon.core.StopWatchService;
 import ua.hospes.nfs.marathon.core.di.HasComponent;
 import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.core.di.module.ActivityModule;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        StopWatchService.checkDeath(this);
     }
 
 

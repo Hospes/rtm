@@ -7,8 +7,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import hugo.weaving.DebugLog;
-
 /**
  * @author Andrew Khloponin
  */
@@ -19,6 +17,10 @@ public class StopWatchService extends Service {
     private final IBinder binder = new StopWatchBinder();
     private final StopWatch stopWatch = new StopWatch();
 
+
+    public static void checkDeath(Context context) {
+        context.startService(new Intent(context, StopWatchService.class));
+    }
 
     public static void start(Context context) {
         context.startService(new Intent(context, StopWatchService.class).putExtra(KEY_ACTION, KEY_START));
@@ -81,8 +83,8 @@ public class StopWatchService extends Service {
             stopWatch.removeOnChronometerTickListener(listener);
         }
 
-        public boolean isStopWatchStarted() {
-            return stopWatch.isStarted();
+        public StopWatch getStopWatch() {
+            return stopWatch;
         }
     }
 }

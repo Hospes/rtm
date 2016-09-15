@@ -30,7 +30,7 @@ public abstract class StopWatchFragment extends Fragment implements StopWatch.On
 
 
     protected boolean isStopWatchStarted() {
-        return binder != null && binder.isStopWatchStarted();
+        return binder != null && binder.getStopWatch().isStarted();
     }
 
 

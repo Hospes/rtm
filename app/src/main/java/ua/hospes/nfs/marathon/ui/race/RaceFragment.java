@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import autodagger.AutoInjector;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.StopWatch;
 import ua.hospes.nfs.marathon.core.StopWatchFragment;
 import ua.hospes.nfs.marathon.core.StopWatchService;
 import ua.hospes.nfs.marathon.core.di.Injector;
@@ -39,6 +38,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     private TextView tvTime;
     private RecyclerView rv;
     private RaceAdapter adapter;
+    private long currentNanoTime = 0L;
 
 
     public static Fragment newInstance() {
@@ -76,8 +76,13 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter());
-        //adapter.setOnItemClickListener((item, position) -> showEditTeamDialog(item));
+        rv.setAdapter(adapter = new RaceAdapter(rv));
+
+        adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
+        adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
+        adapter.setOnInitSessionClickListener((item, position) -> presenter.initSession(item.getTeam().getId()));
+        adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
+        adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
         presenter.attachView(this);
     }
@@ -112,8 +117,16 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
                 StopWatchService.stop(getContext());
                 return true;
 
-            case R.id.action_settings:
+            case R.id.action_add_team:
                 presenter.showAddTeamDialog(getChildFragmentManager());
+                return true;
+
+            case R.id.action_reset:
+                presenter.resetRace();
+                return true;
+
+            case R.id.action_clear:
+                presenter.clear();
                 return true;
 
             default:
@@ -131,19 +144,31 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
 
     @Override
-    public void onStopWatchStateChanged(StopWatch stopWatch) {
+    public void update(List<RaceItem> items) {
+        adapter.clear();
+        adapter.addAll(items);
+    }
+
+
+    @Override
+    public void onStopWatchStarted(long startTime, long nanoStartTime) {
+        presenter.startRace(nanoStartTime);
+    }
+
+    @Override
+    public void onStopWatchStopped(long stopTime, long nanoStopTime) {
+        presenter.stopRace(nanoStopTime);
+    }
+
+    @Override
+    public void onStopWatchStateChanged(int runningState) {
         getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
-    public void onStopWatchTick(StopWatch stopWatch) {
-        tvTime.setText(TimeUtils.format(stopWatch.getTime()));
-    }
-
-
-    @Override
-    public void update(List<RaceItem> items) {
-        adapter.clear();
-        adapter.addAll(items);
+    public void onStopWatchTick(long time, long nanoTime, long currentNanoTime) {
+        this.currentNanoTime = currentNanoTime;
+        tvTime.setText(TimeUtils.format(time));
+        adapter.updateDurations(currentNanoTime);
     }
 }

@@ -12,7 +12,7 @@ import ua.hospes.nfs.marathon.core.db.tables.Teams;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = "DBOpenHelper";
-    private static String DB_NAME = "bwww.lobby.db";
+    private static String DB_NAME = "hospes.nfs.marathon";
     private static int DB_VERSION = 1;
 
 
@@ -47,14 +47,16 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             Sessions.TEAM_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             Sessions.DRIVER_ID + INTEGER_TYPE + COMMA_SEP +
             Sessions.CAR_ID + INTEGER_TYPE + COMMA_SEP +
-            Sessions.START_DURATION_TIME + INTEGER_TYPE + DEFAULT + "0" + COMMA_SEP +
-            Sessions.END_DURATION_TIME + INTEGER_TYPE + COMMA_SEP +
-            Sessions.TYPE + INTEGER_TYPE +
+            Sessions.START_DURATION_TIME + INTEGER_TYPE + DEFAULT + " -1 " + COMMA_SEP +
+            Sessions.END_DURATION_TIME + INTEGER_TYPE + DEFAULT + " -1 " + COMMA_SEP +
+            Sessions.TYPE + TEXT_TYPE + NOT_NULL +
             " );";
 
     private static final String CREATE_RACE_TABLE_SQL = CREATE_TABLE + Race.name + " (" +
             Race._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
-            Race.TEAM_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+            Race.TEAM_ID + INTEGER_TYPE + UNIQUE + NOT_NULL + COMMA_SEP +
+            Race.TEAM_NUMBER + INTEGER_TYPE + DEFAULT + " -1 " + COMMA_SEP +
+            Race.SESSION_ID + INTEGER_TYPE + COMMA_SEP +
             Race.ORDER + INTEGER_TYPE +
             " );";
 

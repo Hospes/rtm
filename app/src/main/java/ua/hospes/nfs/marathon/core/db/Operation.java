@@ -5,6 +5,6 @@ import com.squareup.sqlbrite.BriteDatabase;
 /**
  * @author Andrew Khloponin
  */
-public interface Operation {
-    long doOperation(BriteDatabase db);
+public interface Operation<RESULT> {
+    RESULT doOperation(BriteDatabase db);
 }

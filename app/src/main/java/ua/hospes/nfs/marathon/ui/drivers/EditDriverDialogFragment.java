@@ -5,11 +5,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,6 +24,8 @@ import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
+import ua.hospes.nfs.marathon.domain.team.models.Team;
 import ua.hospes.nfs.marathon.ui.MainActivity;
 import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
@@ -30,10 +38,14 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
 public class EditDriverDialogFragment extends DialogFragment {
     private static final String KEY_DRIVER = "driver";
 
-    @Inject DriversRepository repository;
+    @Inject DriversRepository driversRepository;
+    @Inject TeamsRepository teamsRepository;
 
-    private TextInputEditText name;
+    private List<Team> teams = new ArrayList<>();
+    private AppCompatSpinner spinner;
+    private EditText name;
     private Driver driver = null;
+    private Team team = null;
 
 
     public static EditDriverDialogFragment newInstance(Driver driver) {
@@ -65,7 +77,26 @@ public class EditDriverDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_driver, null);
 
-        name = UiUtils.findView(view, R.id.name);
+        findViews(view);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setPrompt("Select team");
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int realPos = position - 1;
+                if (realPos < 0 || realPos >= teams.size()) team = null;
+                else team = teams.get(realPos);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                team = null;
+            }
+        });
+        loadTeams(adapter);
 
         if (driver != null) {
             name.setText(driver.getName());
@@ -85,27 +116,48 @@ public class EditDriverDialogFragment extends DialogFragment {
     }
 
 
-    private DialogInterface.OnClickListener onOkClick = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            if (driver == null) {
-                driver = new Driver(name.getText().toString(), -1);
-            } else {
-                driver.setName(name.getText().toString());
-            }
-            repository.save(driver).compose(RxUtils.applySchedulers()).subscribe();
+    private void findViews(View view) {
+        name = UiUtils.findView(view, R.id.name);
+        spinner = UiUtils.findView(view, R.id.team);
+    }
+
+    private void loadTeams(ArrayAdapter<String> adapter) {
+        teams.clear();
+        adapter.clear();
+        adapter.add("No team");
+        teamsRepository.get()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(team -> {
+                    teams.add(team);
+                    adapter.add(team.getName());
+                    if (driver != null && driver.getTeamId() == team.getId()) {
+                        spinner.setSelection(teams.size());
+                    }
+                }, Throwable::printStackTrace);
+    }
+
+
+    private DialogInterface.OnClickListener onOkClick = (dialog, i) -> {
+        if (driver == null) {
+            driver = new Driver(name.getText().toString());
+        } else {
+            driver.setName(name.getText().toString());
         }
+
+        driver.setTeamId(team.getId());
+        driver.setTeamName(team.getName());
+
+        driversRepository.save(driver)
+                .compose(RxUtils.applySchedulers())
+                .subscribe();
     };
 
-    private DialogInterface.OnClickListener onCancelClick = (dialogInterface, i) -> {
-        //Do nothing
-    };
+    private DialogInterface.OnClickListener onCancelClick = (dialog, i) -> {/* Do nothing */};
 
-    private DialogInterface.OnClickListener onDeleteClick = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            if (driver == null) return;
-            repository.delete(driver).compose(RxUtils.applySchedulers()).subscribe();
-        }
+    private DialogInterface.OnClickListener onDeleteClick = (dialog, i) -> {
+        if (driver == null) return;
+        driversRepository.delete(driver)
+                .compose(RxUtils.applySchedulers())
+                .subscribe();
     };
 }

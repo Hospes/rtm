@@ -49,6 +49,10 @@ public class TeamsDbStorage {
         return dbHelper.singleQuery(TeamsMapper::map, new QueryBuilder(Teams.name));
     }
 
+    public Observable<TeamDb> get(int id) {
+        return dbHelper.singleQuery(TeamsMapper::map, new QueryBuilder(Teams.name).where(Teams._ID + " = ?", String.valueOf(id)));
+    }
+
     public Observable<List<TeamDb>> listen() {
         return dbHelper.query(TeamsMapper::map, new QueryBuilder(Teams.name));
     }

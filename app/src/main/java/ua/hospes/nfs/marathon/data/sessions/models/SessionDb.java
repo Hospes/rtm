@@ -9,13 +9,13 @@ import ua.hospes.nfs.marathon.core.db.tables.Sessions;
  * @author Andrew Khloponin
  */
 public class SessionDb implements ModelBaseInterface {
-    private int id;
+    private int id = -1;
     private final int teamId;
     private int driverId = -1;
     private int carId = -1;
-    private long startDurationTime = 0;
-    private long endDurationTime = 0;
-    private int type;
+    private long startDurationTime = -1;
+    private long endDurationTime = -1;
+    private String type;
 
 
     public SessionDb(int teamId) {
@@ -48,7 +48,7 @@ public class SessionDb implements ModelBaseInterface {
         return endDurationTime;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
     //endregion
@@ -74,11 +74,24 @@ public class SessionDb implements ModelBaseInterface {
         this.endDurationTime = endDurationTime;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
     //endregion
 
+
+    @Override
+    public String toString() {
+        return "SessionDb{" +
+                "id=" + id +
+                ", teamId=" + teamId +
+                ", driverId=" + driverId +
+                ", carId=" + carId +
+                ", startDurationTime=" + startDurationTime +
+                ", endDurationTime=" + endDurationTime +
+                ", type=" + type +
+                '}';
+    }
 
     @Override
     public ContentValues toContentValues() {

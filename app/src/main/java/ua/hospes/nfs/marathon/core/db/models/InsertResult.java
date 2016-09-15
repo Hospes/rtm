@@ -6,6 +6,7 @@ public class InsertResult<T> extends AbsDbResult<T> {
 
     public InsertResult(long result, T data) {
         super(data);
+        this.result = result;
     }
 
 

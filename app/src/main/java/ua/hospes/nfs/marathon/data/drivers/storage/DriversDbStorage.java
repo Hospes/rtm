@@ -12,6 +12,7 @@ import ua.hospes.nfs.marathon.core.db.models.UpdateResult;
 import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 import ua.hospes.nfs.marathon.data.drivers.mapper.DriversMapper;
 import ua.hospes.nfs.marathon.data.drivers.models.DriverDb;
+import ua.hospes.nfs.marathon.utils.ArrayUtils;
 
 /**
  * @author Andrew Khloponin
@@ -41,6 +42,14 @@ public class DriversDbStorage {
 
     public Observable<DriverDb> get() {
         return dbHelper.singleQuery(DriversMapper::map, new QueryBuilder(Drivers.name));
+    }
+
+    public Observable<DriverDb> get(int... ids) {
+        return dbHelper.singleQuery(DriversMapper::map, new QueryBuilder(Drivers.name).whereIn(Drivers._ID, ArrayUtils.convert(ids)));
+    }
+
+    public Observable<DriverDb> getTeamById(int teamId) {
+        return dbHelper.singleQuery(DriversMapper::map, new QueryBuilder(Drivers.name).where(Drivers.TEAM_ID + " = ?", String.valueOf(teamId)));
     }
 
     public Observable<List<DriverDb>> listen() {

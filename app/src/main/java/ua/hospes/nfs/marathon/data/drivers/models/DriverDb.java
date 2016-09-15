@@ -11,13 +11,15 @@ import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 public class DriverDb implements ModelBaseInterface {
     private final int id;
     private String name;
-    private int teamId;
+    private int teamId = -1;
 
 
-    public DriverDb(int id, String name, int teamId) {
+    public DriverDb() {
+        this.id = -1;
+    }
+
+    public DriverDb(int id) {
         this.id = id;
-        this.name = name;
-        this.teamId = teamId;
     }
 
 
@@ -34,6 +36,26 @@ public class DriverDb implements ModelBaseInterface {
         return teamId;
     }
     //endregion
+
+    //region Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+    //endregion
+
+
+    @Override
+    public String toString() {
+        return "DriverDb{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", teamId=" + teamId +
+                '}';
+    }
 
 
     @Override

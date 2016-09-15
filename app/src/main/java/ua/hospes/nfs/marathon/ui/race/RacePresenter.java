@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.ui.race;
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
 import javax.inject.Inject;
@@ -8,6 +9,9 @@ import rx.Subscription;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.domain.race.RaceInteractor;
+import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
+import ua.hospes.nfs.marathon.domain.sessions.models.Session;
+import ua.hospes.nfs.marathon.ui.race.detail.RaceItemDetailActivity;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 
 /**
@@ -38,11 +42,70 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
         RxUtils.unsubscribe(this);
     }
 
-    public void showAddTeamDialog(FragmentManager managerFragment) {
-        interactor.getNotInRace()
+    public void startRace(long startTime) {
+        Subscription subscription = interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(teams -> {
-                    AddTeamToRaceDialogFragment.newInstance(teams).show(managerFragment, "add_team_to_race");
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void stopRace(long stopTime) {
+        Subscription subscription = interactor.stopRace(stopTime)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void initSession(int teamId) {
+        Subscription subscription = interactor.initSession(Session.Type.TRACK, teamId)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void onPit(RaceItem item, long time) {
+        Subscription subscription = interactor.teamPit(item, time)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void onOut(RaceItem item, long time) {
+        Subscription subscription = interactor.teamOut(item, time)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void resetRace() {
+        Subscription subscription = interactor.resetRace()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void clear() {
+        Subscription subscription = interactor.clear()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void showRaceItemDetail(Context context, RaceItem item) {
+        RaceItemDetailActivity.start(context, item.getId());
+    }
+
+    public void showSetDriverDialog(FragmentManager managerFragment, Session session) {
+        Subscription subscription = interactor.getDrivers(session.getTeam().getId())
+                .toList()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {
+                    SetDriverDialog.newInstance(session.getId(), result).show(managerFragment, "set_driver");
                 }, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
+    public void showAddTeamDialog(FragmentManager managerFragment) {
+        AddTeamToRaceDialogFragment.newInstance().show(managerFragment, "add_team_to_race");
     }
 }

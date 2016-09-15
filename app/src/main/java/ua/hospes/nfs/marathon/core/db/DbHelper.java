@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
@@ -56,9 +55,12 @@ public class DbHelper {
         return db.createQuery(builder.getTable(), builder.getFullSelection(), builder.getSelectionArgs());
     }
 
+    public final <T> Observable<List<T>> query(final Func1<Cursor, T> mapper, final QueryBuilder builder, final String... tables) {
+        return db.createQuery(Arrays.asList(tables), builder.getFullSelection(), builder.getSelectionArgs()).mapToList(mapper);
+    }
+
     public final <T> Observable<List<T>> query(final Func1<Cursor, T> mapper, final QueryBuilder builder) {
-        return db.createQuery(builder.getTable(), builder.getFullSelection(), builder.getSelectionArgs())
-                .mapToList(mapper);
+        return db.createQuery(builder.getTable(), builder.getFullSelection(), builder.getSelectionArgs()).mapToList(mapper);
     }
 
     public final <T> Observable<T> singleQuery(final Func1<Cursor, T> mapper, final String sql, final String... sqlArgs) {
@@ -178,7 +180,6 @@ public class DbHelper {
 
 
     //region Update
-    @RxLogObservable
     public final <T extends ModelBaseInterface> Observable<UpdateResult<T>> update(final QueryBuilder builder, final T cv) {
         if (builder == null || cv == null) return Observable.empty();
         return Observable.create(new Observable.OnSubscribe<UpdateResult<T>>() {
@@ -231,13 +232,17 @@ public class DbHelper {
     //endregion
 
 
-    public Observable<Long> multiOperationTransaction(final Iterable<Operation> operations) {
-        return Observable.create(new Observable.OnSubscribe<Long>() {
+    public <OPERATION extends Operation<RESULT>, RESULT> Observable<RESULT> multiOperationTransaction(final OPERATION... operations) {
+        return multiOperationTransaction(Arrays.asList(operations));
+    }
+
+    public <OPERATION extends Operation<RESULT>, RESULT> Observable<RESULT> multiOperationTransaction(final Iterable<OPERATION> operations) {
+        return Observable.create(new Observable.OnSubscribe<RESULT>() {
             @Override
-            public void call(Subscriber<? super Long> subscriber) {
+            public void call(Subscriber<? super RESULT> subscriber) {
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
-                    for (Operation operation : operations) {
+                    for (OPERATION operation : operations) {
                         subscriber.onNext(operation.doOperation(db));
                     }
                     transaction.markSuccessful();
