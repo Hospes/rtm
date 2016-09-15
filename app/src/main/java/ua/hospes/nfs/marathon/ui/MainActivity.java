@@ -25,6 +25,7 @@ import ua.hospes.nfs.marathon.core.di.HasComponent;
 import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.core.di.module.ActivityModule;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
+import ua.hospes.nfs.marathon.ui.cars.CarsFragment;
 import ua.hospes.nfs.marathon.ui.drivers.DriversFragment;
 import ua.hospes.nfs.marathon.ui.race.RaceFragment;
 import ua.hospes.nfs.marathon.ui.teams.TeamsFragment;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
                         "Race",
                         "Teams",
                         "Drivers",
+                        "Cars",
                 }));
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -75,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
                     case 2:
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.container, DriversFragment.newInstance())
+                                .commit();
+                        break;
+
+                    case 3:
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, CarsFragment.newInstance())
                                 .commit();
                         break;
 

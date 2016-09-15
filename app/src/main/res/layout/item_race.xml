@@ -15,95 +15,98 @@
                   android:layout_margin="4dp"
                   android:text="4 - Fortune"
                   android:textSize="24sp" />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Pits: 10" />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Car: 4" />
     </LinearLayout>
 
-    <FrameLayout android:id="@+id/container_init_session"
-                 android:layout_width="0dp"
+    <FrameLayout android:layout_width="0dp"
                  android:layout_height="match_parent"
                  android:layout_weight="1">
 
-        <Button android:id="@+id/btn_init_session"
+        <Button android:id="@+id/btn_set_driver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Init session" />
-    </FrameLayout>
+                android:text="Set driver" />
 
-    <LinearLayout android:id="@+id/container_session"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:orientation="horizontal">
-
-        <FrameLayout android:layout_width="140dp"
-                     android:layout_height="match_parent">
-
-            <Button android:id="@+id/btn_set_driver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Set driver" />
-
-            <LinearLayout android:id="@+id/container_session_driver"
-                          android:layout_width="wrap_content"
-                          android:layout_height="match_parent"
-                          android:layout_gravity="center"
-                          android:gravity="center"
-                          android:orientation="vertical">
-
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="4dp"
-                          android:text="Driver"
-                          android:textAllCaps="true"
-                          android:textSize="14sp" />
-
-                <TextView android:id="@+id/tv_session_driver"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginLeft="4dp"
-                          android:layout_marginRight="4dp"
-                          android:gravity="center_vertical"
-                          android:singleLine="true"
-                          android:text="Andrew Khloponin" />
-            </LinearLayout>
-        </FrameLayout>
-
-        <LinearLayout android:layout_width="100dp"
+        <LinearLayout android:id="@+id/container_session_driver"
+                      android:layout_width="wrap_content"
                       android:layout_height="match_parent"
+                      android:layout_gravity="center"
                       android:gravity="center"
                       android:orientation="vertical">
 
-            <TextView android:id="@+id/tv_session_type"
-                      android:layout_width="wrap_content"
+            <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_margin="4dp"
-                      android:text="ON TRACK"
+                      android:text="Driver"
                       android:textAllCaps="true"
                       android:textSize="14sp" />
 
-            <TextView android:id="@+id/tv_session_duration"
+            <TextView android:id="@+id/tv_session_driver"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
+                      android:layout_marginLeft="4dp"
+                      android:layout_marginRight="4dp"
                       android:gravity="center_vertical"
-                      android:text="00:00:00" />
+                      android:singleLine="true"
+                      android:text="Andrew Khloponin" />
+
+            <ua.hospes.nfs.marathon.ui.race.widgets.DriverTimeView
+                android:id="@+id/tv_driver_all_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="00:00:00" />
         </LinearLayout>
+    </FrameLayout>
 
-        <LinearLayout android:layout_width="100dp"
-                      android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:orientation="vertical">
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:gravity="center"
+                  android:orientation="vertical">
 
-            <Button android:id="@+id/btn_pit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PIT" />
+        <TextView android:id="@+id/tv_session_type"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="4dp"
+                  android:text="ON TRACK"
+                  android:textAllCaps="true"
+                  android:textSize="14sp" />
 
-            <Button android:id="@+id/btn_out"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="OUT"
-                    android:visibility="gone" />
+        <ua.hospes.nfs.marathon.ui.race.widgets.SessionTimeView
+            android:id="@+id/tv_session_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="00:00:00" />
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout android:layout_width="100dp"
+                  android:layout_height="match_parent"
+                  android:gravity="center"
+                  android:orientation="vertical">
+
+        <Button android:id="@+id/btn_pit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PIT" />
+
+        <Button android:id="@+id/btn_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OUT"
+                android:visibility="gone" />
+
     </LinearLayout>
 </LinearLayout>

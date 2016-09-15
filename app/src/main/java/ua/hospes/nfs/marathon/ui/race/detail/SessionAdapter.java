@@ -29,7 +29,7 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
         if (item.getStartDurationTime() == -1 || item.getEndDurationTime() == -1)
             holder.duration.setText("NOW");
         else
-            holder.duration.setText(TimeUtils.formatNano(item.getEndDurationTime() - item.getStartDurationTime()));
+            holder.duration.setText(TimeUtils.formatNanoWithMills(item.getEndDurationTime() - item.getStartDurationTime()));
         holder.type.setText(item.getType().getTitle());
     }
 

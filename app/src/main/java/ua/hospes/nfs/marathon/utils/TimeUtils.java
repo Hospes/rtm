@@ -34,4 +34,14 @@ public class TimeUtils {
 
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second);
     }
+
+    public static String formatNanoWithMills(long nanoTime) {
+        long millisTime = nanoTime / NANO_2_MILLIS;
+        long millis = millisTime % 1000;
+        long second = (millisTime / 1000) % 60;
+        long minute = (millisTime / (1000 * 60)) % 60;
+        long hour = (millisTime / (1000 * 60 * 60)) % 24;
+
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d.%03d", hour, minute, second, millis);
+    }
 }

@@ -66,6 +66,18 @@ public class SessionsDbStorage {
         return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name).whereIn(Sessions._ID, ArrayUtils.convert(ids)));
     }
 
+    public Observable<SessionDb> getByTeamId(int teamId) {
+        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name).where(Sessions.TEAM_ID + " = ?", String.valueOf(teamId)));
+    }
+
+    public Observable<SessionDb> getByTeamIdAndDriverId(int teamId, int driverId) {
+        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name)
+                .where(Sessions.TEAM_ID + " = ?", String.valueOf(teamId))
+                .and()
+                .where(Sessions.DRIVER_ID + " = ?", String.valueOf(driverId))
+        );
+    }
+
     public Observable<List<SessionDb>> listen() {
         return dbHelper.query(SessionsMapper::map, new QueryBuilder(Sessions.name));
     }

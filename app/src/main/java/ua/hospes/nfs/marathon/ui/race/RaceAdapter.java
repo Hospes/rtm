@@ -17,7 +17,9 @@ import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
-import ua.hospes.nfs.marathon.utils.TimeUtils;
+import ua.hospes.nfs.marathon.ui.race.widgets.DriverTimeView;
+import ua.hospes.nfs.marathon.ui.race.widgets.SessionTimeView;
+import ua.hospes.nfs.marathon.ui.race.widgets.TimeView;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
 /**
@@ -27,7 +29,6 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
     public static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.3f;
     public static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.3f;
     private RecyclerView rv;
-    private OnItemClickListener<RaceItem> onInitSessionClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
     private OnItemClickListener<RaceItem> onOutClickListener;
@@ -50,12 +51,10 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
         holder.team.setText(String.format(Locale.getDefault(), "%1$d - %2$s", item.getTeamNumber(), item.getTeam().getName()));
 
         Session session = item.getSession();
-        holder.duration.setTag(session);
+        holder.driverTimeView.setPrevDuration(item.getDriverPrevDuration());
+        holder.driverTimeView.setSession(session);
+        holder.sessionTimeView.setSession(session);
         if (session != null) {
-            if (session.getStartDurationTime() == -1)
-                holder.duration.setText(TimeUtils.format(0));
-            holder.cInitSession.setVisibility(View.GONE);
-            holder.cSession.setVisibility(View.VISIBLE);
             Driver driver = session.getDriver();
             if (driver != null) {
                 holder.btnSetDriver.setVisibility(View.GONE);
@@ -71,14 +70,14 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
             switch (session.getType()) {
                 case TRACK:
                     holder.sessionType.setTextColor(Color.GREEN);
-                    holder.duration.setTextColor(Color.GREEN);
+                    holder.sessionTimeView.setTextColor(Color.GREEN);
                     holder.pit.setVisibility(View.VISIBLE);
                     holder.out.setVisibility(View.GONE);
                     break;
 
                 case PIT:
                     holder.sessionType.setTextColor(Color.RED);
-                    holder.duration.setTextColor(Color.RED);
+                    holder.sessionTimeView.setTextColor(Color.RED);
                     holder.pit.setVisibility(View.GONE);
                     holder.out.setVisibility(View.VISIBLE);
                     break;
@@ -88,14 +87,7 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
                     holder.out.setVisibility(View.GONE);
                     break;
             }
-        } else {
-            holder.cInitSession.setVisibility(View.VISIBLE);
-            holder.cSession.setVisibility(View.GONE);
         }
-
-        holder.initSession.setOnClickListener(v -> {
-            if (onInitSessionClickListener != null) onInitSessionClickListener.onItemClick(item, position);
-        });
 
         holder.btnSetDriver.setOnClickListener(v -> {
             if (onSetDriverClickListener != null) onSetDriverClickListener.onItemClick(item, position);
@@ -116,15 +108,11 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
 
     public void updateDurations(long currentNanoTime) {
-        for (TextView tv : collectShouldPlayItems()) {
-            Session session = (Session) tv.getTag();
-            if (session == null) continue;
-            tv.setText(TimeUtils.formatNano(currentNanoTime - session.getStartDurationTime()));
-        }
+        for (TimeView tv : collectShouldPlayItems()) tv.setCurrentNanoTime(currentNanoTime);
     }
 
-    private Set<TextView> collectShouldPlayItems() {
-        Set<TextView> set = new HashSet<>();
+    private Set<TimeView> collectShouldPlayItems() {
+        Set<TimeView> set = new HashSet<>();
 
         RecyclerView.LayoutManager lm = rv.getLayoutManager();
 
@@ -143,14 +131,11 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
             if (shouldPlay) {
                 MyHolder viewHolder = (MyHolder) rv.getChildViewHolder(child);
-                set.add(viewHolder.duration);
+                set.add(viewHolder.sessionTimeView);
+                set.add(viewHolder.driverTimeView);
             }
         }
         return set;
-    }
-
-    public void setOnInitSessionClickListener(OnItemClickListener<RaceItem> onInitSessionClickListener) {
-        this.onInitSessionClickListener = onInitSessionClickListener;
     }
 
     public void setOnSetDriverClickListener(OnItemClickListener<RaceItem> onSetDriverClickListener) {
@@ -167,27 +152,28 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        private View cSession, cInitSession, cSessionDriver;
-        private TextView driver, team, duration, sessionType;
-        private Button pit, out, initSession, btnSetDriver;
+        private View cSessionDriver;
+        private DriverTimeView driverTimeView;
+        private SessionTimeView sessionTimeView;
+        private TextView driver, team, sessionType;
+        private Button pit, out, btnSetDriver;
 
         public MyHolder(View itemView) {
             super(itemView);
 
             team = UiUtils.findView(itemView, R.id.tv_team);
-            duration = UiUtils.findView(itemView, R.id.tv_session_duration);
+            sessionTimeView = UiUtils.findView(itemView, R.id.tv_session_duration);
             driver = UiUtils.findView(itemView, R.id.tv_session_driver);
             sessionType = UiUtils.findView(itemView, R.id.tv_session_type);
 
+            driverTimeView = UiUtils.findView(itemView, R.id.tv_driver_all_time);
+
             btnSetDriver = UiUtils.findView(itemView, R.id.btn_set_driver);
 
-            cSession = UiUtils.findView(itemView, R.id.container_session);
-            cInitSession = UiUtils.findView(itemView, R.id.container_init_session);
             cSessionDriver = UiUtils.findView(itemView, R.id.container_session_driver);
 
             pit = UiUtils.findView(itemView, R.id.btn_pit);
             out = UiUtils.findView(itemView, R.id.btn_out);
-            initSession = UiUtils.findView(itemView, R.id.btn_init_session);
         }
     }
 }

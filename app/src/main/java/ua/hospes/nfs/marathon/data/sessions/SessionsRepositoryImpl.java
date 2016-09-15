@@ -61,6 +61,28 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
+    public Observable<Session> getByTeamId(int teamId) {
+        return dbStorage.getByTeamId(teamId)
+                .flatMap(sessionItemDb ->
+                        Observable.zip(
+                                Observable.just(sessionItemDb),
+                                getTeamById(sessionItemDb.getTeamId()),
+                                getDriverById(sessionItemDb.getDriverId()),
+                                SessionsMapper::map));
+    }
+
+    @Override
+    public Observable<Session> getByTeamIdAndDriverId(int teamId, int driverId) {
+        return dbStorage.getByTeamIdAndDriverId(teamId, driverId)
+                .flatMap(sessionItemDb ->
+                        Observable.zip(
+                                Observable.just(sessionItemDb),
+                                getTeamById(sessionItemDb.getTeamId()),
+                                getDriverById(sessionItemDb.getDriverId()),
+                                SessionsMapper::map));
+    }
+
+    @Override
     public Observable<List<Session>> listen() {
         return dbStorage.listen()
                 .flatMap(sessionItemDbs -> Observable.from(sessionItemDbs)

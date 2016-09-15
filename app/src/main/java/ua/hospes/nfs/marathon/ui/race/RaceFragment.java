@@ -80,7 +80,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
-        adapter.setOnInitSessionClickListener((item, position) -> presenter.initSession(item.getTeam().getId()));
+        //adapter.setOnInitSessionClickListener((item, position) -> presenter.initSession(item.getTeam().getId()));
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
@@ -98,6 +98,9 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onPrepareOptionsMenu(Menu menu) {
         boolean stopWatchStarted = isStopWatchStarted();
         menu.findItem(R.id.action_start).setVisible(!stopWatchStarted);
+        menu.findItem(R.id.action_add_team).setVisible(!stopWatchStarted);
+        menu.findItem(R.id.action_reset).setVisible(!stopWatchStarted);
+        menu.findItem(R.id.action_clear).setVisible(!stopWatchStarted);
         menu.findItem(R.id.action_stop).setVisible(stopWatchStarted);
 
         MenuItem stopWatchItem = menu.findItem(R.id.action_stopwatch);

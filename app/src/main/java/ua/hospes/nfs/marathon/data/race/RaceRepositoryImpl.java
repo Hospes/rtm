@@ -8,10 +8,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Func1;
 import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
 import ua.hospes.nfs.marathon.data.race.operations.UpdateRaceOperation;
 import ua.hospes.nfs.marathon.data.race.storage.RaceDbStorage;
+import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
@@ -40,7 +42,12 @@ public class RaceRepositoryImpl implements RaceRepository {
     @Override
     public Observable<RaceItem> get() {
         return raceDbStorage.get()
-                .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map));
+                .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map))
+                .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getPitStopsCount(raceItem.getTeam().getId()), (item, pits) -> {
+                    item.setPitStops(pits);
+                    return item;
+                }))
+                .flatMap(new GetDriverDurationFunc());
     }
 
     @Override
@@ -48,6 +55,11 @@ public class RaceRepositoryImpl implements RaceRepository {
         return raceDbStorage.listen()
                 .flatMap(raceItemDbs -> Observable.from(raceItemDbs)
                         .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map))
+                        .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getPitStopsCount(raceItem.getTeam().getId()), (item, pits) -> {
+                            item.setPitStops(pits);
+                            return item;
+                        }))
+                        .flatMap(new GetDriverDurationFunc())
                         .toList());
     }
 
@@ -100,5 +112,35 @@ public class RaceRepositoryImpl implements RaceRepository {
 
     private Observable<Session> getSessionById(int id) {
         return sessionsRepository.get(id).singleOrDefault(null, session -> id == session.getId());
+    }
+
+    private Observable<Integer> getPitStopsCount(int teamId) {
+        return sessionsRepository.getByTeamId(teamId).filter(session -> session.getType() == Session.Type.PIT).count();
+    }
+
+    private Observable<Long> getDriverPrevSessionsDuration(int teamId, int driverId) {
+        return sessionsRepository.getByTeamIdAndDriverId(teamId, driverId)
+                .filter(session -> session.getStartDurationTime() != -1 && session.getEndDurationTime() != -1)
+                .map(session -> session.getEndDurationTime() - session.getStartDurationTime())
+                .toList()
+                .map(longs -> {
+                    long result = 0L;
+                    for (Long l : longs) result += l;
+                    return result;
+                });
+    }
+
+
+    private class GetDriverDurationFunc implements Func1<RaceItem, Observable<RaceItem>> {
+        @Override
+        public Observable<RaceItem> call(RaceItem item) {
+            if (item.getSession() == null || item.getSession().getDriver() == null) return Observable.just(item);
+            Driver driver = item.getSession().getDriver();
+            return getDriverPrevSessionsDuration(driver.getTeamId(), driver.getId())
+                    .map(aLong -> {
+                        item.setDriverPrevDuration(aLong);
+                        return item;
+                    });
+        }
     }
 }

@@ -5,13 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import hugo.weaving.DebugLog;
+import ua.hospes.nfs.marathon.core.db.tables.Cars;
 import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
-    private static final String LOG_TAG = "DBOpenHelper";
     private static String DB_NAME = "hospes.nfs.marathon";
     private static int DB_VERSION = 1;
 
@@ -30,6 +30,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String DEFAULT = " DEFAULT ";
     private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
+
+    private static final String CREATE_CARS_TABLE_SQL = CREATE_TABLE + Cars.name + " (" +
+            Cars._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
+            Cars.NUMBER + INTEGER_TYPE + DEFAULT + " 0 " + COMMA_SEP +
+            Cars.RATING + INTEGER_TYPE + DEFAULT + " 0 " +
+            " );";
 
     private static final String CREATE_DRIVERS_TABLE_SQL = CREATE_TABLE + Drivers.name + " (" +
             Drivers._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
@@ -69,6 +75,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     @DebugLog
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_CARS_TABLE_SQL);
         db.execSQL(CREATE_DRIVERS_TABLE_SQL);
         db.execSQL(CREATE_TEAMS_TABLE_SQL);
         db.execSQL(CREATE_SESSIONS_TABLE_SQL);
@@ -92,7 +99,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @DebugLog
     private void cleanupDatabase(SQLiteDatabase db) {
-        dropTables(db, new String[]{Drivers.name, Teams.name, Sessions.name, Race.name});
+        dropTables(db, new String[]{Cars.name, Drivers.name, Teams.name, Sessions.name, Race.name});
     }
 
     @DebugLog

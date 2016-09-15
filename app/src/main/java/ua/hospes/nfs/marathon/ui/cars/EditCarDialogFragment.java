@@ -1,0 +1,136 @@
+package ua.hospes.nfs.marathon.ui.cars;
+
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSpinner;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+
+import javax.inject.Inject;
+
+import autodagger.AutoInjector;
+import ua.hospes.nfs.marathon.R;
+import ua.hospes.nfs.marathon.core.di.Injector;
+import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
+import ua.hospes.nfs.marathon.ui.MainActivity;
+import ua.hospes.nfs.marathon.ui.MainActivityComponent;
+import ua.hospes.nfs.marathon.utils.RxUtils;
+import ua.hospes.nfs.marathon.utils.UiUtils;
+
+/**
+ * @author Andrew Khloponin
+ */
+@AutoInjector(MainActivity.class)
+public class EditCarDialogFragment extends DialogFragment {
+    private static final String KEY_CAR = "car";
+
+    @Inject CarsRepository carsRepository;
+
+    private String[] ratingTitles = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+
+    private AppCompatSpinner spRating;
+    private EditText etNumber;
+    private Car car = null;
+    private int selectedRating = -1;
+
+
+    public static EditCarDialogFragment newInstance(Car car) {
+        EditCarDialogFragment frag = new EditCarDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(KEY_CAR, car);
+        frag.setArguments(args);
+
+        return frag;
+    }
+
+    public EditCarDialogFragment() {}
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
+
+        if (getArguments() != null) {
+            car = getArguments().getParcelable(KEY_CAR);
+        }
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_car, null);
+
+        findViews(view);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, ratingTitles);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRating.setAdapter(adapter);
+        spRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedRating = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedRating = -1;
+            }
+        });
+
+        if (car != null) {
+            etNumber.setText(String.valueOf(car.getNumber()));
+            etNumber.setSelection(String.valueOf(car.getNumber()).length());
+            if (car.getRating() >= 0 && car.getRating() < 11)
+                spRating.setSelection(car.getRating());
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, onOkClick)
+                .setNegativeButton(android.R.string.cancel, onCancelClick);
+
+        if (car != null) {
+            builder.setNeutralButton(R.string.delete, onDeleteClick);
+        }
+
+        return builder.create();
+    }
+
+
+    private void findViews(View view) {
+        etNumber = UiUtils.findView(view, R.id.number);
+        spRating = UiUtils.findView(view, R.id.rating);
+    }
+
+    private DialogInterface.OnClickListener onOkClick = (dialog, i) -> {
+        if (car == null) car = new Car();
+
+        car.setNumber(Integer.getInteger(etNumber.getText().toString()));
+        car.setRating(selectedRating);
+
+        carsRepository.save(car)
+                .compose(RxUtils.applySchedulers())
+                .subscribe();
+    };
+
+    private DialogInterface.OnClickListener onCancelClick = (dialog, i) -> {/* Do nothing */};
+
+    private DialogInterface.OnClickListener onDeleteClick = (dialog, i) -> {
+        if (car == null) return;
+        carsRepository.delete(car)
+                .compose(RxUtils.applySchedulers())
+                .subscribe();
+    };
+}

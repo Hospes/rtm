@@ -14,20 +14,19 @@ public abstract class StopWatchFragment extends Fragment implements StopWatch.On
     private StopWatchService.StopWatchBinder binder;
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         getContext().bindService(new Intent(getContext(), StopWatchService.class), connection, Context.BIND_IMPORTANT);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         getContext().unbindService(connection);
         if (binder == null) return;
         binder.removeStopWatchListener(this);
         binder = null;
     }
-
 
     protected boolean isStopWatchStarted() {
         return binder != null && binder.getStopWatch().isStarted();

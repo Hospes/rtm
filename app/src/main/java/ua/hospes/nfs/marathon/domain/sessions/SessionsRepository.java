@@ -13,6 +13,10 @@ public interface SessionsRepository {
 
     Observable<Session> get(int... ids);
 
+    Observable<Session> getByTeamId(int teamId);
+
+    Observable<Session> getByTeamIdAndDriverId(int teamId, int driverId);
+
     Observable<List<Session>> listen();
 
     Observable<List<Session>> listenByTeamId(int teamId);
