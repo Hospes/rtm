@@ -55,4 +55,9 @@ public class DriversDbStorage {
     public Observable<List<DriverDb>> listen() {
         return dbHelper.query(DriversMapper::map, new QueryBuilder(Drivers.name));
     }
+
+
+    public Observable<Void> clear() {
+        return dbHelper.delete(new QueryBuilder(Drivers.name)).map(integer -> null);
+    }
 }

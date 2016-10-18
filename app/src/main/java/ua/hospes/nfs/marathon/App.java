@@ -3,9 +3,12 @@ package ua.hospes.nfs.marathon;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
+
 import javax.inject.Singleton;
 
 import autodagger.AutoComponent;
+import io.fabric.sdk.android.Fabric;
 import ua.hospes.nfs.marathon.core.di.module.ApplicationModule;
 import ua.hospes.nfs.marathon.core.di.module.DataModule;
 import ua.hospes.nfs.marathon.core.di.module.DbModule;
@@ -22,12 +25,12 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         component = DaggerAppComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
     }
-
 
 
     public static App get(Context context) {

@@ -14,6 +14,7 @@ import ua.hospes.nfs.marathon.data.sessions.mapper.SessionsMapper;
 import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
 import ua.hospes.nfs.marathon.data.sessions.operations.CloseSessionOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.OpenSessionOperation;
+import ua.hospes.nfs.marathon.data.sessions.operations.SetCarOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.SetDriverOperation;
 import ua.hospes.nfs.marathon.utils.ArrayUtils;
 
@@ -46,6 +47,10 @@ public class SessionsDbStorage {
 
 
     public Observable<Integer> applySetDriverOperations(Iterable<SetDriverOperation> operations) {
+        return dbHelper.multiOperationTransaction(operations);
+    }
+
+    public Observable<Integer> applySetCarOperations(Iterable<SetCarOperation> operations) {
         return dbHelper.multiOperationTransaction(operations);
     }
 

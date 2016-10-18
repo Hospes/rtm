@@ -1,28 +1,29 @@
 package ua.hospes.nfs.marathon.domain.sessions.models;
 
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
-import ua.hospes.nfs.marathon.domain.team.models.Team;
 
 /**
  * @author Andrew Khloponin
  */
 public class Session {
     private final int id;
-    private final Team team;
+    private final int teamId;
     private Driver driver = null;
+    private Car car = null;
     private long startDurationTime = -1;
     private long endDurationTime = -1;
     private Type type = Type.TRACK;
 
 
-    public Session(Team team) {
+    public Session(int teamId) {
         this.id = -1;
-        this.team = team;
+        this.teamId = teamId;
     }
 
-    public Session(int id, Team team) {
+    public Session(int id, int teamId) {
         this.id = id;
-        this.team = team;
+        this.teamId = teamId;
     }
 
 
@@ -31,12 +32,16 @@ public class Session {
         return id;
     }
 
-    public Team getTeam() {
-        return team;
+    public int getTeamId() {
+        return teamId;
     }
 
     public Driver getDriver() {
         return driver;
+    }
+
+    public Car getCar() {
+        return car;
     }
 
     public long getStartDurationTime() {
@@ -55,6 +60,10 @@ public class Session {
     //region Setters
     public void setDriver(Driver driver) {
         this.driver = driver;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public void setStartDurationTime(long startDurationTime) {
@@ -83,8 +92,9 @@ public class Session {
     public String toString() {
         return "Session{" +
                 "id=" + id +
-                ", team=" + team +
+                ", teamId=" + teamId +
                 ", driver=" + driver +
+                ", car=" + car +
                 ", startDurationTime=" + startDurationTime +
                 ", endDurationTime=" + endDurationTime +
                 ", type=" + type +

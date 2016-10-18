@@ -16,6 +16,8 @@ import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
 import ua.hospes.nfs.marathon.core.db.models.SimpleBaseModel;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
+import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
@@ -33,14 +35,16 @@ public class RaceInteractor {
     private final TeamsRepository teamsRepository;
     private final SessionsRepository sessionsRepository;
     private final DriversRepository driversRepository;
+    private final CarsRepository carsRepository;
 
 
     @Inject
-    public RaceInteractor(RaceRepository raceRepository, TeamsRepository teamsRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository) {
+    public RaceInteractor(RaceRepository raceRepository, TeamsRepository teamsRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository, CarsRepository carsRepository) {
         this.raceRepository = raceRepository;
         this.teamsRepository = teamsRepository;
         this.sessionsRepository = sessionsRepository;
         this.driversRepository = driversRepository;
+        this.carsRepository = carsRepository;
     }
 
 
@@ -57,7 +61,7 @@ public class RaceInteractor {
                 .map((Func1<Session, Pair<Integer, ModelBaseInterface>>) session -> {
                     ContentValues cv = new ContentValues();
                     cv.put(Race.SESSION_ID, session.getId());
-                    return new Pair<>(session.getTeam().getId(), new SimpleBaseModel(cv));
+                    return new Pair<>(session.getTeamId(), new SimpleBaseModel(cv));
                 })
                 .toList()
                 .flatMap(raceRepository::updateByTeamId);
@@ -65,6 +69,11 @@ public class RaceInteractor {
 
     public Observable<Boolean> setDriver(int sessionId, Driver driver) {
         return sessionsRepository.setSessionDriver(sessionId, driver.getId())
+                .map(session -> true);
+    }
+
+    public Observable<Boolean> setCar(int sessionId, Car car) {
+        return sessionsRepository.setSessionCar(sessionId, car.getId())
                 .map(session -> true);
     }
 
@@ -114,6 +123,10 @@ public class RaceInteractor {
 
     public Observable<Driver> getDrivers(int teamId) {
         return driversRepository.getByTeamId(teamId);
+    }
+
+    public Observable<Car> getCarsNotInRace() {
+        return carsRepository.getNotInRace();
     }
 
     public Observable<Void> resetRace() {

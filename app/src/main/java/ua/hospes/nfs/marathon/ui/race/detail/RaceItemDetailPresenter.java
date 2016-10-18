@@ -33,7 +33,7 @@ public class RaceItemDetailPresenter extends BasePresenter<RaceItemDetailContrac
         Subscription subscription = interactor.listenRaceItem(raceItemId)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(raceItem -> {
-                    getView().onUpdateDetails(raceItem);
+                    getView().onUpdateRaceItem(raceItem);
                     if (raceItem == null) return;
                     listenSessions(raceItem.getTeam().getId());
                 }, Throwable::printStackTrace);

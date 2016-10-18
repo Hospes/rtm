@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+
 /**
  * @author Andrew Khloponin
  */
 public class Team implements Parcelable {
     private int id = -1;
     private String name;
-    private List<String> drivers = new ArrayList<>();
+    private List<Driver> drivers = new ArrayList<>();
 
 
     public Team(String name) {
@@ -35,7 +37,7 @@ public class Team implements Parcelable {
         return name;
     }
 
-    public List<String> getDrivers() {
+    public List<Driver> getDrivers() {
         return drivers;
     }
     //endregion
@@ -45,7 +47,7 @@ public class Team implements Parcelable {
         this.name = name;
     }
 
-    public void setDrivers(Collection<String> drivers) {
+    public void setDrivers(Collection<Driver> drivers) {
         this.drivers.clear();
         this.drivers.addAll(drivers);
     }
@@ -85,13 +87,13 @@ public class Team implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.name);
-        dest.writeStringList(this.drivers);
+        dest.writeTypedList(this.drivers);
     }
 
     protected Team(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
-        this.drivers = in.createStringArrayList();
+        this.drivers = in.createTypedArrayList(Driver.CREATOR);
     }
 
     public static final Creator<Team> CREATOR = new Creator<Team>() {

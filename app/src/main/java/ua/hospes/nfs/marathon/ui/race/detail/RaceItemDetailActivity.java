@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,6 +26,8 @@ import ua.hospes.nfs.marathon.core.di.HasComponent;
 import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.core.di.module.ActivityModule;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
+import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+import ua.hospes.nfs.marathon.domain.race.models.DriverDetails;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 import ua.hospes.nfs.marathon.utils.UiUtils;
@@ -39,8 +44,13 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
     @Inject RaceItemDetailPresenter presenter;
     private int raceItemId = -1;
 
+    private TextView tvPits;
+
+    private RecyclerView rvDrivers;
+    private DriverDetailsAdapter driverDetailsAdapter;
+
     private SessionAdapter adapter;
-    private RecyclerView rv;
+    private RecyclerView rvSessions;
 
 
     public static void start(Context context, int raceItemId) {
@@ -60,7 +70,8 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rv = UiUtils.findView(this, R.id.list);
+        rvDrivers = UiUtils.findView(this, R.id.drivers);
+        rvSessions = UiUtils.findView(this, R.id.list);
 
         presenter.attachView(this);
         if (getIntent() != null) {
@@ -68,10 +79,15 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         }
         presenter.listenRaceItem(raceItemId);
 
-        rv.setHasFixedSize(true);
-        rv.setNestedScrollingEnabled(true);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter = new SessionAdapter());
+        rvDrivers.setHasFixedSize(true);
+        rvDrivers.setNestedScrollingEnabled(true);
+        rvDrivers.setLayoutManager(new GridLayoutManager(this, 2));
+        rvDrivers.setAdapter(driverDetailsAdapter = new DriverDetailsAdapter());
+
+        rvSessions.setHasFixedSize(true);
+        rvSessions.setNestedScrollingEnabled(true);
+        rvSessions.setLayoutManager(new LinearLayoutManager(this));
+        rvSessions.setAdapter(adapter = new SessionAdapter());
     }
 
     @Override
@@ -104,11 +120,23 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
 
     @DebugLog
     @Override
-    public void onUpdateDetails(RaceItem raceItem) {
+    public void onUpdateRaceItem(RaceItem raceItem) {
         getSupportActionBar().setTitle(raceItem.getTeam().getName());
+
+        List<DriverDetails> driverDetailses = new ArrayList<>();
+        for (Driver driver : raceItem.getTeam().getDrivers()) {
+            DriverDetails driverDetails = new DriverDetails();
+
+            driverDetails.setId(driver.getId());
+            driverDetails.setName(driver.getName());
+            driverDetails.setPrevDuration(raceItem.getDetails().getDriverDuration(driver.getId()));
+            driverDetails.setSession(raceItem.getSession());
+
+            driverDetailses.add(driverDetails);
+        }
+        driverDetailsAdapter.addAll(driverDetailses);
     }
 
-    @DebugLog
     @Override
     public void onUpdateSessions(List<Session> sessions) {
         adapter.clear();

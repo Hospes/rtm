@@ -4,9 +4,9 @@ import android.database.Cursor;
 
 import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
-import ua.hospes.nfs.marathon.domain.team.models.Team;
 
 /**
  * @author Andrew Khloponin
@@ -24,9 +24,10 @@ public class SessionsMapper {
         return result;
     }
 
-    public static Session map(SessionDb db, Team team, Driver driver) {
-        Session session = new Session(db.getId(), team);
+    public static Session map(SessionDb db, Driver driver, Car car) {
+        Session session = new Session(db.getId(), db.getTeamId());
         session.setDriver(driver);
+        session.setCar(car);
         session.setStartDurationTime(db.getStartDurationTime());
         session.setEndDurationTime(db.getEndDurationTime());
         session.setType(db.getType());
@@ -34,9 +35,11 @@ public class SessionsMapper {
     }
 
     public static SessionDb map(Session session) {
-        SessionDb item = new SessionDb(session.getTeam().getId());
+        SessionDb item = new SessionDb(session.getTeamId());
         if (session.getDriver() != null)
             item.setDriverId(session.getDriver().getId());
+        if (session.getCar() != null)
+            item.setCarId(session.getCar().getId());
         item.setStartDurationTime(session.getStartDurationTime());
         item.setEndDurationTime(session.getEndDurationTime());
         item.setType(session.getType().name());

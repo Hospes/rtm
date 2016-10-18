@@ -2,8 +2,11 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".ui.MainActivity">
-    <item android:id="@+id/action_add_driver"
+    <item android:id="@+id/action_add"
           android:icon="@drawable/ic_action_add"
           android:title="@string/action_add"
+          app:showAsAction="always" />
+    <item android:id="@+id/action_clear"
+          android:title="@string/action_clear"
           app:showAsAction="always" />
 </menu>

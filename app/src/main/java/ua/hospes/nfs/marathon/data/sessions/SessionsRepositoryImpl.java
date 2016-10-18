@@ -11,14 +11,15 @@ import ua.hospes.nfs.marathon.data.sessions.mapper.SessionsMapper;
 import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
 import ua.hospes.nfs.marathon.data.sessions.operations.CloseSessionOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.OpenSessionOperation;
+import ua.hospes.nfs.marathon.data.sessions.operations.SetCarOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.SetDriverOperation;
 import ua.hospes.nfs.marathon.data.sessions.storage.SessionsDbStorage;
+import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
-import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
-import ua.hospes.nfs.marathon.domain.team.models.Team;
 
 /**
  * @author Andrew Khloponin
@@ -26,15 +27,15 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
 @Singleton
 public class SessionsRepositoryImpl implements SessionsRepository {
     private final SessionsDbStorage dbStorage;
-    private final TeamsRepository teamsRepository;
     private final DriversRepository driversRepository;
+    private final CarsRepository carsRepository;
 
 
     @Inject
-    public SessionsRepositoryImpl(SessionsDbStorage dbStorage, TeamsRepository teamsRepository, DriversRepository driversRepository) {
+    public SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepository driversRepository, CarsRepository carsRepository) {
         this.dbStorage = dbStorage;
-        this.teamsRepository = teamsRepository;
         this.driversRepository = driversRepository;
+        this.carsRepository = carsRepository;
     }
 
 
@@ -44,8 +45,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(sessionItemDb ->
                         Observable.zip(
                                 Observable.just(sessionItemDb),
-                                getTeamById(sessionItemDb.getTeamId()),
                                 getDriverById(sessionItemDb.getDriverId()),
+                                getCarById(sessionItemDb.getCarId()),
                                 SessionsMapper::map));
     }
 
@@ -55,8 +56,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(sessionItemDb ->
                         Observable.zip(
                                 Observable.just(sessionItemDb),
-                                getTeamById(sessionItemDb.getTeamId()),
                                 getDriverById(sessionItemDb.getDriverId()),
+                                getCarById(sessionItemDb.getCarId()),
                                 SessionsMapper::map));
     }
 
@@ -66,8 +67,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(sessionItemDb ->
                         Observable.zip(
                                 Observable.just(sessionItemDb),
-                                getTeamById(sessionItemDb.getTeamId()),
                                 getDriverById(sessionItemDb.getDriverId()),
+                                getCarById(sessionItemDb.getCarId()),
                                 SessionsMapper::map));
     }
 
@@ -77,8 +78,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(sessionItemDb ->
                         Observable.zip(
                                 Observable.just(sessionItemDb),
-                                getTeamById(sessionItemDb.getTeamId()),
                                 getDriverById(sessionItemDb.getDriverId()),
+                                getCarById(sessionItemDb.getCarId()),
                                 SessionsMapper::map));
     }
 
@@ -89,8 +90,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                         .flatMap(sessionItemDb ->
                                 Observable.zip(
                                         Observable.just(sessionItemDb),
-                                        getTeamById(sessionItemDb.getTeamId()),
                                         getDriverById(sessionItemDb.getDriverId()),
+                                        getCarById(sessionItemDb.getCarId()),
                                         SessionsMapper::map))
                         .toList());
     }
@@ -102,8 +103,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                         .flatMap(sessionItemDb ->
                                 Observable.zip(
                                         Observable.just(sessionItemDb),
-                                        getTeamById(sessionItemDb.getTeamId()),
                                         getDriverById(sessionItemDb.getDriverId()),
+                                        getCarById(sessionItemDb.getCarId()),
                                         SessionsMapper::map))
                         .toList());
     }
@@ -126,8 +127,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(result ->
                         Observable.zip(
                                 Observable.just(result.getData()),
-                                getTeamById(result.getData().getTeamId()),
                                 getDriverById(result.getData().getDriverId()),
+                                getCarById(result.getData().getCarId()),
                                 SessionsMapper::map)
                 );
     }
@@ -137,6 +138,14 @@ public class SessionsRepositoryImpl implements SessionsRepository {
         return Observable.just(new SetDriverOperation(sessionId, driverId))
                 .toList()
                 .flatMap(dbStorage::applySetDriverOperations)
+                .flatMap(this::get);
+    }
+
+    @Override
+    public Observable<Session> setSessionCar(int sessionId, int carId) {
+        return Observable.just(new SetCarOperation(sessionId, carId))
+                .toList()
+                .flatMap(dbStorage::applySetCarOperations)
                 .flatMap(this::get);
     }
 
@@ -175,8 +184,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 .flatMap(result ->
                         Observable.zip(
                                 Observable.just(result.getData()),
-                                getTeamById(result.getData().getTeamId()),
                                 getDriverById(result.getData().getDriverId()),
+                                getCarById(result.getData().getCarId()),
                                 SessionsMapper::map)
                 );
     }
@@ -204,11 +213,11 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
 
-    private Observable<Team> getTeamById(int id) {
-        return teamsRepository.get(id).singleOrDefault(null, team -> id == team.getId());
-    }
-
     private Observable<Driver> getDriverById(int id) {
         return driversRepository.get(id).singleOrDefault(null, driver -> id == driver.getId());
+    }
+
+    private Observable<Car> getCarById(int id) {
+        return carsRepository.getByIds(id).singleOrDefault(null, car -> id == car.getId());
     }
 }

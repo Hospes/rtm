@@ -95,8 +95,18 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
         RaceItemDetailActivity.start(context, item.getId());
     }
 
+    public void showSetCarDialog(FragmentManager managerFragment, Session session) {
+        Subscription subscription = interactor.getCarsNotInRace()
+                .toList()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {
+                    SetCarDialog.newInstance(session.getId(), result).show(managerFragment, "set_car");
+                }, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
+
     public void showSetDriverDialog(FragmentManager managerFragment, Session session) {
-        Subscription subscription = interactor.getDrivers(session.getTeam().getId())
+        Subscription subscription = interactor.getDrivers(session.getTeamId())
                 .toList()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {

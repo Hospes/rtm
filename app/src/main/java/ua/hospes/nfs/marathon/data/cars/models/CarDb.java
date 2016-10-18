@@ -49,7 +49,7 @@ public class CarDb implements ModelBaseInterface {
 
     @Override
     public String toString() {
-        return "Car{" +
+        return "CarDb{" +
                 "id=" + id +
                 ", number=" + number +
                 ", rating=" + rating +

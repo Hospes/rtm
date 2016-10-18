@@ -28,24 +28,37 @@
                       android:layout_height="wrap_content"
                       android:orientation="vertical">
 
+            <TextView android:id="@+id/pits"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="PITS: 2/3" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/drivers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:orientation="horizontal"
                           android:padding="8dp">
 
-                <TextView android:id="@+id/driver"
-                          android:layout_width="0dp"
+                <TextView android:layout_width="0dp"
                           android:layout_height="wrap_content"
                           android:layout_weight="1"
                           android:text="Driver" />
 
-                <TextView android:id="@+id/duration"
-                          android:layout_width="100dp"
+                <TextView android:layout_width="50dp"
+                          android:layout_height="wrap_content"
+                          android:text="Car" />
+
+                <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
                           android:text="Duration" />
 
-                <TextView android:id="@+id/type"
-                          android:layout_width="100dp"
+                <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
                           android:text="Type" />
             </LinearLayout>

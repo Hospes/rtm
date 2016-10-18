@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 import autodagger.AutoInjector;
 import ua.hospes.nfs.marathon.core.di.Injector;
-import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.race.RaceInteractor;
 import ua.hospes.nfs.marathon.ui.MainActivity;
 import ua.hospes.nfs.marathon.ui.MainActivityComponent;
@@ -28,27 +28,27 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
  * @author Andrew Khloponin
  */
 @AutoInjector(MainActivity.class)
-public class SetDriverDialog extends DialogFragment {
+public class SetCarDialog extends DialogFragment {
     private final static String KEY_SESSION_ID = "session_id";
-    private final static String KEY_DRIVERS = "drivers";
+    private final static String KEY_CARS = "cars";
     @Inject RaceInteractor raceInteractor;
-    private final List<Driver> drivers = new ArrayList<>();
+    private final List<Car> cars = new ArrayList<>();
     private String[] titles = new String[]{};
     private int sessionId = -1;
 
 
-    public static SetDriverDialog newInstance(int sessionId, List<Driver> drivers) {
-        SetDriverDialog dialog = new SetDriverDialog();
+    public static SetCarDialog newInstance(int sessionId, List<Car> cars) {
+        SetCarDialog dialog = new SetCarDialog();
 
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_SESSION_ID, sessionId);
-        bundle.putParcelableArray(KEY_DRIVERS, drivers.toArray(new Driver[drivers.size()]));
+        bundle.putParcelableArray(KEY_CARS, cars.toArray(new Car[cars.size()]));
         dialog.setArguments(bundle);
 
         return dialog;
     }
 
-    public SetDriverDialog() {}
+    public SetCarDialog() {}
 
 
     @Override
@@ -60,10 +60,10 @@ public class SetDriverDialog extends DialogFragment {
         if (getArguments() != null) {
             sessionId = getArguments().getInt(KEY_SESSION_ID, -1);
 
-            Parcelable[] array = getArguments().getParcelableArray(KEY_DRIVERS);
-            Collections.addAll(drivers, array == null ? new Driver[]{} : (Driver[]) array);
+            Parcelable[] array = getArguments().getParcelableArray(KEY_CARS);
+            Collections.addAll(cars, array == null ? new Car[]{} : (Car[]) array);
 
-            titles = Collections2.transform(drivers, Driver::getName).toArray(new String[drivers.size()]);
+            titles = Collections2.transform(cars, input -> String.valueOf(input.getNumber())).toArray(new String[cars.size()]);
         }
     }
 
@@ -71,9 +71,9 @@ public class SetDriverDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Select driver")
+                .setTitle("Select car")
                 .setItems(titles, (dialog, which) -> {
-                    raceInteractor.setDriver(sessionId, drivers.get(which))
+                    raceInteractor.setCar(sessionId, cars.get(which))
                             .compose(RxUtils.applySchedulers())
                             .subscribe();
                 })

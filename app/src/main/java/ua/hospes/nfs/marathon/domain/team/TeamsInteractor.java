@@ -25,4 +25,8 @@ public class TeamsInteractor {
     public Observable<List<Team>> listen() {
         return repository.listen();
     }
+
+    public Observable<Void> clear() {
+        return repository.clear();
+    }
 }

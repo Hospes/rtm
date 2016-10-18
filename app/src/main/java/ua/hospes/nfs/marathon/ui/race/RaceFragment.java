@@ -80,7 +80,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
-        //adapter.setOnInitSessionClickListener((item, position) -> presenter.initSession(item.getTeam().getId()));
+        adapter.setOnSetCarClickListener((item, position) -> presenter.showSetCarDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 

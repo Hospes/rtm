@@ -144,8 +144,13 @@ public class EditDriverDialogFragment extends DialogFragment {
             driver.setName(name.getText().toString());
         }
 
-        driver.setTeamId(team.getId());
-        driver.setTeamName(team.getName());
+        if (team != null) {
+            driver.setTeamId(team.getId());
+            driver.setTeamName(team.getName());
+        } else {
+            driver.setTeamId(-1);
+            driver.setTeamName(null);
+        }
 
         driversRepository.save(driver)
                 .compose(RxUtils.applySchedulers())

@@ -10,7 +10,7 @@ import ua.hospes.nfs.marathon.domain.sessions.models.Session;
  */
 public interface RaceItemDetailContract {
     interface View {
-        void onUpdateDetails(RaceItem raceItem);
+        void onUpdateRaceItem(RaceItem raceItem);
 
         void onUpdateSessions(List<Session> sessions);
     }

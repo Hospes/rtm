@@ -21,4 +21,6 @@ public interface DriversRepository {
     Observable<Boolean> save(Driver driver);
 
     Observable<Boolean> delete(Driver driver);
+
+    Observable<Void> clear();
 }

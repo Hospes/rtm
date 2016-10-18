@@ -91,8 +91,12 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_add_team:
+            case R.id.action_add:
                 showEditTeamDialog(null);
+                return true;
+
+            case R.id.action_clear:
+                presenter.clear();
                 return true;
 
             default:

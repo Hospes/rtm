@@ -2,8 +2,6 @@ package ua.hospes.nfs.marathon.data.team.mapper;
 
 import android.database.Cursor;
 
-import com.google.common.collect.Collections2;
-
 import java.util.List;
 
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
@@ -23,7 +21,7 @@ public class TeamsMapper {
 
     public static Team map(TeamDb db, List<Driver> drivers) {
         Team team = new Team(db.getId(), db.getName());
-        team.setDrivers(Collections2.transform(drivers, Driver::getName));
+        team.setDrivers(drivers);
         return team;
     }
 

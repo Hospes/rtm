@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.common.collect.Collections2;
+
 import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
+import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
@@ -27,7 +30,9 @@ public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> 
 
         holder.id.setText(String.valueOf(item.getId()));
         holder.name.setText(item.getName());
-        holder.drivers.setText(item.getDrivers().toString().replaceAll("(\\[|\\])", ""));
+
+
+        holder.drivers.setText(Collections2.transform(item.getDrivers(), Driver::getName).toString().replaceAll("(\\[|\\])", ""));
 
         holder.edit.setOnClickListener(view -> getOnItemClickListener().onItemClick(item, position));
     }

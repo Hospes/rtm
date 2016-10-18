@@ -72,6 +72,11 @@ public class TeamsRepositoryImpl implements TeamsRepository {
         return dbStorage.remove(TeamsMapper.map(team)).map(count -> count != 0);
     }
 
+    @Override
+    public Observable<Void> clear() {
+        return dbStorage.clear();
+    }
+
 
     private Observable<Driver> getDriverByTeamId(int teamId) {
         return driversRepository.getByTeamId(teamId);

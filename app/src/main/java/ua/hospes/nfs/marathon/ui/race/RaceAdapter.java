@@ -14,6 +14,7 @@ import java.util.Set;
 
 import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
+import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
@@ -29,6 +30,7 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
     public static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.3f;
     public static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.3f;
     private RecyclerView rv;
+    private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
     private OnItemClickListener<RaceItem> onOutClickListener;
@@ -46,21 +48,48 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_not_transparent);
+
         RaceItem item = getItem(position);
 
         holder.team.setText(String.format(Locale.getDefault(), "%1$d - %2$s", item.getTeamNumber(), item.getTeam().getName()));
+        holder.pits.setText(String.valueOf(item.getDetails().getPitStops()));
 
         Session session = item.getSession();
-        holder.driverTimeView.setPrevDuration(item.getDriverPrevDuration());
         holder.driverTimeView.setSession(session);
         holder.sessionTimeView.setSession(session);
         if (session != null) {
+            Car car = session.getCar();
+            if (car != null) {
+                holder.btnSetCar.setVisibility(View.GONE);
+                holder.cSessionCar.setVisibility(View.VISIBLE);
+
+                holder.btnSessionCar.setText(String.valueOf(car.getNumber()));
+                int color;
+                switch (car.getRating()) {
+                    case 0:
+                        color = Color.RED;
+                        break;
+                    case 1:
+                        color = Color.YELLOW;
+                        break;
+                    default:
+                        color = Color.GREEN;
+                        break;
+                }
+                holder.btnSessionCar.setTextColor(color);
+            } else {
+                holder.btnSetCar.setVisibility(View.VISIBLE);
+                holder.cSessionCar.setVisibility(View.GONE);
+            }
+
             Driver driver = session.getDriver();
             if (driver != null) {
                 holder.btnSetDriver.setVisibility(View.GONE);
                 holder.cSessionDriver.setVisibility(View.VISIBLE);
 
                 holder.driver.setText(session.getDriver().getName());
+                holder.driverTimeView.setPrevDuration(item.getDetails().getDriverDuration(driver.getId()));
             } else {
                 holder.btnSetDriver.setVisibility(View.VISIBLE);
                 holder.cSessionDriver.setVisibility(View.GONE);
@@ -89,6 +118,16 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
             }
         }
 
+        holder.btnSessionCar.setOnClickListener(v -> {
+            if (onSetCarClickListener != null) onSetCarClickListener.onItemClick(item, position);
+        });
+        holder.btnSetCar.setOnClickListener(v -> {
+            if (onSetCarClickListener != null) onSetCarClickListener.onItemClick(item, position);
+        });
+
+        holder.driver.setOnClickListener(v -> {
+            if (onSetDriverClickListener != null) onSetDriverClickListener.onItemClick(item, position);
+        });
         holder.btnSetDriver.setOnClickListener(v -> {
             if (onSetDriverClickListener != null) onSetDriverClickListener.onItemClick(item, position);
         });
@@ -138,6 +177,11 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
         return set;
     }
 
+
+    public void setOnSetCarClickListener(OnItemClickListener<RaceItem> onSetCarClickListener) {
+        this.onSetCarClickListener = onSetCarClickListener;
+    }
+
     public void setOnSetDriverClickListener(OnItemClickListener<RaceItem> onSetDriverClickListener) {
         this.onSetDriverClickListener = onSetDriverClickListener;
     }
@@ -152,19 +196,35 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
 
     public class MyHolder extends RecyclerView.ViewHolder {
+        //Car
+        private View cSessionCar;
+        private Button btnSessionCar;
+        private Button btnSetCar;
+
+        //Driver
         private View cSessionDriver;
         private DriverTimeView driverTimeView;
+        private Button driver;
+        private Button btnSetDriver;
+
+        private TextView team, sessionType, pits;
         private SessionTimeView sessionTimeView;
-        private TextView driver, team, sessionType;
-        private Button pit, out, btnSetDriver;
+        private Button pit, out;
 
         public MyHolder(View itemView) {
             super(itemView);
 
+            //Car
+            cSessionCar = UiUtils.findView(itemView, R.id.container_session_car);
+            btnSessionCar = UiUtils.findView(itemView, R.id.btn_session_car);
+            btnSetCar = UiUtils.findView(itemView, R.id.btn_set_car);
+
             team = UiUtils.findView(itemView, R.id.tv_team);
             sessionTimeView = UiUtils.findView(itemView, R.id.tv_session_duration);
-            driver = UiUtils.findView(itemView, R.id.tv_session_driver);
+            driver = UiUtils.findView(itemView, R.id.btn_session_driver);
             sessionType = UiUtils.findView(itemView, R.id.tv_session_type);
+
+            pits = UiUtils.findView(itemView, R.id.tv_pits);
 
             driverTimeView = UiUtils.findView(itemView, R.id.tv_driver_all_time);
 

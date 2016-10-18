@@ -39,6 +39,9 @@ public class SessionTimeView extends TimeView {
 
     public void setSession(Session session) {
         this.session = session;
-        if (session != null && session.getStartDurationTime() == -1) setText(TimeUtils.format(0));
+        if (session == null) return;
+        if (session.getStartDurationTime() == -1) setText(TimeUtils.format(0));
+        if (session.getStartDurationTime() != -1 && session.getEndDurationTime() != -1)
+            setText(TimeUtils.formatNano(session.getEndDurationTime() - session.getStartDurationTime()));
     }
 }

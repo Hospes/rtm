@@ -23,4 +23,9 @@ public class DriversInteractor {
     public Observable<List<Driver>> listen() {
         return repository.listen();
     }
+
+
+    public Observable<Void> clear() {
+        return repository.clear();
+    }
 }

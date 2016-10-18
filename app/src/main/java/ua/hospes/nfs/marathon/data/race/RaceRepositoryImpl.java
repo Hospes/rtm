@@ -8,14 +8,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
+import rx.functions.Func2;
 import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
 import ua.hospes.nfs.marathon.data.race.operations.UpdateRaceOperation;
 import ua.hospes.nfs.marathon.data.race.storage.RaceDbStorage;
-import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
+import ua.hospes.nfs.marathon.data.sessions.storage.SessionsDbStorage;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
+import ua.hospes.nfs.marathon.domain.race.models.RaceItemDetails;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
@@ -28,13 +30,15 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
 public class RaceRepositoryImpl implements RaceRepository {
     private final RaceDbStorage raceDbStorage;
     private final TeamsRepository teamsRepository;
+    private final SessionsDbStorage sessionsDbStorage;
     private final SessionsRepository sessionsRepository;
 
 
     @Inject
-    public RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepository teamsRepository, SessionsRepository sessionsRepository) {
+    public RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepository teamsRepository, SessionsDbStorage sessionsDbStorage, SessionsRepository sessionsRepository) {
         this.raceDbStorage = raceDbStorage;
         this.teamsRepository = teamsRepository;
+        this.sessionsDbStorage = sessionsDbStorage;
         this.sessionsRepository = sessionsRepository;
     }
 
@@ -43,11 +47,7 @@ public class RaceRepositoryImpl implements RaceRepository {
     public Observable<RaceItem> get() {
         return raceDbStorage.get()
                 .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map))
-                .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getPitStopsCount(raceItem.getTeam().getId()), (item, pits) -> {
-                    item.setPitStops(pits);
-                    return item;
-                }))
-                .flatMap(new GetDriverDurationFunc());
+                .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getRawSessionsByTeamId(raceItem.getTeam().getId()), new CalculateRaceItemDetails()));
     }
 
     @Override
@@ -55,11 +55,7 @@ public class RaceRepositoryImpl implements RaceRepository {
         return raceDbStorage.listen()
                 .flatMap(raceItemDbs -> Observable.from(raceItemDbs)
                         .flatMap(raceItemDb -> Observable.zip(Observable.just(raceItemDb), getTeamById(raceItemDb.getTeamId()), getSessionById(raceItemDb.getSessionId()), RaceMapper::map))
-                        .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getPitStopsCount(raceItem.getTeam().getId()), (item, pits) -> {
-                            item.setPitStops(pits);
-                            return item;
-                        }))
-                        .flatMap(new GetDriverDurationFunc())
+                        .flatMap(raceItem -> Observable.zip(Observable.just(raceItem), getRawSessionsByTeamId(raceItem.getTeam().getId()), new CalculateRaceItemDetails()))
                         .toList());
     }
 
@@ -114,33 +110,25 @@ public class RaceRepositoryImpl implements RaceRepository {
         return sessionsRepository.get(id).singleOrDefault(null, session -> id == session.getId());
     }
 
-    private Observable<Integer> getPitStopsCount(int teamId) {
-        return sessionsRepository.getByTeamId(teamId).filter(session -> session.getType() == Session.Type.PIT).count();
+    private Observable<List<SessionDb>> getRawSessionsByTeamId(int teamId) {
+        return sessionsDbStorage.getByTeamId(teamId).toList();
     }
 
-    private Observable<Long> getDriverPrevSessionsDuration(int teamId, int driverId) {
-        return sessionsRepository.getByTeamIdAndDriverId(teamId, driverId)
-                .filter(session -> session.getStartDurationTime() != -1 && session.getEndDurationTime() != -1)
-                .map(session -> session.getEndDurationTime() - session.getStartDurationTime())
-                .toList()
-                .map(longs -> {
-                    long result = 0L;
-                    for (Long l : longs) result += l;
-                    return result;
-                });
-    }
-
-
-    private class GetDriverDurationFunc implements Func1<RaceItem, Observable<RaceItem>> {
+    private class CalculateRaceItemDetails implements Func2<RaceItem, List<SessionDb>, RaceItem> {
         @Override
-        public Observable<RaceItem> call(RaceItem item) {
-            if (item.getSession() == null || item.getSession().getDriver() == null) return Observable.just(item);
-            Driver driver = item.getSession().getDriver();
-            return getDriverPrevSessionsDuration(driver.getTeamId(), driver.getId())
-                    .map(aLong -> {
-                        item.setDriverPrevDuration(aLong);
-                        return item;
-                    });
+        public RaceItem call(RaceItem item, List<SessionDb> sessions) {
+            RaceItemDetails details = new RaceItemDetails();
+            int pitStops = 0;
+            for (SessionDb session : sessions) {
+                pitStops += Session.Type.PIT.name().equals(session.getType()) ? 1 : 0;
+                if (session.getStartDurationTime() == -1 || session.getEndDurationTime() == -1) continue;
+                if (session.getDriverId() == -1) continue;
+                long duration = session.getEndDurationTime() - session.getStartDurationTime();
+                details.addDriverDuration(session.getDriverId(), duration);
+            }
+            details.setPitStops(pitStops);
+            item.setDetails(details);
+            return item;
         }
     }
 }

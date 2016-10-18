@@ -11,8 +11,8 @@ public class RaceItem {
     private final Team team;
     private int teamNumber = -1;
     private Session session;
-    private int pitStops = 0;
-    private long driverPrevDuration = 0L;
+
+    private RaceItemDetails details;
 
 
     public RaceItem(Team team) {
@@ -43,12 +43,8 @@ public class RaceItem {
         return teamNumber;
     }
 
-    public int getPitStops() {
-        return pitStops;
-    }
-
-    public long getDriverPrevDuration() {
-        return driverPrevDuration;
+    public RaceItemDetails getDetails() {
+        return details;
     }
     //endregion
 
@@ -61,12 +57,8 @@ public class RaceItem {
         this.teamNumber = teamNumber;
     }
 
-    public void setPitStops(int pitStops) {
-        this.pitStops = pitStops;
-    }
-
-    public void setDriverPrevDuration(long driverPrevDuration) {
-        this.driverPrevDuration = driverPrevDuration;
+    public void setDetails(RaceItemDetails details) {
+        this.details = details;
     }
     //endregion
 
@@ -78,8 +70,7 @@ public class RaceItem {
                 ", team=" + team +
                 ", teamNumber=" + teamNumber +
                 ", session=" + session +
-                ", pitStops=" + pitStops +
-                ", driverPrevDuration=" + driverPrevDuration +
+                ", details=" + details +
                 '}';
     }
 }

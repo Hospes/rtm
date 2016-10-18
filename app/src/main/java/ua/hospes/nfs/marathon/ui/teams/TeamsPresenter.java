@@ -35,4 +35,12 @@ public class TeamsPresenter extends BasePresenter<TeamsContract.View> {
         super.detachView();
         RxUtils.unsubscribe(this);
     }
+
+
+    public void clear() {
+        Subscription subscription = interactor.clear()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace);
+        RxUtils.manage(this, subscription);
+    }
 }

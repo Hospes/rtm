@@ -70,6 +70,11 @@ public class DriversRepositoryImpl implements DriversRepository {
         return dbStorage.remove(DriversMapper.map(driver)).map(count -> count != 0);
     }
 
+    @Override
+    public Observable<Void> clear() {
+        return dbStorage.clear();
+    }
+
 
     private Observable<TeamDb> getTeamById(int id) {
         return teamsDbStorage.get().singleOrDefault(null, team -> id == team.getId());

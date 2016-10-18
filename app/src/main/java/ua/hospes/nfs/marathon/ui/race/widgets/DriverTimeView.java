@@ -40,6 +40,7 @@ public class DriverTimeView extends TimeView {
 
     public void setPrevDuration(long prevDuration) {
         this.prevDuration = prevDuration;
+        setText(TimeUtils.formatNano(prevDuration));
     }
 
     public Session getSession() {

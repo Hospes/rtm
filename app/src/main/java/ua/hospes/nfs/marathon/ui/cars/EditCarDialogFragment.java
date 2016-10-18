@@ -35,7 +35,7 @@ public class EditCarDialogFragment extends DialogFragment {
 
     @Inject CarsRepository carsRepository;
 
-    private String[] ratingTitles = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    private String[] ratingTitles = new String[]{"0", "1", "2"};
 
     private AppCompatSpinner spRating;
     private EditText etNumber;
@@ -92,7 +92,7 @@ public class EditCarDialogFragment extends DialogFragment {
         if (car != null) {
             etNumber.setText(String.valueOf(car.getNumber()));
             etNumber.setSelection(String.valueOf(car.getNumber()).length());
-            if (car.getRating() >= 0 && car.getRating() < 11)
+            if (car.getRating() >= 0 && car.getRating() < 3)
                 spRating.setSelection(car.getRating());
         }
 
@@ -117,7 +117,11 @@ public class EditCarDialogFragment extends DialogFragment {
     private DialogInterface.OnClickListener onOkClick = (dialog, i) -> {
         if (car == null) car = new Car();
 
-        car.setNumber(Integer.getInteger(etNumber.getText().toString()));
+        try {
+            car.setNumber(Integer.parseInt(etNumber.getText().toString()));
+        } catch (NumberFormatException | NullPointerException e) {
+            car.setNumber(0);
+        }
         car.setRating(selectedRating);
 
         carsRepository.save(car)

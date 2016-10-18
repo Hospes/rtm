@@ -25,6 +25,8 @@ public interface SessionsRepository {
 
     Observable<Session> setSessionDriver(int sessionId, int driverId);
 
+    Observable<Session> setSessionCar(int sessionId, int carId);
+
     /**
      * Open list of sessions by team ids
      *

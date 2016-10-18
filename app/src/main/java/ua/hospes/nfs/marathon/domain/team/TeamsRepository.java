@@ -26,4 +26,6 @@ public interface TeamsRepository {
     Observable<Boolean> save(Team driver);
 
     Observable<Boolean> delete(Team driver);
+
+    Observable<Void> clear();
 }

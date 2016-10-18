@@ -9,6 +9,7 @@ import ua.hospes.nfs.marathon.core.db.DbHelper;
 import ua.hospes.nfs.marathon.core.db.QueryBuilder;
 import ua.hospes.nfs.marathon.core.db.models.InsertResult;
 import ua.hospes.nfs.marathon.core.db.models.UpdateResult;
+import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 import ua.hospes.nfs.marathon.data.team.mapper.TeamsMapper;
@@ -55,5 +56,10 @@ public class TeamsDbStorage {
 
     public Observable<List<TeamDb>> listen() {
         return dbHelper.query(TeamsMapper::map, new QueryBuilder(Teams.name));
+    }
+
+
+    public Observable<Void> clear() {
+        return dbHelper.delete(new QueryBuilder(Teams.name)).map(integer -> null);
     }
 }
