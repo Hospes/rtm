@@ -1,0 +1,7 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:defaultValue="manual"
+                    android:entries="@array/assign_pitstop_dur_titles"
+                    android:entryValues="@array/assign_pitstop_dur_values"
+                    android:key="assign_pitstop_dur_to"
+                    android:title="Predefine driver for PIT-STOP from session" />
+</PreferenceScreen>

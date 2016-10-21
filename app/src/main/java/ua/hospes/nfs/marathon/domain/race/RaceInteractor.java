@@ -1,6 +1,7 @@
 package ua.hospes.nfs.marathon.domain.race;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import com.google.common.collect.Collections2;
@@ -20,6 +21,7 @@ import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
+import ua.hospes.nfs.marathon.domain.preferences.PreferencesManager;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
@@ -31,6 +33,7 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
  */
 @ActivityScope
 public class RaceInteractor {
+    private final PreferencesManager preferencesManager;
     private final RaceRepository raceRepository;
     private final TeamsRepository teamsRepository;
     private final SessionsRepository sessionsRepository;
@@ -39,7 +42,8 @@ public class RaceInteractor {
 
 
     @Inject
-    public RaceInteractor(RaceRepository raceRepository, TeamsRepository teamsRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository, CarsRepository carsRepository) {
+    public RaceInteractor(PreferencesManager preferencesManager, RaceRepository raceRepository, TeamsRepository teamsRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository, CarsRepository carsRepository) {
+        this.preferencesManager = preferencesManager;
         this.raceRepository = raceRepository;
         this.teamsRepository = teamsRepository;
         this.sessionsRepository = sessionsRepository;
@@ -67,9 +71,17 @@ public class RaceInteractor {
                 .flatMap(raceRepository::updateByTeamId);
     }
 
-    public Observable<Boolean> setDriver(int sessionId, Driver driver) {
-        return sessionsRepository.setSessionDriver(sessionId, driver.getId())
-                .map(session -> true);
+    public Observable<Boolean> setDriver(int sessionId, int teamId, int driverId) {
+        switch (preferencesManager.getPitStopAssign()) {
+            case NEXT:
+                return Observable.zip(
+                        setDriverForLatestPitSession(teamId, driverId),
+                        sessionsRepository.setSessionDriver(sessionId, driverId),
+                        (session, session2) -> true
+                );
+            default:
+                return sessionsRepository.setSessionDriver(sessionId, driverId).map(session -> true);
+        }
     }
 
     public Observable<Boolean> setCar(int sessionId, Car car) {
@@ -97,10 +109,17 @@ public class RaceInteractor {
                 .map(sessions -> true);
     }
 
-    public Observable<Boolean> teamPit(RaceItem item, long time) {
+    public Observable<Boolean> teamPit(@NonNull RaceItem item, long time) {
+        int driverId = -1;
+        switch (preferencesManager.getPitStopAssign()) {
+            case PREVIOUS:
+                if (item.getSession() != null && item.getSession().getDriver() != null)
+                    driverId = item.getSession().getDriver().getId();
+                break;
+        }
         return Observable.zip(
-                sessionsRepository.closeSessions(time, item.getSession().getId()),
-                sessionsRepository.startNewSessions(time, Session.Type.PIT, item.getTeam().getId()),
+                closeSession(time, item.getSession()),
+                sessionsRepository.startNewSession(time, Session.Type.PIT, driverId, item.getTeam().getId()),
                 (closedSession, openedSession) -> {
                     item.setSession(openedSession);
                     return item;
@@ -109,9 +128,9 @@ public class RaceInteractor {
                 .flatMap(raceRepository::update);
     }
 
-    public Observable<Boolean> teamOut(RaceItem item, long time) {
+    public Observable<Boolean> teamOut(@NonNull RaceItem item, long time) {
         return Observable.zip(
-                sessionsRepository.closeSessions(time, item.getSession().getId()),
+                closeSession(time, item.getSession()),
                 sessionsRepository.startNewSessions(time, Session.Type.TRACK, item.getTeam().getId()),
                 (closedSession, openedSession) -> {
                     item.setSession(openedSession);
@@ -148,5 +167,16 @@ public class RaceInteractor {
 
     public Observable<Void> clear() {
         return Observable.zip(raceRepository.clean(), sessionsRepository.clean(), (aVoid, aVoid2) -> null);
+    }
+
+
+    private Observable<Session> closeSession(long time, Session session) {
+        return session == null ? Observable.empty() : sessionsRepository.closeSessions(time, session.getId());
+    }
+
+    private Observable<Session> setDriverForLatestPitSession(int teamId, int driverId) {
+        return sessionsRepository.getByTeamId(teamId)
+                .last(session -> session.getType() == Session.Type.PIT)
+                .flatMap(session -> sessionsRepository.setSessionDriver(session.getId(), driverId));
     }
 }

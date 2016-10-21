@@ -1,19 +1,13 @@
 package ua.hospes.nfs.marathon.ui;
 
-import android.content.Context;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import autodagger.AutoComponent;
@@ -28,13 +22,20 @@ import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.ui.cars.CarsFragment;
 import ua.hospes.nfs.marathon.ui.drivers.DriversFragment;
 import ua.hospes.nfs.marathon.ui.race.RaceFragment;
+import ua.hospes.nfs.marathon.ui.settings.SettingsFragment;
 import ua.hospes.nfs.marathon.ui.teams.TeamsFragment;
 
 @ActivityScope
 @AutoComponent(dependencies = App.class, modules = {ActivityModule.class})
 @AutoInjector
-public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent> {
+public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent>, NavigationDrawerFragment.NavigationDrawerCallbacks {
     private MainActivityComponent component;
+
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,59 +46,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // Setup spinner
-        AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new MyAdapter(
-                toolbar.getContext(),
-                new String[]{
-                        "Race",
-                        "Teams",
-                        "Drivers",
-                        "Cars",
-                }));
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, RaceFragment.newInstance())
-                                .commit();
-                        break;
-
-                    case 1:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, TeamsFragment.newInstance())
-                                .commit();
-                        break;
-
-                    case 2:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, DriversFragment.newInstance())
-                                .commit();
-                        break;
-
-                    case 3:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, CarsFragment.newInstance())
-                                .commit();
-                        break;
-
-                    default:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                                .commit();
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
         StopWatchService.checkDeath(this);
     }
@@ -114,41 +67,44 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
         return component;
     }
 
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        switch (position) {
+            case 0:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, RaceFragment.newInstance())
+                        .commit();
+                break;
 
-    private static class MyAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
-        private final ThemedSpinnerAdapter.Helper mDropDownHelper;
+            case 1:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, TeamsFragment.newInstance())
+                        .commit();
+                break;
 
-        public MyAdapter(Context context, String[] objects) {
-            super(context, android.R.layout.simple_list_item_1, objects);
-            mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
-        }
+            case 2:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, DriversFragment.newInstance())
+                        .commit();
+                break;
 
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            View view;
+            case 3:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, CarsFragment.newInstance())
+                        .commit();
+                break;
 
-            if (convertView == null) {
-                // Inflate the drop down using the helper's LayoutInflater
-                LayoutInflater inflater = mDropDownHelper.getDropDownViewInflater();
-                view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-            } else {
-                view = convertView;
-            }
+            case 4:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, SettingsFragment.newInstance())
+                        .commit();
+                break;
 
-            TextView textView = (TextView) view.findViewById(android.R.id.text1);
-            textView.setText(getItem(position));
-
-            return view;
-        }
-
-        @Override
-        public Theme getDropDownViewTheme() {
-            return mDropDownHelper.getDropDownViewTheme();
-        }
-
-        @Override
-        public void setDropDownViewTheme(Theme theme) {
-            mDropDownHelper.setDropDownViewTheme(theme);
+            default:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
         }
     }
 

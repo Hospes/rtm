@@ -1,6 +1,7 @@
 package ua.hospes.nfs.marathon.data.drivers.mapper;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 
 import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 import ua.hospes.nfs.marathon.data.drivers.models.DriverDb;
@@ -18,10 +19,10 @@ public class DriversMapper {
         return db;
     }
 
-    public static Driver map(DriverDb db, TeamDb team) {
+    public static Driver map(DriverDb db, @Nullable TeamDb team) {
         Driver driver = new Driver(db.getId(), db.getName());
-        driver.setTeamId(team.getId());
-        driver.setTeamName(team.getName());
+        driver.setTeamId(team == null ? -1 : team.getId());
+        driver.setTeamName(team == null ? null : team.getName());
         return driver;
     }
 

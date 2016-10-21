@@ -191,6 +191,30 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
+    public Observable<Session> startNewSession(long startTime, Session.Type type, int driverId, int teamId) {
+        return Observable.create(new Observable.OnSubscribe<SessionDb>() {
+            @Override
+            public void call(Subscriber<? super SessionDb> subscriber) {
+                SessionDb sessionDb = new SessionDb(teamId);
+                sessionDb.setStartDurationTime(startTime);
+                sessionDb.setDriverId(driverId);
+                sessionDb.setType(type.name());
+                subscriber.onNext(sessionDb);
+                subscriber.onCompleted();
+            }
+        })
+                .toList()
+                .flatMap(dbStorage::add)
+                .flatMap(result ->
+                        Observable.zip(
+                                Observable.just(result.getData()),
+                                getDriverById(result.getData().getDriverId()),
+                                getCarById(result.getData().getCarId()),
+                                SessionsMapper::map)
+                );
+    }
+
+    @Override
     public Observable<Session> closeSessions(long stopTime, int... sessionIds) {
         return Observable.create(new Observable.OnSubscribe<CloseSessionOperation>() {
             @Override

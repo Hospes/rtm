@@ -3,6 +3,7 @@ package ua.hospes.nfs.marathon.domain.sessions;
 import java.util.List;
 
 import rx.Observable;
+import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 
 /**
@@ -27,15 +28,19 @@ public interface SessionsRepository {
 
     Observable<Session> setSessionCar(int sessionId, int carId);
 
-    /**
-     * Open list of sessions by team ids
-     *
-     * @param startTime Start time in nanoseconds
-     * @param teamIds   Array of teams that have to open sessions for
-     */
-    Observable<Session> startSessions(long startTime, int... sessionIds);
+    Observable<Session> startSessions(long startTime, int... teamIds);
 
-    Observable<Session> startNewSessions(long startTime, Session.Type type, int... sessionIds);
+    Observable<Session> startNewSessions(long startTime, Session.Type type, int... teamIds);
+
+    /**
+     * Create new session in {@link Sessions} table with
+     *
+     * @param startTime start time in nanoseconds
+     * @param type      session type {@link Session.Type}
+     * @param driverId  predefined session driver or -1 if no driver
+     * @param teamId    team id
+     */
+    Observable<Session> startNewSession(long startTime, Session.Type type, int driverId, int teamId);
 
     /**
      * Close list of sessions by ids

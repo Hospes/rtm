@@ -110,7 +110,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
                 .toList()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {
-                    SetDriverDialog.newInstance(session.getId(), result).show(managerFragment, "set_driver");
+                    SetDriverDialog.newInstance(session.getId(), session.getTeamId(), result).show(managerFragment, "set_driver");
                 }, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
