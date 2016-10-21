@@ -126,7 +126,7 @@ public class EditCarDialogFragment extends DialogFragment {
 
         carsRepository.save(car)
                 .compose(RxUtils.applySchedulers())
-                .subscribe();
+                .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 
     private DialogInterface.OnClickListener onCancelClick = (dialog, i) -> {/* Do nothing */};
@@ -135,6 +135,6 @@ public class EditCarDialogFragment extends DialogFragment {
         if (car == null) return;
         carsRepository.delete(car)
                 .compose(RxUtils.applySchedulers())
-                .subscribe();
+                .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 }

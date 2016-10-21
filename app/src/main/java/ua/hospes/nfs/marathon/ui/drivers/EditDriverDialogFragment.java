@@ -154,7 +154,7 @@ public class EditDriverDialogFragment extends DialogFragment {
 
         driversRepository.save(driver)
                 .compose(RxUtils.applySchedulers())
-                .subscribe();
+                .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 
     private DialogInterface.OnClickListener onCancelClick = (dialog, i) -> {/* Do nothing */};
@@ -163,6 +163,6 @@ public class EditDriverDialogFragment extends DialogFragment {
         if (driver == null) return;
         driversRepository.delete(driver)
                 .compose(RxUtils.applySchedulers())
-                .subscribe();
+                .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 }

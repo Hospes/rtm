@@ -75,7 +75,7 @@ public class SetCarDialog extends DialogFragment {
                 .setItems(titles, (dialog, which) -> {
                     raceInteractor.setCar(sessionId, cars.get(which))
                             .compose(RxUtils.applySchedulers())
-                            .subscribe();
+                            .subscribe(aBoolean -> {}, Throwable::printStackTrace);
                 })
                 .create();
     }

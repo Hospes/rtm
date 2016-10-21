@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
@@ -132,11 +135,11 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
             if (onSetDriverClickListener != null) onSetDriverClickListener.onItemClick(item, position);
         });
 
-        holder.pit.setOnClickListener(v -> {
+        RxView.clicks(holder.pit).throttleFirst(5, TimeUnit.SECONDS).subscribe(v -> {
             if (onPitClickListener != null) onPitClickListener.onItemClick(item, position);
         });
 
-        holder.out.setOnClickListener(v -> {
+        RxView.clicks(holder.out).throttleFirst(5, TimeUnit.SECONDS).subscribe(v -> {
             if (onOutClickListener != null) onOutClickListener.onItemClick(item, position);
         });
 

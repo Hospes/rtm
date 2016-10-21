@@ -80,7 +80,7 @@ public class SetDriverDialog extends DialogFragment {
                     Driver driver = drivers.get(which);
                     raceInteractor.setDriver(sessionId, teamId, driver.getId())
                             .compose(RxUtils.applySchedulers())
-                            .subscribe();
+                            .subscribe(aBoolean -> {}, Throwable::printStackTrace);
                 })
                 .create();
     }

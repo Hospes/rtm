@@ -112,7 +112,7 @@ public class AddTeamToRaceDialogFragment extends DialogFragment {
                     teams.add(team);
                     adapter.add(team.getName());
                     if (teams.size() != 0) spinner.setSelection(0);
-                });
+                }, Throwable::printStackTrace);
     }
 
 

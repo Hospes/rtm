@@ -93,7 +93,9 @@ public class EditTeamDialogFragment extends DialogFragment {
             } else {
                 team.setName(name.getText().toString());
             }
-            repository.save(team).compose(RxUtils.applySchedulers()).subscribe();
+            repository.save(team)
+                    .compose(RxUtils.applySchedulers())
+                    .subscribe(aBoolean -> {}, Throwable::printStackTrace);
         }
     };
 
@@ -105,7 +107,9 @@ public class EditTeamDialogFragment extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             if (team == null) return;
-            repository.delete(team).compose(RxUtils.applySchedulers()).subscribe();
+            repository.delete(team)
+                    .compose(RxUtils.applySchedulers())
+                    .subscribe(aBoolean -> {}, Throwable::printStackTrace);
         }
     };
 }
