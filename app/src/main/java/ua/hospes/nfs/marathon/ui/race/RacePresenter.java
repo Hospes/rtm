@@ -20,6 +20,7 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
 @ActivityScope
 public class RacePresenter extends BasePresenter<RaceContract.View> {
     private final RaceInteractor interactor;
+    private long startTime = -1;
 
     @Inject
     public RacePresenter(RaceInteractor interactor) {
@@ -43,6 +44,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     public void startRace(long startTime) {
+        this.startTime = startTime;
         Subscription subscription = interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
@@ -92,7 +94,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     public void showRaceItemDetail(Context context, RaceItem item) {
-        RaceItemDetailActivity.start(context, item.getId());
+        RaceItemDetailActivity.start(context, item.getId(), startTime);
     }
 
     public void showSetCarDialog(FragmentManager managerFragment, Session session) {

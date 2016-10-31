@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.ui.race.detail;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,16 @@ public class DriverDetailsAdapter extends AbsRecyclerAdapter<DriverDetails, Driv
 
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
+        Context context = holder.itemView.getContext();
+        int c = position / 2;
+        int resBG = R.drawable.bg_race_item_transparent;
+        if (c % 2 == 0) {
+            resBG = position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_detail_not_trans;
+        } else {
+            resBG = position % 2 == 0 ? R.drawable.bg_race_item_detail_not_trans : R.drawable.bg_race_item_transparent;
+        }
+        holder.itemView.setBackgroundResource(resBG);
+
         DriverDetails item = getItem(position);
 
         holder.name.setText(item.getName());

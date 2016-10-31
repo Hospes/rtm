@@ -118,9 +118,9 @@ public class RaceRepositoryImpl implements RaceRepository {
         @Override
         public RaceItem call(RaceItem item, List<SessionDb> sessions) {
             RaceItemDetails details = new RaceItemDetails();
-            int pitStops = 0;
+            int pitStops = -1;
             for (SessionDb session : sessions) {
-                pitStops += Session.Type.PIT.name().equals(session.getType()) ? 1 : 0;
+                pitStops += Session.Type.TRACK.name().equals(session.getType()) ? 1 : 0;
                 if (session.getStartDurationTime() == -1 || session.getEndDurationTime() == -1) continue;
                 if (session.getDriverId() == -1) continue;
                 long duration = session.getEndDurationTime() - session.getStartDurationTime();

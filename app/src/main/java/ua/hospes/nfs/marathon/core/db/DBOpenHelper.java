@@ -99,11 +99,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @DebugLog
     private void cleanupDatabase(SQLiteDatabase db) {
-        dropTables(db, new String[]{Cars.name, Drivers.name, Teams.name, Sessions.name, Race.name});
+        dropTables(db, Cars.name, Drivers.name, Teams.name, Sessions.name, Race.name);
     }
 
     @DebugLog
-    private void dropTables(SQLiteDatabase db, String[] tables) {
+    private void dropTables(SQLiteDatabase db, String... tables) {
         for (String table : tables) db.execSQL(DROP_TABLE_IF_EXISTS + table);
     }
 }

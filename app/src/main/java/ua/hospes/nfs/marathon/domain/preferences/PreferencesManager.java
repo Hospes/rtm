@@ -7,4 +7,6 @@ import ua.hospes.nfs.marathon.domain.race.models.PitStopAssign;
  */
 public interface PreferencesManager {
     PitStopAssign getPitStopAssign();
+
+    boolean isPitStopSessionsRemoved();
 }

@@ -21,6 +21,7 @@ public class PreferencesManagerImpl extends AbsPreferencesManager implements Pre
 
 
     public static final String KEY_ASSIGN_PITSTOP = "assign_pitstop_dur_to";
+    public static final String KEY_PITSTOP_SESSIONS_REMOVED = "remove_pit_stops";
 
     @NonNull
     @Override
@@ -38,5 +39,10 @@ public class PreferencesManagerImpl extends AbsPreferencesManager implements Pre
             e.printStackTrace();
             return PitStopAssign.MANUAL;
         }
+    }
+
+    @Override
+    public boolean isPitStopSessionsRemoved() {
+        return getBoolean(KEY_PITSTOP_SESSIONS_REMOVED, false);
     }
 }

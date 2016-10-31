@@ -7,17 +7,14 @@
               android:padding="8dp">
 
     <TextView android:id="@+id/name"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
-              android:text="Andrew" />
-
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_margin="4dp"
-              android:text="-" />
+              android:layout_weight="1"
+              android:text="Driver" />
 
     <ua.hospes.nfs.marathon.ui.race.widgets.DriverTimeView
         android:id="@+id/driver"
-        android:layout_width="match_parent"
+        android:text="00:00:00"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

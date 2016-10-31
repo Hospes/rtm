@@ -30,12 +30,7 @@ public class DbHelper {
 
     @Inject
     public DbHelper(Context context) {
-        SqlBrite sqlBrite = SqlBrite.create(new SqlBrite.Logger() {
-            @Override
-            public void log(String message) {
-                Log.d(LOG_TAG, message);
-            }
-        });
+        SqlBrite sqlBrite = SqlBrite.create(message -> Log.d(LOG_TAG, message));
 
         db = sqlBrite.wrapDatabaseHelper(new DBOpenHelper(context), Schedulers.io());
     }

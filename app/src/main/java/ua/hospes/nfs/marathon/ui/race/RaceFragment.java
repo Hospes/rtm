@@ -23,6 +23,7 @@ import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.StopWatchFragment;
 import ua.hospes.nfs.marathon.core.StopWatchService;
 import ua.hospes.nfs.marathon.core.di.Injector;
+import ua.hospes.nfs.marathon.domain.preferences.PreferencesManager;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.ui.MainActivity;
 import ua.hospes.nfs.marathon.ui.MainActivityComponent;
@@ -35,6 +36,7 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
 @AutoInjector(MainActivity.class)
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
     @Inject RacePresenter presenter;
+    @Inject PreferencesManager preferencesManager;
     private TextView tvTime;
     private RecyclerView rv;
     private RaceAdapter adapter;
@@ -76,7 +78,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(rv));
+        rv.setAdapter(adapter = new RaceAdapter(rv, preferencesManager));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));

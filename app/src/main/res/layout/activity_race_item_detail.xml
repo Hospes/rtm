@@ -20,9 +20,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/appbar">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar">
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -36,25 +37,35 @@
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
+                          android:background="#313131"
                           android:orientation="horizontal"
                           android:padding="8dp">
 
                 <TextView android:layout_width="0dp"
                           android:layout_height="wrap_content"
                           android:layout_weight="1"
-                          android:text="Driver" />
+                          android:text="Driver"
+                          android:textStyle="bold" />
 
                 <TextView android:layout_width="50dp"
                           android:layout_height="wrap_content"
-                          android:text="Car" />
+                          android:text="Car"
+                          android:textStyle="bold" />
 
                 <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
-                          android:text="Duration" />
+                          android:text="Start time"
+                          android:textStyle="bold" />
 
                 <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
-                          android:text="Type" />
+                          android:text="Duration"
+                          android:textStyle="bold" />
+
+                <TextView android:layout_width="70dp"
+                          android:layout_height="wrap_content"
+                          android:text="Type"
+                          android:textStyle="bold" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -62,5 +73,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

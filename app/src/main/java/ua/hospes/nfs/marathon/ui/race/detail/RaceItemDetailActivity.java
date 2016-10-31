@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +39,10 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
 @AutoInjector
 public class RaceItemDetailActivity extends AppCompatActivity implements HasComponent<RaceItemDetailActivityComponent>, RaceItemDetailContract.View {
     private final static String KEY_RACE_ITEM_ID = "race_item_id";
+    private final static String KEY_RACE_START_TIME = "race_start_time";
     private RaceItemDetailActivityComponent component;
     @Inject RaceItemDetailPresenter presenter;
     private int raceItemId = -1;
-
-    private TextView tvPits;
 
     private RecyclerView rvDrivers;
     private DriverDetailsAdapter driverDetailsAdapter;
@@ -52,9 +50,14 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
     private SessionAdapter adapter;
     private RecyclerView rvSessions;
 
+    private long startTime = -1;
 
-    public static void start(Context context, int raceItemId) {
-        context.startActivity(new Intent(context, RaceItemDetailActivity.class).putExtra(KEY_RACE_ITEM_ID, raceItemId));
+
+    public static void start(Context context, int raceItemId, long startTime) {
+        context.startActivity(new Intent(context, RaceItemDetailActivity.class)
+                .putExtra(KEY_RACE_ITEM_ID, raceItemId)
+                .putExtra(KEY_RACE_START_TIME, startTime)
+        );
     }
 
 
@@ -76,6 +79,7 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         presenter.attachView(this);
         if (getIntent() != null) {
             raceItemId = getIntent().getIntExtra(KEY_RACE_ITEM_ID, -1);
+            startTime = getIntent().getLongExtra(KEY_RACE_START_TIME, -1);
         }
         presenter.listenRaceItem(raceItemId);
 
@@ -87,7 +91,7 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         rvSessions.setHasFixedSize(true);
         rvSessions.setNestedScrollingEnabled(true);
         rvSessions.setLayoutManager(new LinearLayoutManager(this));
-        rvSessions.setAdapter(adapter = new SessionAdapter());
+        rvSessions.setAdapter(adapter = new SessionAdapter(startTime));
     }
 
     @Override

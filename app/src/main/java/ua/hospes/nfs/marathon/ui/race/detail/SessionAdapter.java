@@ -1,6 +1,6 @@
 package ua.hospes.nfs.marathon.ui.race.detail;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +18,14 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
  * @author Andrew Khloponin
  */
 public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder> {
+    private long startTime = -1;
+
+
+    public SessionAdapter(long startTime) {
+        this.startTime = startTime;
+    }
+
+
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_race_detail_session, parent, false));
@@ -25,28 +33,18 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
 
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
+        Context context = holder.itemView.getContext();
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_detail_not_trans);
+
         Session item = getItem(position);
 
         Car car = item.getCar();
-        if (car != null) {
-            holder.car.setText(String.valueOf(car.getNumber()));
-            int color;
-            switch (car.getRating()) {
-                case 0:
-                    color = Color.RED;
-                    break;
-                case 1:
-                    color = Color.YELLOW;
-                    break;
-                default:
-                    color = Color.GREEN;
-                    break;
-            }
-            holder.car.setTextColor(color);
+        holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));
+        if (startTime == -1 || item.getStartDurationTime() == -1) {
+            holder.start.setText("");
         } else {
-            holder.car.setText("");
+            holder.start.setText(TimeUtils.formatNanoWithMills(item.getStartDurationTime() - startTime));
         }
-
         holder.driver.setText(item.getDriver() == null ? "" : item.getDriver().getName());
         if (item.getStartDurationTime() == -1 || item.getEndDurationTime() == -1)
             holder.duration.setText("NOW");
@@ -56,11 +54,12 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView driver, car, duration, type;
+        private TextView driver, car, start, duration, type;
 
         public MyHolder(View itemView) {
             super(itemView);
 
+            start = UiUtils.findView(itemView, R.id.start);
             duration = UiUtils.findView(itemView, R.id.duration);
             car = UiUtils.findView(itemView, R.id.car);
             driver = UiUtils.findView(itemView, R.id.driver);

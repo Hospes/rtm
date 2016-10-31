@@ -41,10 +41,15 @@ public class CarsDbStorage {
 
 
     public Observable<CarDb> getNotInRace() {
+        //SELECT c.* FROM Cars AS c WHERE c._id NOT IN ( SELECT s.car_id FROM Sessions AS s WHERE s.end_time = -1 )
         return dbHelper.singleQuery(CarsMapper::map,
-                "SELECT t1.* FROM " + Cars.name + " t1" +
-                        " LEFT JOIN " + Sessions.name + " t2 ON t2." + Sessions.CAR_ID + " = t1." + Cars._ID +
-                        " WHERE t2." + Sessions.END_DURATION_TIME + " IS NULL OR t2." + Sessions.END_DURATION_TIME + " <> ?", String.valueOf(-1)
+                "SELECT c.* FROM " + Cars.name + " c" +
+                        " WHERE c." + Cars._ID + " NOT IN " +
+                        "(" +
+                        " SELECT s." + Sessions.CAR_ID + " FROM " + Sessions.name + " AS s" +
+                        " WHERE s." + Sessions.END_DURATION_TIME + " = ?" +
+                        " )",
+                String.valueOf(-1)
         );
     }
 
