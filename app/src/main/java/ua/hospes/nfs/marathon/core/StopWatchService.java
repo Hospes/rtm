@@ -80,6 +80,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     }
 
 
+
     private Notification buildNotification(String time) {
         Intent startMainActivity = new Intent(this, MainActivity.class);
         startMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

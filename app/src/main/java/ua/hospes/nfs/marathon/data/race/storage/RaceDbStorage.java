@@ -7,11 +7,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import ua.hospes.dbhelper.InsertResult;
+import ua.hospes.dbhelper.QueryBuilder;
+import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.nfs.marathon.core.db.DbHelper;
-import ua.hospes.nfs.marathon.core.db.QueryBuilder;
-import ua.hospes.nfs.marathon.core.db.models.InsertResult;
-import ua.hospes.nfs.marathon.core.db.models.SimpleBaseModel;
-import ua.hospes.nfs.marathon.core.db.models.UpdateResult;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
@@ -59,7 +58,7 @@ public class RaceDbStorage {
         ContentValues cv = new ContentValues();
         cv.put(Race.TEAM_NUMBER, -1);
         cv.put(Race.SESSION_ID, -1);
-        return dbHelper.update(new QueryBuilder(Race.name), new SimpleBaseModel(cv)).map(result -> null);
+        return dbHelper.update(new QueryBuilder(Race.name), cv).map(result -> null);
     }
 
     public Observable<Void> clean() {

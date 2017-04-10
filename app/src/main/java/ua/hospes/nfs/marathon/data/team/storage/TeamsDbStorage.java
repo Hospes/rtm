@@ -5,11 +5,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import ua.hospes.dbhelper.InsertResult;
+import ua.hospes.dbhelper.QueryBuilder;
+import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.nfs.marathon.core.db.DbHelper;
-import ua.hospes.nfs.marathon.core.db.QueryBuilder;
-import ua.hospes.nfs.marathon.core.db.models.InsertResult;
-import ua.hospes.nfs.marathon.core.db.models.UpdateResult;
-import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 import ua.hospes.nfs.marathon.data.team.mapper.TeamsMapper;

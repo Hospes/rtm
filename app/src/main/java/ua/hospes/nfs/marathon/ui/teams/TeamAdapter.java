@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.google.common.collect.Collections2;
 
+import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
 import ua.hospes.nfs.marathon.utils.UiUtils;
@@ -25,9 +25,7 @@ public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
-        Team item = getItem(position);
-
+    public void onBindViewHolder(MyHolder holder, Team item, int position) {
         holder.id.setText(String.valueOf(item.getId()));
         holder.name.setText(item.getName());
 

@@ -1,10 +1,28 @@
 package ua.hospes.nfs.marathon.core.db.tables;
 
-import android.provider.BaseColumns;
+import ua.hospes.dbhelper.AbsDbTable;
 
-public interface Drivers extends BaseColumns {
-    String name = "Drivers";
+/**
+ * @author Andrew Khloponin
+ */
+public class Drivers extends AbsDbTable {
+    public static final String name = "Drivers";
 
-    String NAME = "name";
-    String TEAM_ID = "team_id";
+    public static final String NAME = "name";
+    public static final String TEAM_ID = "team_id";
+
+
+    @Override
+    public String create() {
+        return CREATE_TABLE + name + " (" +
+                _ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
+                NAME + TEXT_TYPE + COMMA_SEP +
+                TEAM_ID + INTEGER_TYPE +
+                " );";
+    }
+
+    @Override
+    public String drop() {
+        return DROP_TABLE_IF_EXISTS + name;
+    }
 }

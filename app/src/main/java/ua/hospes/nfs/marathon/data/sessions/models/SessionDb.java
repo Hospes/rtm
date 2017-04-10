@@ -2,13 +2,13 @@ package ua.hospes.nfs.marathon.data.sessions.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
+import ua.hospes.dbhelper.BaseModelInterface;
 import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 
 /**
  * @author Andrew Khloponin
  */
-public class SessionDb implements ModelBaseInterface {
+public class SessionDb implements BaseModelInterface {
     private int id = -1;
     private final int teamId;
     private int driverId = -1;

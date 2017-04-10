@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
@@ -24,9 +24,7 @@ public class CarsAdapter extends AbsRecyclerAdapter<Car, CarsAdapter.MyHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
-        Car item = getItem(position);
-
+    public void onBindViewHolder(MyHolder holder, Car item, int position) {
         holder.id.setText(String.valueOf(item.getId()));
         holder.number.setText(String.valueOf(item.getNumber()));
         holder.rating.setText(String.format(Locale.getDefault(), "%1$d / 10", item.getRating()));

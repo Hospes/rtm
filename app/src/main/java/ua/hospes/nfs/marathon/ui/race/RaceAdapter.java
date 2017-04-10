@@ -17,8 +17,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import ua.hospes.absrvadapter.AbsRecyclerAdapter;
+import ua.hospes.absrvadapter.OnItemClickListener;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.preferences.PreferencesManager;
@@ -55,11 +56,9 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
+    public void onBindViewHolder(MyHolder holder, RaceItem item, int position) {
         Context context = holder.itemView.getContext();
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_not_transparent);
-
-        RaceItem item = getItem(position);
 
         holder.team.setText(String.format(Locale.getDefault(), "%1$d - %2$s", item.getTeamNumber(), item.getTeam().getName()));
         holder.pits.setText(String.valueOf(item.getDetails().getPitStops()));

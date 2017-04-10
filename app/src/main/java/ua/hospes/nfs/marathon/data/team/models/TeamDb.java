@@ -2,13 +2,13 @@ package ua.hospes.nfs.marathon.data.team.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
+import ua.hospes.dbhelper.BaseModelInterface;
 import ua.hospes.nfs.marathon.core.db.tables.Teams;
 
 /**
  * @author Andrew Khloponin
  */
-public class TeamDb implements ModelBaseInterface {
+public class TeamDb implements BaseModelInterface {
     private int id = -1;
     private String name;
 

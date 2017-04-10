@@ -2,13 +2,13 @@ package ua.hospes.nfs.marathon.data.drivers.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
+import ua.hospes.dbhelper.BaseModelInterface;
 import ua.hospes.nfs.marathon.core.db.tables.Drivers;
 
 /**
  * @author Andrew Khloponin
  */
-public class DriverDb implements ModelBaseInterface {
+public class DriverDb implements BaseModelInterface {
     private final int id;
     private String name;
     private int teamId = -1;

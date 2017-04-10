@@ -12,9 +12,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Func1;
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
-import ua.hospes.nfs.marathon.core.db.models.SimpleBaseModel;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
 import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
@@ -62,10 +59,10 @@ public class RaceInteractor {
 
     public Observable<Boolean> initSession(Session.Type type, int... teamIds) {
         return sessionsRepository.newSessions(type, teamIds)
-                .map((Func1<Session, Pair<Integer, ModelBaseInterface>>) session -> {
+                .map(session -> {
                     ContentValues cv = new ContentValues();
                     cv.put(Race.SESSION_ID, session.getId());
-                    return new Pair<>(session.getTeamId(), new SimpleBaseModel(cv));
+                    return new Pair<>(session.getTeamId(), cv);
                 })
                 .toList()
                 .flatMap(raceRepository::updateByTeamId);

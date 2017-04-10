@@ -4,8 +4,8 @@ import android.content.ContentValues;
 
 import com.squareup.sqlbrite.BriteDatabase;
 
-import ua.hospes.nfs.marathon.core.db.Operation;
-import ua.hospes.nfs.marathon.core.db.QueryBuilder;
+import ua.hospes.dbhelper.Operation;
+import ua.hospes.dbhelper.QueryBuilder;
 import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 
 /**

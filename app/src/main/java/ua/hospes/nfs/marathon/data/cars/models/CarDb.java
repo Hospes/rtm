@@ -2,13 +2,13 @@ package ua.hospes.nfs.marathon.data.cars.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
+import ua.hospes.dbhelper.BaseModelInterface;
 import ua.hospes.nfs.marathon.core.db.tables.Cars;
 
 /**
  * @author Andrew Khloponin
  */
-public class CarDb implements ModelBaseInterface {
+public class CarDb implements BaseModelInterface {
     private final int id;
     private int number = 0;
     private int rating = 0;

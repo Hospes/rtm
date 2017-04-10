@@ -1,14 +1,13 @@
 package ua.hospes.nfs.marathon.ui.race.detail;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 import ua.hospes.nfs.marathon.utils.TimeUtils;
@@ -32,11 +31,8 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
-        Context context = holder.itemView.getContext();
+    public void onBindViewHolder(MyHolder holder, Session item, int position) {
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_detail_not_trans);
-
-        Session item = getItem(position);
 
         Car car = item.getCar();
         holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));

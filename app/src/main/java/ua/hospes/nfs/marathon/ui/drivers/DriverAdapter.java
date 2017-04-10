@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.adapter.AbsRecyclerAdapter;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
@@ -23,9 +23,7 @@ public class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHo
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
-        Driver item = getItem(position);
-
+    public void onBindViewHolder(MyHolder holder, Driver item, int position) {
         holder.id.setText(String.valueOf(item.getId()));
         holder.name.setText(item.getName());
         holder.team.setText(TextUtils.isEmpty(item.getTeamName()) ? "no team" : item.getTeamName());

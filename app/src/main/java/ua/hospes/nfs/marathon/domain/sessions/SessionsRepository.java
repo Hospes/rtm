@@ -3,7 +3,6 @@ package ua.hospes.nfs.marathon.domain.sessions;
 import java.util.List;
 
 import rx.Observable;
-import ua.hospes.nfs.marathon.core.db.tables.Sessions;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 
 /**

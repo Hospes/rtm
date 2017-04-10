@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.data.race;
 
+import android.content.ContentValues;
 import android.util.Pair;
 
 import java.util.List;
@@ -9,7 +10,6 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.functions.Func2;
-import ua.hospes.nfs.marathon.core.db.ModelBaseInterface;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
 import ua.hospes.nfs.marathon.data.race.operations.UpdateRaceOperation;
 import ua.hospes.nfs.marathon.data.race.storage.RaceDbStorage;
@@ -78,7 +78,7 @@ public class RaceRepositoryImpl implements RaceRepository {
     }
 
     @Override
-    public Observable<Boolean> updateByTeamId(Iterable<Pair<Integer, ModelBaseInterface>> items) {
+    public Observable<Boolean> updateByTeamId(Iterable<Pair<Integer, ContentValues>> items) {
         return Observable.from(items)
                 .map(UpdateRaceOperation::new)
                 .toList()
