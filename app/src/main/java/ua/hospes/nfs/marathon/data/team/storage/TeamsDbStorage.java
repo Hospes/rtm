@@ -41,7 +41,7 @@ public class TeamsDbStorage {
 
 
     public Observable<TeamDb> getNotInRace() {
-        return dbHelper.singleQuery(TeamsMapper::map, "SELECT t1.* FROM " + Teams.name + " t1 LEFT JOIN " + Race.name + " t2 ON t2." + Race.TEAM_ID + " = t1." + Teams._ID + " WHERE t2." + Race.TEAM_ID + " IS NULL");
+        return dbHelper.singleQuery(TeamsMapper::map, "SELECT t1.rowid, t1.* FROM " + Teams.name + " t1 LEFT JOIN " + Race.name + " t2 ON t2." + Race.TEAM_ID + " = t1." + Teams._ID + " WHERE t2." + Race.TEAM_ID + " IS NULL");
     }
 
 

@@ -1,43 +1,36 @@
 package ua.hospes.nfs.marathon;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 
-import javax.inject.Singleton;
+import javax.inject.Inject;
 
-import autodagger.AutoComponent;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasDispatchingActivityInjector;
 import io.fabric.sdk.android.Fabric;
-import ua.hospes.nfs.marathon.core.di.module.ApplicationModule;
-import ua.hospes.nfs.marathon.core.di.module.DataModule;
-import ua.hospes.nfs.marathon.core.di.module.DbModule;
-import ua.hospes.nfs.marathon.core.di.module.DomainModule;
+import ua.hospes.nfs.marathon.core.di.components.DaggerAppComponent;
+import ua.hospes.nfs.marathon.core.di.module.AppModule;
 
 /**
  * @author Andrew Khloponin
  */
-@Singleton
-@AutoComponent(modules = {ApplicationModule.class, DbModule.class, DomainModule.class, DataModule.class})
-public class App extends MultiDexApplication {
-    private AppComponent component;
+public class App extends MultiDexApplication implements HasDispatchingActivityInjector {
+    @Inject DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        component = DaggerAppComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
+        DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build().inject(this);
     }
 
-
-    public static App get(Context context) {
-        return (App) context.getApplicationContext();
-    }
-
-    public AppComponent getComponent() {
-        return component;
+    @Override
+    public DispatchingAndroidInjector<Activity> activityInjector() {
+        return dispatchingActivityInjector;
     }
 }

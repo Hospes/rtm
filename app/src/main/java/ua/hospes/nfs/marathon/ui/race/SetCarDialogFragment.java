@@ -1,12 +1,13 @@
 package ua.hospes.nfs.marathon.ui.race;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 
 import com.google.common.collect.Collections2;
 
@@ -16,19 +17,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
-import ua.hospes.nfs.marathon.core.di.Injector;
+import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.race.RaceInteractor;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
-public class SetCarDialog extends DialogFragment {
+public class SetCarDialogFragment extends AppCompatDialogFragment {
     private final static String KEY_SESSION_ID = "session_id";
     private final static String KEY_CARS = "cars";
     @Inject RaceInteractor raceInteractor;
@@ -37,8 +34,8 @@ public class SetCarDialog extends DialogFragment {
     private int sessionId = -1;
 
 
-    public static SetCarDialog newInstance(int sessionId, List<Car> cars) {
-        SetCarDialog dialog = new SetCarDialog();
+    public static SetCarDialogFragment newInstance(int sessionId, List<Car> cars) {
+        SetCarDialogFragment dialog = new SetCarDialogFragment();
 
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_SESSION_ID, sessionId);
@@ -48,15 +45,12 @@ public class SetCarDialog extends DialogFragment {
         return dialog;
     }
 
-    public SetCarDialog() {}
+    public SetCarDialogFragment() {}
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
-
         if (getArguments() != null) {
             sessionId = getArguments().getInt(KEY_SESSION_ID, -1);
 
@@ -65,6 +59,12 @@ public class SetCarDialog extends DialogFragment {
 
             titles = Collections2.transform(cars, input -> String.valueOf(input.getNumber())).toArray(new String[cars.size()]);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @NonNull

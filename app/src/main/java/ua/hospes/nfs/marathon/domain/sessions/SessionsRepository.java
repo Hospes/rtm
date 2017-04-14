@@ -27,9 +27,11 @@ public interface SessionsRepository {
 
     Observable<Session> setSessionCar(int sessionId, int carId);
 
-    Observable<Session> startSessions(long startTime, int... teamIds);
+    Observable<Session> setRaceStartTime(long raceStartTime, int... sessionIds);
 
-    Observable<Session> startNewSessions(long startTime, Session.Type type, int... teamIds);
+    Observable<Session> startSessions(long startTime, int... sessionIds);
+
+    Observable<Session> startNewSessions(long raceStartTime, long startTime, Session.Type type, int... teamIds);
 
     /**
      * Create new session in {@link Sessions} table with
@@ -39,7 +41,7 @@ public interface SessionsRepository {
      * @param driverId  predefined session driver or -1 if no driver
      * @param teamId    team id
      */
-    Observable<Session> startNewSession(long startTime, Session.Type type, int driverId, int teamId);
+    Observable<Session> startNewSession(long raceStartTime, long startTime, Session.Type type, int driverId, int teamId);
 
     /**
      * Close list of sessions by ids

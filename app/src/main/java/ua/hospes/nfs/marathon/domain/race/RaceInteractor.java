@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import ua.hospes.nfs.marathon.core.db.tables.Race;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
@@ -28,7 +27,6 @@ import ua.hospes.nfs.marathon.domain.team.models.Team;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class RaceInteractor {
     private final PreferencesManager preferencesManager;
     private final RaceRepository raceRepository;
@@ -90,10 +88,12 @@ public class RaceInteractor {
         return raceRepository.get()
                 .filter(item -> item.getSession() != null)
                 .map(item -> item.getSession().getId())
-                .toList()
-                .flatMap(sessionIds -> sessionsRepository.startSessions(startTime, Ints.toArray(sessionIds)))
-                .toList()
-                .map(sessions -> true);
+                .toList().map(Ints::toArray)
+                .flatMap(sessionIds -> Observable.zip(
+                        sessionsRepository.startSessions(startTime, sessionIds).toList().singleOrDefault(null),
+                        sessionsRepository.setRaceStartTime(startTime, sessionIds).toList().singleOrDefault(null),
+                        (sessions, sessions2) -> true)
+                );
     }
 
     public Observable<Boolean> stopRace(long stopTime) {
@@ -108,6 +108,8 @@ public class RaceInteractor {
 
     public Observable<Boolean> teamPit(@NonNull RaceItem item, long time) {
         int driverId = -1;
+        long raceStartTime = -1;
+        if (item.getSession() != null) raceStartTime = item.getSession().getRaceStartTime();
         switch (preferencesManager.getPitStopAssign()) {
             case PREVIOUS:
                 if (item.getSession() != null && item.getSession().getDriver() != null)
@@ -116,7 +118,7 @@ public class RaceInteractor {
         }
         return Observable.zip(
                 closeSession(time, item.getSession()),
-                sessionsRepository.startNewSession(time, Session.Type.PIT, driverId, item.getTeam().getId()),
+                sessionsRepository.startNewSession(raceStartTime, time, Session.Type.PIT, driverId, item.getTeam().getId()),
                 (closedSession, openedSession) -> {
                     item.setSession(openedSession);
                     return item;
@@ -126,9 +128,11 @@ public class RaceInteractor {
     }
 
     public Observable<Boolean> teamOut(@NonNull RaceItem item, long time) {
+        long raceStartTime = -1;
+        if (item.getSession() != null) raceStartTime = item.getSession().getRaceStartTime();
         return Observable.zip(
                 closeSession(time, item.getSession()),
-                sessionsRepository.startNewSessions(time, Session.Type.TRACK, item.getTeam().getId()),
+                sessionsRepository.startNewSessions(raceStartTime, time, Session.Type.TRACK, item.getTeam().getId()),
                 (closedSession, openedSession) -> {
                     item.setSession(openedSession);
                     return item;

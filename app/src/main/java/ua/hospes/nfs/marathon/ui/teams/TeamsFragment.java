@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.ui.teams;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,18 +17,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
+import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
 public class TeamsFragment extends Fragment implements TeamsContract.View {
     @Inject TeamsPresenter presenter;
 
@@ -45,10 +42,13 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
-
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Nullable

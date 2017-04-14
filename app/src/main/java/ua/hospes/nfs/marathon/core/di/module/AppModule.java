@@ -6,31 +6,32 @@ import android.content.pm.PackageManager;
 
 import javax.inject.Singleton;
 
-import autodagger.AutoExpose;
 import dagger.Module;
 import dagger.Provides;
-import ua.hospes.nfs.marathon.App;
 
 @Module
-@Singleton
-public class ApplicationModule {
+public class AppModule {
     private Application mApplication;
 
-    public ApplicationModule(Application application) {
+    public AppModule(Application application) {
         mApplication = application;
     }
 
     @Provides
     @Singleton
-    @AutoExpose(App.class)
-    public Context provideContext() {
+    Application providesApplication() {
         return mApplication;
     }
 
     @Provides
     @Singleton
-    @AutoExpose(App.class)
-    public PackageManager providePackageManager(Context context) {
+    Context provideContext() {
+        return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    PackageManager providePackageManager(Context context) {
         return context.getPackageManager();
     }
 }

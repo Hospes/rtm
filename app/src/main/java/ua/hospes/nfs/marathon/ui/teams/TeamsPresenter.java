@@ -3,7 +3,6 @@ package ua.hospes.nfs.marathon.ui.teams;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.domain.team.TeamsInteractor;
 import ua.hospes.nfs.marathon.utils.RxUtils;
@@ -11,7 +10,6 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class TeamsPresenter extends BasePresenter<TeamsContract.View> {
     private final TeamsInteractor interactor;
 

@@ -1,12 +1,13 @@
 package ua.hospes.nfs.marathon.ui.drivers;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,23 +20,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
+import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
-public class EditDriverDialogFragment extends DialogFragment {
+public class EditDriverDialogFragment extends AppCompatDialogFragment {
     private static final String KEY_DRIVER = "driver";
 
     @Inject DriversRepository driversRepository;
@@ -64,12 +61,15 @@ public class EditDriverDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
-
         if (getArguments() != null) {
             driver = getArguments().getParcelable(KEY_DRIVER);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @NonNull

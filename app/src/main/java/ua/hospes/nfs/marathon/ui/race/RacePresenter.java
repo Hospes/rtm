@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.domain.race.RaceInteractor;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
@@ -17,10 +16,8 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class RacePresenter extends BasePresenter<RaceContract.View> {
     private final RaceInteractor interactor;
-    private long startTime = -1;
 
     @Inject
     public RacePresenter(RaceInteractor interactor) {
@@ -44,7 +41,6 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     public void startRace(long startTime) {
-        this.startTime = startTime;
         Subscription subscription = interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
@@ -94,7 +90,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     public void showRaceItemDetail(Context context, RaceItem item) {
-        RaceItemDetailActivity.start(context, item.getId(), startTime);
+        RaceItemDetailActivity.start(context, item.getId());
     }
 
     public void showSetCarDialog(FragmentManager managerFragment, Session session) {
@@ -102,7 +98,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
                 .toList()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {
-                    SetCarDialog.newInstance(session.getId(), result).show(managerFragment, "set_car");
+                    SetCarDialogFragment.newInstance(session.getId(), result).show(managerFragment, "set_car");
                 }, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
@@ -112,7 +108,7 @@ public class RacePresenter extends BasePresenter<RaceContract.View> {
                 .toList()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {
-                    SetDriverDialog.newInstance(session.getId(), session.getTeamId(), result).show(managerFragment, "set_driver");
+                    SetDriverDialogFragment.newInstance(session.getId(), session.getTeamId(), result).show(managerFragment, "set_driver");
                 }, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }

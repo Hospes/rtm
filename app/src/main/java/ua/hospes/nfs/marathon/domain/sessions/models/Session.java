@@ -11,6 +11,7 @@ public class Session {
     private final int teamId;
     private Driver driver = null;
     private Car car = null;
+    private long raceStartTime = -1;
     private long startDurationTime = -1;
     private long endDurationTime = -1;
     private Type type = Type.TRACK;
@@ -44,6 +45,10 @@ public class Session {
         return car;
     }
 
+    public long getRaceStartTime() {
+        return raceStartTime;
+    }
+
     public long getStartDurationTime() {
         return startDurationTime;
     }
@@ -64,6 +69,10 @@ public class Session {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public void setRaceStartTime(long raceStartTime) {
+        this.raceStartTime = raceStartTime;
     }
 
     public void setStartDurationTime(long startDurationTime) {
@@ -95,6 +104,7 @@ public class Session {
                 ", teamId=" + teamId +
                 ", driver=" + driver +
                 ", car=" + car +
+                ", raceStartTime=" + raceStartTime +
                 ", startDurationTime=" + startDurationTime +
                 ", endDurationTime=" + endDurationTime +
                 ", type=" + type +

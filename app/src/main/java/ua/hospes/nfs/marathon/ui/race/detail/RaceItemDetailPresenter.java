@@ -3,19 +3,19 @@ package ua.hospes.nfs.marathon.ui.race.detail;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class RaceItemDetailPresenter extends BasePresenter<RaceItemDetailContract.View> {
     private final RaceItemDetailInteractor interactor;
 
     @Inject
-    public RaceItemDetailPresenter(RaceItemDetailInteractor interactor) {this.interactor = interactor;}
+    public RaceItemDetailPresenter(RaceItemDetailInteractor interactor) {
+        this.interactor = interactor;
+    }
 
     @Override
     public void attachView(RaceItemDetailContract.View view) {

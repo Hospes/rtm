@@ -14,7 +14,7 @@ import ua.hospes.nfs.marathon.core.db.tables.Teams;
 public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = "DBOpenHelper";
     private static String DB_NAME = "hospes.nfs.marathon";
-    private static int DB_VERSION = 1;
+    private static int DB_VERSION = 2;
 
 
     public DBOpenHelper(Context context) {

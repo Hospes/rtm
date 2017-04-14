@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import ua.hospes.nfs.marathon.data.drivers.DriversRepositoryImpl;
 import ua.hospes.nfs.marathon.data.team.mapper.TeamsMapper;
 import ua.hospes.nfs.marathon.data.team.storage.TeamsDbStorage;
 import ua.hospes.nfs.marathon.domain.drivers.DriversRepository;
@@ -23,7 +24,7 @@ public class TeamsRepositoryImpl implements TeamsRepository {
 
 
     @Inject
-    public TeamsRepositoryImpl(TeamsDbStorage dbStorage, DriversRepository driversRepository) {
+    public TeamsRepositoryImpl(TeamsDbStorage dbStorage, DriversRepositoryImpl driversRepository) {
         this.dbStorage = dbStorage;
         this.driversRepository = driversRepository;
     }

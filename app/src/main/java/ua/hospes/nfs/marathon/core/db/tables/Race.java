@@ -17,7 +17,6 @@ public class Race extends AbsDbTable {
     @Override
     public String create() {
         return CREATE_TABLE + name + " (" +
-                _ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
                 TEAM_ID + INTEGER_TYPE + UNIQUE + NOT_NULL + COMMA_SEP +
                 TEAM_NUMBER + INTEGER_TYPE + DEFAULT + " -1 " + COMMA_SEP +
                 SESSION_ID + INTEGER_TYPE + COMMA_SEP +

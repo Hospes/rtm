@@ -10,26 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
-import ua.hospes.nfs.marathon.App;
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasDispatchingSupportFragmentInjector;
 import ua.hospes.nfs.marathon.R;
 import ua.hospes.nfs.marathon.core.StopWatchService;
-import ua.hospes.nfs.marathon.core.di.HasComponent;
-import ua.hospes.nfs.marathon.core.di.Injector;
-import ua.hospes.nfs.marathon.core.di.module.ActivityModule;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.ui.cars.CarsFragment;
 import ua.hospes.nfs.marathon.ui.drivers.DriversFragment;
 import ua.hospes.nfs.marathon.ui.race.RaceFragment;
 import ua.hospes.nfs.marathon.ui.settings.SettingsFragment;
 import ua.hospes.nfs.marathon.ui.teams.TeamsFragment;
 
-@ActivityScope
-@AutoComponent(dependencies = App.class, modules = {ActivityModule.class})
-@AutoInjector
-public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent>, NavigationDrawerFragment.NavigationDrawerCallbacks {
-    private MainActivityComponent component;
+public class MainActivity extends AppCompatActivity implements HasDispatchingSupportFragmentInjector, NavigationDrawerFragment.NavigationDrawerCallbacks {
+    @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -39,9 +34,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        Injector.getComponent(this, MainActivityComponent.class).inject(this);
-
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -55,17 +49,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
         StopWatchService.checkDeath(this);
     }
 
-
-    @Override
-    public MainActivityComponent getComponent() {
-        if (component == null) {
-            component = DaggerMainActivityComponent.builder()
-                    .appComponent(App.get(this).getComponent())
-                    .activityModule(new ActivityModule(this))
-                    .build();
-        }
-        return component;
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -106,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
                         .commit();
                 break;
         }
+    }
+
+    @Override
+    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentInjector;
     }
 
 

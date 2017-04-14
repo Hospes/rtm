@@ -17,14 +17,6 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
  * @author Andrew Khloponin
  */
 public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder> {
-    private long startTime = -1;
-
-
-    public SessionAdapter(long startTime) {
-        this.startTime = startTime;
-    }
-
-
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_race_detail_session, parent, false));
@@ -36,10 +28,10 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
 
         Car car = item.getCar();
         holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));
-        if (startTime == -1 || item.getStartDurationTime() == -1) {
+        if (item.getRaceStartTime() == -1 || item.getStartDurationTime() == -1) {
             holder.start.setText("");
         } else {
-            holder.start.setText(TimeUtils.formatNanoWithMills(item.getStartDurationTime() - startTime));
+            holder.start.setText(TimeUtils.formatNanoWithMills(item.getStartDurationTime() - item.getRaceStartTime()));
         }
         holder.driver.setText(item.getDriver() == null ? "" : item.getDriver().getName());
         if (item.getStartDurationTime() == -1 || item.getEndDurationTime() == -1)

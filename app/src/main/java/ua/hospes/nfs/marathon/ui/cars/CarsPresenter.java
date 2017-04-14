@@ -3,7 +3,6 @@ package ua.hospes.nfs.marathon.ui.cars;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.domain.cars.CarsInteractor;
 import ua.hospes.nfs.marathon.utils.RxUtils;
@@ -11,7 +10,6 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class CarsPresenter extends BasePresenter<CarsContract.View> {
     private final CarsInteractor interactor;
 

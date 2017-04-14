@@ -13,6 +13,7 @@ public class SessionDb implements BaseModelInterface {
     private final int teamId;
     private int driverId = -1;
     private int carId = -1;
+    private long raceStartTime = -1;
     private long startDurationTime = -1;
     private long endDurationTime = -1;
     private String type;
@@ -38,6 +39,10 @@ public class SessionDb implements BaseModelInterface {
 
     public int getCarId() {
         return carId;
+    }
+
+    public long getRaceStartTime() {
+        return raceStartTime;
     }
 
     public long getStartDurationTime() {
@@ -66,6 +71,10 @@ public class SessionDb implements BaseModelInterface {
         this.carId = carId;
     }
 
+    public void setRaceStartTime(long raceStartTime) {
+        this.raceStartTime = raceStartTime;
+    }
+
     public void setStartDurationTime(long startDurationTime) {
         this.startDurationTime = startDurationTime;
     }
@@ -87,9 +96,10 @@ public class SessionDb implements BaseModelInterface {
                 ", teamId=" + teamId +
                 ", driverId=" + driverId +
                 ", carId=" + carId +
+                ", raceStartTime=" + raceStartTime +
                 ", startDurationTime=" + startDurationTime +
                 ", endDurationTime=" + endDurationTime +
-                ", type=" + type +
+                ", type='" + type + '\'' +
                 '}';
     }
 
@@ -100,6 +110,7 @@ public class SessionDb implements BaseModelInterface {
         cv.put(Sessions.TEAM_ID, teamId);
         cv.put(Sessions.DRIVER_ID, driverId);
         cv.put(Sessions.CAR_ID, carId);
+        cv.put(Sessions.RACE_START_TIME, raceStartTime);
         cv.put(Sessions.START_DURATION_TIME, startDurationTime);
         cv.put(Sessions.END_DURATION_TIME, endDurationTime);
         cv.put(Sessions.TYPE, type);

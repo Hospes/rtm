@@ -1,5 +1,6 @@
 package ua.hospes.nfs.marathon.ui.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
@@ -7,18 +8,14 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
+import dagger.android.support.AndroidSupportInjection;
 import hugo.weaving.DebugLog;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.preferences.PreferencesManager;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Inject PreferencesManager preferencesManager;
 
@@ -28,11 +25,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
 
-    @DebugLog
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @DebugLog

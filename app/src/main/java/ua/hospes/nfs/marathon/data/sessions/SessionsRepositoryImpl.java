@@ -7,10 +7,13 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import ua.hospes.nfs.marathon.data.cars.CarsRepositoryImpl;
+import ua.hospes.nfs.marathon.data.drivers.DriversRepositoryImpl;
 import ua.hospes.nfs.marathon.data.sessions.mapper.SessionsMapper;
 import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
 import ua.hospes.nfs.marathon.data.sessions.operations.CloseSessionOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.OpenSessionOperation;
+import ua.hospes.nfs.marathon.data.sessions.operations.RaceStartTimeOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.SetCarOperation;
 import ua.hospes.nfs.marathon.data.sessions.operations.SetDriverOperation;
 import ua.hospes.nfs.marathon.data.sessions.storage.SessionsDbStorage;
@@ -32,7 +35,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
 
     @Inject
-    public SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepository driversRepository, CarsRepository carsRepository) {
+    public SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepositoryImpl driversRepository, CarsRepositoryImpl carsRepository) {
         this.dbStorage = dbStorage;
         this.driversRepository = driversRepository;
         this.carsRepository = carsRepository;
@@ -111,16 +114,13 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
     @Override
     public Observable<Session> newSessions(Session.Type type, int... teamIds) {
-        return Observable.create(new Observable.OnSubscribe<SessionDb>() {
-            @Override
-            public void call(Subscriber<? super SessionDb> subscriber) {
-                for (int teamId : teamIds) {
-                    SessionDb sessionDb = new SessionDb(teamId);
-                    sessionDb.setType(type.name());
-                    subscriber.onNext(sessionDb);
-                }
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+            for (int teamId : teamIds) {
+                SessionDb sessionDb = new SessionDb(teamId);
+                sessionDb.setType(type.name());
+                subscriber.onNext(sessionDb);
             }
+            subscriber.onCompleted();
         })
                 .toList()
                 .flatMap(dbStorage::add)
@@ -150,15 +150,25 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
-    public Observable<Session> startSessions(long startTime, int... sessionIds) {
-        return Observable.create(new Observable.OnSubscribe<OpenSessionOperation>() {
-            @Override
-            public void call(Subscriber<? super OpenSessionOperation> subscriber) {
-                for (int sessionId : sessionIds) {
-                    subscriber.onNext(new OpenSessionOperation(sessionId, startTime));
-                }
-                subscriber.onCompleted();
+    public Observable<Session> setRaceStartTime(long raceStartTime, int... sessionIds) {
+        return Observable.create((Observable.OnSubscribe<RaceStartTimeOperation>) subscriber -> {
+            for (int sessionId : sessionIds) {
+                subscriber.onNext(new RaceStartTimeOperation(sessionId, raceStartTime));
             }
+            subscriber.onCompleted();
+        })
+                .toList()
+                .flatMap(dbStorage::applyRaceStartOperations)
+                .flatMap(this::get);
+    }
+
+    @Override
+    public Observable<Session> startSessions(long startTime, int... sessionIds) {
+        return Observable.create((Observable.OnSubscribe<OpenSessionOperation>) subscriber -> {
+            for (int sessionId : sessionIds) {
+                subscriber.onNext(new OpenSessionOperation(sessionId, startTime));
+            }
+            subscriber.onCompleted();
         })
                 .toList()
                 .flatMap(dbStorage::applyOpenOperations)
@@ -166,18 +176,16 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
-    public Observable<Session> startNewSessions(long startTime, Session.Type type, int... teamIds) {
-        return Observable.create(new Observable.OnSubscribe<SessionDb>() {
-            @Override
-            public void call(Subscriber<? super SessionDb> subscriber) {
-                for (int teamId : teamIds) {
-                    SessionDb sessionDb = new SessionDb(teamId);
-                    sessionDb.setStartDurationTime(startTime);
-                    sessionDb.setType(type.name());
-                    subscriber.onNext(sessionDb);
-                }
-                subscriber.onCompleted();
+    public Observable<Session> startNewSessions(long raceStartTime, long startTime, Session.Type type, int... teamIds) {
+        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+            for (int teamId : teamIds) {
+                SessionDb sessionDb = new SessionDb(teamId);
+                sessionDb.setRaceStartTime(raceStartTime);
+                sessionDb.setStartDurationTime(startTime);
+                sessionDb.setType(type.name());
+                subscriber.onNext(sessionDb);
             }
+            subscriber.onCompleted();
         })
                 .toList()
                 .flatMap(dbStorage::add)
@@ -191,17 +199,15 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
-    public Observable<Session> startNewSession(long startTime, Session.Type type, int driverId, int teamId) {
-        return Observable.create(new Observable.OnSubscribe<SessionDb>() {
-            @Override
-            public void call(Subscriber<? super SessionDb> subscriber) {
-                SessionDb sessionDb = new SessionDb(teamId);
-                sessionDb.setStartDurationTime(startTime);
-                sessionDb.setDriverId(driverId);
-                sessionDb.setType(type.name());
-                subscriber.onNext(sessionDb);
-                subscriber.onCompleted();
-            }
+    public Observable<Session> startNewSession(long raceStartTime, long startTime, Session.Type type, int driverId, int teamId) {
+        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+            SessionDb sessionDb = new SessionDb(teamId);
+            sessionDb.setRaceStartTime(raceStartTime);
+            sessionDb.setStartDurationTime(startTime);
+            sessionDb.setDriverId(driverId);
+            sessionDb.setType(type.name());
+            subscriber.onNext(sessionDb);
+            subscriber.onCompleted();
         })
                 .toList()
                 .flatMap(dbStorage::add)

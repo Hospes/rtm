@@ -18,6 +18,7 @@ public class SessionsMapper {
         result.setId(cursor.getInt(cursor.getColumnIndex(Sessions._ID)));
         result.setDriverId(cursor.getInt(cursor.getColumnIndex(Sessions.DRIVER_ID)));
         result.setCarId(cursor.getInt(cursor.getColumnIndex(Sessions.CAR_ID)));
+        result.setRaceStartTime(cursor.getLong(cursor.getColumnIndex(Sessions.RACE_START_TIME)));
         result.setStartDurationTime(cursor.getLong(cursor.getColumnIndex(Sessions.START_DURATION_TIME)));
         result.setEndDurationTime(cursor.getLong(cursor.getColumnIndex(Sessions.END_DURATION_TIME)));
         result.setType(cursor.getString(cursor.getColumnIndex(Sessions.TYPE)));
@@ -28,6 +29,7 @@ public class SessionsMapper {
         Session session = new Session(db.getId(), db.getTeamId());
         session.setDriver(driver);
         session.setCar(car);
+        session.setRaceStartTime(db.getRaceStartTime());
         session.setStartDurationTime(db.getStartDurationTime());
         session.setEndDurationTime(db.getEndDurationTime());
         session.setType(db.getType());
@@ -40,6 +42,7 @@ public class SessionsMapper {
             item.setDriverId(session.getDriver().getId());
         if (session.getCar() != null)
             item.setCarId(session.getCar().getId());
+        item.setRaceStartTime(session.getRaceStartTime());
         item.setStartDurationTime(session.getStartDurationTime());
         item.setEndDurationTime(session.getEndDurationTime());
         item.setType(session.getType().name());

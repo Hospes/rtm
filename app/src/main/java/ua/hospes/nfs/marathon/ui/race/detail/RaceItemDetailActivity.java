@@ -16,15 +16,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
+import dagger.android.AndroidInjection;
 import hugo.weaving.DebugLog;
-import ua.hospes.nfs.marathon.App;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.HasComponent;
-import ua.hospes.nfs.marathon.core.di.Injector;
-import ua.hospes.nfs.marathon.core.di.module.ActivityModule;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.models.DriverDetails;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
@@ -34,13 +28,8 @@ import ua.hospes.nfs.marathon.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
-@AutoComponent(dependencies = App.class, modules = {ActivityModule.class})
-@AutoInjector
-public class RaceItemDetailActivity extends AppCompatActivity implements HasComponent<RaceItemDetailActivityComponent>, RaceItemDetailContract.View {
+public class RaceItemDetailActivity extends AppCompatActivity implements RaceItemDetailContract.View {
     private final static String KEY_RACE_ITEM_ID = "race_item_id";
-    private final static String KEY_RACE_START_TIME = "race_start_time";
-    private RaceItemDetailActivityComponent component;
     @Inject RaceItemDetailPresenter presenter;
     private int raceItemId = -1;
 
@@ -50,22 +39,18 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
     private SessionAdapter adapter;
     private RecyclerView rvSessions;
 
-    private long startTime = -1;
 
-
-    public static void start(Context context, int raceItemId, long startTime) {
+    public static void start(Context context, int raceItemId) {
         context.startActivity(new Intent(context, RaceItemDetailActivity.class)
                 .putExtra(KEY_RACE_ITEM_ID, raceItemId)
-                .putExtra(KEY_RACE_START_TIME, startTime)
         );
     }
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        Injector.getComponent(this, RaceItemDetailActivityComponent.class).inject(this);
-
         setContentView(R.layout.activity_race_item_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,7 +64,6 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         presenter.attachView(this);
         if (getIntent() != null) {
             raceItemId = getIntent().getIntExtra(KEY_RACE_ITEM_ID, -1);
-            startTime = getIntent().getLongExtra(KEY_RACE_START_TIME, -1);
         }
         presenter.listenRaceItem(raceItemId);
 
@@ -91,7 +75,7 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
         rvSessions.setHasFixedSize(true);
         rvSessions.setNestedScrollingEnabled(true);
         rvSessions.setLayoutManager(new LinearLayoutManager(this));
-        rvSessions.setAdapter(adapter = new SessionAdapter(startTime));
+        rvSessions.setAdapter(adapter = new SessionAdapter());
     }
 
     @Override
@@ -109,17 +93,6 @@ public class RaceItemDetailActivity extends AppCompatActivity implements HasComp
     protected void onDestroy() {
         super.onDestroy();
         presenter.detachView();
-    }
-
-    @Override
-    public RaceItemDetailActivityComponent getComponent() {
-        if (component == null) {
-            component = DaggerRaceItemDetailActivityComponent.builder()
-                    .appComponent(App.get(this).getComponent())
-                    .activityModule(new ActivityModule(this))
-                    .build();
-        }
-        return component;
     }
 
     @DebugLog

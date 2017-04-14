@@ -3,7 +3,6 @@ package ua.hospes.nfs.marathon.ui.drivers;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.core.ui.BasePresenter;
 import ua.hospes.nfs.marathon.domain.drivers.DriversInteractor;
 import ua.hospes.nfs.marathon.utils.RxUtils;
@@ -11,7 +10,6 @@ import ua.hospes.nfs.marathon.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class DriversPresenter extends BasePresenter<DriversContract.View> {
     private final DriversInteractor interactor;
 

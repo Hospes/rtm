@@ -1,12 +1,12 @@
 package ua.hospes.nfs.marathon.ui.race;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,26 +20,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
+import dagger.android.support.AndroidSupportInjection;
 import rx.Observable;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
 import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 import ua.hospes.nfs.marathon.domain.team.TeamsRepository;
 import ua.hospes.nfs.marathon.domain.team.models.Team;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
-public class AddTeamToRaceDialogFragment extends DialogFragment {
+public class AddTeamToRaceDialogFragment extends AppCompatDialogFragment {
     @Inject RaceRepository raceRepository;
     @Inject SessionsRepository sessionsRepository;
     @Inject TeamsRepository teamsRepository;
@@ -58,10 +54,9 @@ public class AddTeamToRaceDialogFragment extends DialogFragment {
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @NonNull

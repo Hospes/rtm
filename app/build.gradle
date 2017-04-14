@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'io.fabric'
@@ -64,10 +63,8 @@ dependencies {
 
     // Dagger [START]
     compile 'com.google.dagger:dagger:2.10'
-    apt 'com.google.dagger:dagger-compiler:2.10'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.github.arok.Auto-Dagger2:library:24de737382'
-    apt 'com.github.arok.Auto-Dagger2:compiler:24de737382'
+    compile 'com.google.dagger:dagger-android-support:2.10' // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     // Dagger  [END]
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {

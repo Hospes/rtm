@@ -43,7 +43,7 @@ public class CarsDbStorage {
     public Observable<CarDb> getNotInRace() {
         //SELECT c.* FROM Cars AS c WHERE c._id NOT IN ( SELECT s.car_id FROM Sessions AS s WHERE s.end_time = -1 )
         return dbHelper.singleQuery(CarsMapper::map,
-                "SELECT c.* FROM " + Cars.name + " c" +
+                "SELECT c.rowid, c.* FROM " + Cars.name + " c" +
                         " WHERE c." + Cars._ID + " NOT IN " +
                         "(" +
                         " SELECT s." + Sessions.CAR_ID + " FROM " + Sessions.name + " AS s" +

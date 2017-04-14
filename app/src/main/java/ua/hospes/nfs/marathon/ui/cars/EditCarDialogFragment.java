@@ -1,6 +1,7 @@
 package ua.hospes.nfs.marathon.ui.cars;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,20 +17,16 @@ import android.widget.EditText;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
+import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.nfs.marathon.R;
-import ua.hospes.nfs.marathon.core.di.Injector;
 import ua.hospes.nfs.marathon.domain.cars.CarsRepository;
 import ua.hospes.nfs.marathon.domain.cars.models.Car;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 import ua.hospes.nfs.marathon.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
 public class EditCarDialogFragment extends DialogFragment {
     private static final String KEY_CAR = "car";
 
@@ -59,12 +56,15 @@ public class EditCarDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
-
         if (getArguments() != null) {
             car = getArguments().getParcelable(KEY_CAR);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @NonNull

@@ -1,12 +1,13 @@
 package ua.hospes.nfs.marathon.ui.race;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 
 import com.google.common.collect.Collections2;
 
@@ -16,19 +17,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import autodagger.AutoInjector;
-import ua.hospes.nfs.marathon.core.di.Injector;
+import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.nfs.marathon.domain.drivers.models.Driver;
 import ua.hospes.nfs.marathon.domain.race.RaceInteractor;
-import ua.hospes.nfs.marathon.ui.MainActivity;
-import ua.hospes.nfs.marathon.ui.MainActivityComponent;
 import ua.hospes.nfs.marathon.utils.RxUtils;
 
 /**
  * @author Andrew Khloponin
  */
-@AutoInjector(MainActivity.class)
-public class SetDriverDialog extends DialogFragment {
+public class SetDriverDialogFragment extends AppCompatDialogFragment {
     private final static String KEY_SESSION_ID = "session_id";
     private final static String KEY_TEAM_ID = "team_id";
     private final static String KEY_DRIVERS = "drivers";
@@ -39,8 +36,8 @@ public class SetDriverDialog extends DialogFragment {
     private int teamId = -1;
 
 
-    public static SetDriverDialog newInstance(int sessionId, int teamId, List<Driver> drivers) {
-        SetDriverDialog dialog = new SetDriverDialog();
+    public static SetDriverDialogFragment newInstance(int sessionId, int teamId, List<Driver> drivers) {
+        SetDriverDialogFragment dialog = new SetDriverDialogFragment();
 
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_SESSION_ID, sessionId);
@@ -51,15 +48,12 @@ public class SetDriverDialog extends DialogFragment {
         return dialog;
     }
 
-    public SetDriverDialog() {}
+    public SetDriverDialogFragment() {}
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector.getComponent(getActivity(), MainActivityComponent.class).inject(this);
-
         if (getArguments() != null) {
             sessionId = getArguments().getInt(KEY_SESSION_ID, -1);
             teamId = getArguments().getInt(KEY_TEAM_ID, -1);
@@ -69,6 +63,12 @@ public class SetDriverDialog extends DialogFragment {
 
             titles = Collections2.transform(drivers, Driver::getName).toArray(new String[drivers.size()]);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @NonNull

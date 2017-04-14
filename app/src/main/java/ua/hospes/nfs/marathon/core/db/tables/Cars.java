@@ -15,7 +15,6 @@ public class Cars extends AbsDbTable {
     @Override
     public String create() {
         return CREATE_TABLE + name + " (" +
-                _ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
                 NUMBER + INTEGER_TYPE + DEFAULT + " 0 " + COMMA_SEP +
                 RATING + INTEGER_TYPE + DEFAULT + " 0 " +
                 " );";

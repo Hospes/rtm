@@ -15,7 +15,6 @@ public class Drivers extends AbsDbTable {
     @Override
     public String create() {
         return CREATE_TABLE + name + " (" +
-                _ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
                 NAME + TEXT_TYPE + COMMA_SEP +
                 TEAM_ID + INTEGER_TYPE +
                 " );";

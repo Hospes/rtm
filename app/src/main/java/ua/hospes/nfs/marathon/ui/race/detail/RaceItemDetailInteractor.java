@@ -5,7 +5,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import ua.hospes.nfs.marathon.core.di.scope.ActivityScope;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.sessions.SessionsRepository;
@@ -14,13 +13,17 @@ import ua.hospes.nfs.marathon.domain.sessions.models.Session;
 /**
  * @author Andrew Khloponin
  */
-@ActivityScope
 public class RaceItemDetailInteractor {
-    @Inject RaceRepository raceRepository;
-    @Inject SessionsRepository sessionsRepository;
+    private final RaceRepository raceRepository;
+    private final SessionsRepository sessionsRepository;
+
 
     @Inject
-    public RaceItemDetailInteractor() {}
+    public RaceItemDetailInteractor(RaceRepository raceRepository, SessionsRepository sessionsRepository) {
+        this.raceRepository = raceRepository;
+        this.sessionsRepository = sessionsRepository;
+    }
+
 
     public Observable<RaceItem> listenRaceItem(int raceItemId) {
         return raceRepository.listen()

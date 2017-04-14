@@ -13,8 +13,10 @@ import rx.functions.Func2;
 import ua.hospes.nfs.marathon.data.race.mapper.RaceMapper;
 import ua.hospes.nfs.marathon.data.race.operations.UpdateRaceOperation;
 import ua.hospes.nfs.marathon.data.race.storage.RaceDbStorage;
+import ua.hospes.nfs.marathon.data.sessions.SessionsRepositoryImpl;
 import ua.hospes.nfs.marathon.data.sessions.models.SessionDb;
 import ua.hospes.nfs.marathon.data.sessions.storage.SessionsDbStorage;
+import ua.hospes.nfs.marathon.data.team.TeamsRepositoryImpl;
 import ua.hospes.nfs.marathon.domain.race.RaceRepository;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItem;
 import ua.hospes.nfs.marathon.domain.race.models.RaceItemDetails;
@@ -35,7 +37,7 @@ public class RaceRepositoryImpl implements RaceRepository {
 
 
     @Inject
-    public RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepository teamsRepository, SessionsDbStorage sessionsDbStorage, SessionsRepository sessionsRepository) {
+    public RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepositoryImpl teamsRepository, SessionsDbStorage sessionsDbStorage, SessionsRepositoryImpl sessionsRepository) {
         this.raceDbStorage = raceDbStorage;
         this.teamsRepository = teamsRepository;
         this.sessionsDbStorage = sessionsDbStorage;
