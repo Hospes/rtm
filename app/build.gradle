@@ -51,7 +51,7 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'ua.hospes.dbhelper:dbhelper:0.2.3'
+    compile 'ua.hospes.dbhelper:dbhelper:0.2.4'
     compile 'ua.hospes.absrvadapter:absrvadapter:0.2.2'
 
     //Rx1 [START]
