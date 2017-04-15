@@ -49,7 +49,9 @@ android {
                     'proguard-gson.rules',
                     'proguard-guava.rules',
                     'proguard-glide.rules',
-                    'proguard-crashlytics.rules'
+                    'proguard-crashlytics.rules',
+                    'proguard-rxjava.rules',
+                    'proguard-appcompat.rules'
         }
     }
 
@@ -90,7 +92,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     // Dagger  [END]
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
 }
