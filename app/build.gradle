@@ -48,10 +48,8 @@ android {
                     'proguard-rules.pro',
                     'proguard-gson.rules',
                     'proguard-guava.rules',
-                    'proguard-glide.rules',
                     'proguard-crashlytics.rules',
-                    'proguard-rxjava.rules',
-                    'proguard-appcompat.rules'
+                    'proguard-rxjava.rules'
         }
     }
 
@@ -65,34 +63,31 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:multidex:1.0.1'
 
-    compile "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:preference-v7:${rootProject.ext.supportLibVersion}"
 
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile "com.google.code.gson:gson:${rootProject.ext.gsonVersion}"
     compile "com.google.guava:guava:${rootProject.ext.guavaVersion}"
-    compile 'com.google.android:flexbox:0.2.3'
+    compile "com.google.android:flexbox:${rootProject.ext.flexboxVersion}"
 
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
 
     compile 'ua.hospes.dbhelper:dbhelper:0.2.4'
     compile 'ua.hospes.absrvadapter:absrvadapter:0.2.2'
 
     //Rx1 [START]
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.5'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile "io.reactivex:rxandroid:${rootProject.ext.rxAndroidVersion}"
+    compile "io.reactivex:rxjava:${rootProject.ext.rxJavaVersion}"
+    compile "com.jakewharton.rxbinding:rxbinding:${rootProject.ext.rxBindingVersion}"
     //Rx1  [END]
 
     // Dagger [START]
-    compile 'com.google.dagger:dagger:2.10'
-    compile 'com.google.dagger:dagger-android-support:2.10' // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+    compile "com.google.dagger:dagger:${rootProject.ext.dagger2Version}"
+    compile "com.google.dagger:dagger-android-support:${rootProject.ext.dagger2Version}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2Version}"
     // Dagger  [END]
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
-        transitive = true;
-    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') { transitive = true }
 }

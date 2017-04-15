@@ -32,7 +32,17 @@ ext {
 
     supportLibVersion = "25.3.1"
 
+    gsonVersion = "2.8.0"
     guavaVersion = "20.0"
+    flexboxVersion = "0.2.6"
+
+    glideVersion = "3.7.0"
+
+    rxAndroidVersion = "1.2.1"
+    rxJavaVersion = "1.2.9"
+    rxBindingVersion = "0.4.0"
+
+    dagger2Version = "2.10"
 }
 
 task clean(type: Delete) {
