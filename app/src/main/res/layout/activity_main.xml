@@ -36,7 +36,7 @@
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
     <fragment android:id="@+id/navigation_drawer"
-              android:name="ua.hospes.nfs.marathon.ui.NavigationDrawerFragment"
+              android:name="ua.hospes.rtm.ui.NavigationDrawerFragment"
               android:layout_width="@dimen/navigation_drawer_width"
               android:layout_height="match_parent"
               android:layout_gravity="start"

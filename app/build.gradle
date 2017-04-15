@@ -11,21 +11,45 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "ua.hospes.nfs.marathon"
+        applicationId "ua.hospes.rtm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName version + (buildNumber != null ? ".$buildNumber" : ".dev")
 
-        archivesBaseName = "nfs-marathon-v$version" + (buildNumber != null ? ".$buildNumber" : ".dev")
+        archivesBaseName = "rtm-v$version" + (buildNumber != null ? ".$buildNumber" : ".dev")
 
         multiDexEnabled true
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            //storeFile file("debug.keystore")
+        }
         release {
+            storeFile file(System.getProperty("user.home") + "/release-hospes.keystore")
+            storePassword "sync753df"
+            keyAlias("rtm")
+            keyPassword ">fFRteQE6,^uDQ]a"
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix ".debug"
+
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro',
+                    'proguard-gson.rules',
+                    'proguard-guava.rules',
+                    'proguard-glide.rules',
+                    'proguard-crashlytics.rules'
         }
     }
 

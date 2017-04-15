@@ -12,7 +12,7 @@
               android:layout_weight="1"
               android:text="Driver" />
 
-    <ua.hospes.nfs.marathon.ui.race.widgets.DriverTimeView
+    <ua.hospes.rtm.ui.race.widgets.DriverTimeView
         android:id="@+id/driver"
         android:text="00:00:00"
         android:layout_width="wrap_content"
