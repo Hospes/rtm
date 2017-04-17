@@ -8,8 +8,9 @@ import android.os.Parcelable;
  */
 public class Car implements Parcelable {
     private final int id;
-    private int number = 0;
-    private int rating = 0;
+    private int number = -1;
+    private CarQuality quality = CarQuality.NORMAL;
+    private boolean broken = false;
 
 
     public Car() {
@@ -30,8 +31,12 @@ public class Car implements Parcelable {
         return number;
     }
 
-    public int getRating() {
-        return rating;
+    public CarQuality getQuality() {
+        return quality;
+    }
+
+    public boolean isBroken() {
+        return broken;
     }
     //endregion
 
@@ -40,8 +45,12 @@ public class Car implements Parcelable {
         this.number = number;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setQuality(CarQuality quality) {
+        this.quality = quality;
+    }
+
+    public void setBroken(boolean broken) {
+        this.broken = broken;
     }
     //endregion
 
@@ -51,7 +60,8 @@ public class Car implements Parcelable {
         return "Car{" +
                 "id=" + id +
                 ", number=" + number +
-                ", rating=" + rating +
+                ", quality=" + quality +
+                ", broken=" + broken +
                 '}';
     }
 
@@ -63,16 +73,19 @@ public class Car implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeInt(this.number);
-        dest.writeInt(this.rating);
+        dest.writeInt(this.quality == null ? -1 : this.quality.ordinal());
+        dest.writeByte(this.broken ? (byte) 1 : (byte) 0);
     }
 
     protected Car(Parcel in) {
         this.id = in.readInt();
         this.number = in.readInt();
-        this.rating = in.readInt();
+        int tmpQuality = in.readInt();
+        this.quality = tmpQuality == -1 ? CarQuality.NORMAL : CarQuality.values()[tmpQuality];
+        this.broken = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Car> CREATOR = new Parcelable.Creator<Car>() {
+    public static final Creator<Car> CREATOR = new Creator<Car>() {
         @Override
         public Car createFromParcel(Parcel source) {return new Car(source);}
 

@@ -69,6 +69,7 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
         if (session != null) {
             Car car = session.getCar();
             holder.btnSessionCar.setText(car == null ? context.getString(R.string.btn_set_car) : String.valueOf(car.getNumber()));
+            holder.btnSessionCar.setTextColor(car == null ? Color.WHITE : context.getResources().getColor(car.getQuality().getColor()));
 
             Driver driver = session.getDriver();
             holder.btnSessionDriver.setText(driver == null ? context.getString(R.string.btn_set_driver) : session.getDriver().getName());

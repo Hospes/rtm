@@ -4,14 +4,17 @@ import android.content.ContentValues;
 
 import ua.hospes.dbhelper.BaseModelInterface;
 import ua.hospes.rtm.core.db.tables.Cars;
+import ua.hospes.rtm.domain.cars.models.CarQuality;
 
 /**
  * @author Andrew Khloponin
  */
 public class CarDb implements BaseModelInterface {
     private final int id;
-    private int number = 0;
-    private int rating = 0;
+    private int number = -1;
+    private CarQuality quality = CarQuality.NORMAL;
+    private boolean broken = false;
+
 
     public CarDb() {
         this.id = -1;
@@ -31,8 +34,12 @@ public class CarDb implements BaseModelInterface {
         return number;
     }
 
-    public int getRating() {
-        return rating;
+    public CarQuality getQuality() {
+        return quality;
+    }
+
+    public boolean isBroken() {
+        return broken;
     }
     //endregion
 
@@ -41,8 +48,12 @@ public class CarDb implements BaseModelInterface {
         this.number = number;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setQuality(CarQuality quality) {
+        this.quality = quality;
+    }
+
+    public void setBroken(boolean broken) {
+        this.broken = broken;
     }
     //endregion
 
@@ -52,7 +63,8 @@ public class CarDb implements BaseModelInterface {
         return "CarDb{" +
                 "id=" + id +
                 ", number=" + number +
-                ", rating=" + rating +
+                ", quality='" + quality + '\'' +
+                ", broken=" + broken +
                 '}';
     }
 
@@ -62,7 +74,8 @@ public class CarDb implements BaseModelInterface {
         ContentValues cv = new ContentValues();
 
         cv.put(Cars.NUMBER, number);
-        cv.put(Cars.RATING, rating);
+        cv.put(Cars.QUALITY, quality.toString());
+        cv.put(Cars.BROKEN, broken ? 1 : 0);
 
         return cv;
     }

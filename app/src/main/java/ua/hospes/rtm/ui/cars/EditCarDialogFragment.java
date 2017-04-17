@@ -12,7 +12,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import javax.inject.Inject;
@@ -21,6 +21,7 @@ import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.cars.CarsRepository;
 import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.models.CarQuality;
 import ua.hospes.rtm.utils.RxUtils;
 import ua.hospes.rtm.utils.UiUtils;
 
@@ -32,12 +33,14 @@ public class EditCarDialogFragment extends DialogFragment {
 
     @Inject CarsRepository carsRepository;
 
-    private String[] ratingTitles = new String[]{"0", "1", "2"};
+    private final CarQuality[] qualities = {CarQuality.LOW, CarQuality.NORMAL, CarQuality.HIGH};
 
-    private AppCompatSpinner spRating;
+    private AppCompatSpinner spQuality;
     private EditText etNumber;
+    private CheckBox cbBroken;
+
     private Car car = null;
-    private int selectedRating = -1;
+    private CarQuality selectedQuality = CarQuality.NORMAL;
 
 
     public static EditCarDialogFragment newInstance(Car car) {
@@ -74,26 +77,28 @@ public class EditCarDialogFragment extends DialogFragment {
 
         findViews(view);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, ratingTitles);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spRating.setAdapter(adapter);
-        spRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spQuality.setAdapter(new CarQualityAdapter(getContext(), qualities));
+        spQuality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedRating = position;
+                selectedQuality = (CarQuality) parent.getSelectedItem();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedRating = -1;
+                selectedQuality = CarQuality.NORMAL;
             }
         });
 
         if (car != null) {
             etNumber.setText(String.valueOf(car.getNumber()));
             etNumber.setSelection(String.valueOf(car.getNumber()).length());
-            if (car.getRating() >= 0 && car.getRating() < 3)
-                spRating.setSelection(car.getRating());
+            selectedQuality = car.getQuality();
+            cbBroken.setChecked(car.isBroken());
+        }
+
+        for (int i = 0; i < qualities.length; i++) {
+            if (qualities[i].equals(selectedQuality)) spQuality.setSelection(i);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
@@ -111,7 +116,8 @@ public class EditCarDialogFragment extends DialogFragment {
 
     private void findViews(View view) {
         etNumber = UiUtils.findView(view, R.id.number);
-        spRating = UiUtils.findView(view, R.id.rating);
+        spQuality = UiUtils.findView(view, R.id.quality);
+        cbBroken = UiUtils.findView(view, R.id.broken);
     }
 
     private DialogInterface.OnClickListener onOkClick = (dialog, i) -> {
@@ -122,7 +128,8 @@ public class EditCarDialogFragment extends DialogFragment {
         } catch (NumberFormatException | NullPointerException e) {
             car.setNumber(0);
         }
-        car.setRating(selectedRating);
+        car.setQuality(selectedQuality);
+        car.setBroken(cbBroken.isChecked());
 
         carsRepository.save(car)
                 .compose(RxUtils.applySchedulers())

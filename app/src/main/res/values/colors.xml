@@ -3,4 +3,8 @@
     <color name="colorPrimary">#e7651a</color>
     <color name="colorPrimaryDark">#c25a1e</color>
     <color name="colorAccent">#ff8641</color>
+
+    <color name="car_quality_low">#ff0000</color>
+    <color name="car_quality_normal">#ffd000</color>
+    <color name="car_quality_high">#00ff00</color>
 </resources>

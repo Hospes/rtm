@@ -4,7 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +20,15 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.rtm.R;
+import ua.hospes.rtm.core.ui.AbsFragment;
+import ua.hospes.rtm.core.ui.SpaceItemDecoration;
 import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-public class CarsFragment extends Fragment implements CarsContract.View {
+public class CarsFragment extends AbsFragment implements CarsContract.View {
     @Inject CarsPresenter presenter;
 
     private RecyclerView rv;
@@ -51,6 +54,11 @@ public class CarsFragment extends Fragment implements CarsContract.View {
         super.onAttach(context);
     }
 
+    @Override
+    protected int setActionBarTitle() {
+        return R.string.cars_title;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,7 +77,8 @@ public class CarsFragment extends Fragment implements CarsContract.View {
         super.onActivityCreated(savedInstanceState);
 
         rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.cars_column_count)));
+        rv.addItemDecoration(new SpaceItemDecoration(getResources(), R.dimen.grid_item_margin));
         rv.setAdapter(adapter = new CarsAdapter());
         adapter.setOnItemClickListener((item, position) -> showEditCarDialog(item));
 
@@ -96,7 +105,7 @@ public class CarsFragment extends Fragment implements CarsContract.View {
                 return true;
 
             case R.id.action_clear:
-                presenter.clear();
+                showClearDialog();
                 return true;
 
             default:
@@ -119,7 +128,15 @@ public class CarsFragment extends Fragment implements CarsContract.View {
     }
 
 
-    public void showEditCarDialog(Car car) {
+    private void showEditCarDialog(Car car) {
         EditCarDialogFragment.newInstance(car).show(getChildFragmentManager(), "add_car");
+    }
+
+    private void showClearDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.cars_remove_all)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 }

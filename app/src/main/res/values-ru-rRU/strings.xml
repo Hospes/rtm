@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- Cars screen -->
+    <string name="cars_title">Карты</string>
+    <string name="cars_broken">сломан</string>
+    <string name="cars_remove_all">Очистить весь список картов?</string>
+</resources>
