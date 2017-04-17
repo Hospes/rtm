@@ -19,7 +19,7 @@ public abstract class AbsFragment extends Fragment {
     @StringRes
     protected abstract int setActionBarTitle();
 
-    protected final void updateABTitle(@StringRes int title) {
+    private void updateABTitle(@StringRes int title) {
         if (title == -1) return;
 
         if (getActivity() instanceof AppCompatActivity) {
