@@ -74,8 +74,8 @@ dependencies {
 
     compile "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
 
-    compile 'ua.hospes.dbhelper:dbhelper:0.2.4'
-    compile 'ua.hospes.absrvadapter:absrvadapter:0.2.2'
+    compile "ua.hospes.dbhelper:dbhelper:${rootProject.ext.hospesDbHelper}"
+    compile "ua.hospes.absrvadapter:absrvadapter:${rootProject.ext.hospesAbsRecycler}"
 
     //Rx1 [START]
     compile "io.reactivex:rxandroid:${rootProject.ext.rxAndroidVersion}"
@@ -89,5 +89,5 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2Version}"
     // Dagger  [END]
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') { transitive = true }
+    compile("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlyticsVersion}@aar") { transitive = true }
 }

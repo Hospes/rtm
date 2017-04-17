@@ -42,7 +42,11 @@ ext {
     rxJavaVersion = "1.2.9"
     rxBindingVersion = "0.4.0"
 
+    hospesDbHelper = "0.2.4"
+    hospesAbsRecycler = "0.2.2"
+
     dagger2Version = "2.10"
+    crashlyticsVersion = "2.6.7"
 }
 
 task clean(type: Delete) {
