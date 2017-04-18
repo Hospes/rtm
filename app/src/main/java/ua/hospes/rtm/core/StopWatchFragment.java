@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
+
+import ua.hospes.rtm.core.ui.AbsFragment;
 
 /**
  * @author Andrew Khloponin
  */
-public abstract class StopWatchFragment extends Fragment implements StopWatch.OnStopWatchListener {
+public abstract class StopWatchFragment extends AbsFragment implements StopWatch.OnStopWatchListener {
     private StopWatchService.StopWatchBinder binder;
 
     @Override

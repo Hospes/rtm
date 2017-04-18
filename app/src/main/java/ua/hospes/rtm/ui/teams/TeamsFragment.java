@@ -20,13 +20,14 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.rtm.R;
+import ua.hospes.rtm.core.ui.AbsFragment;
 import ua.hospes.rtm.domain.team.models.Team;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-public class TeamsFragment extends Fragment implements TeamsContract.View {
+public class TeamsFragment extends AbsFragment implements TeamsContract.View {
     @Inject TeamsPresenter presenter;
 
     private RecyclerView rv;
@@ -50,6 +51,11 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+    }
+
+    @Override
+    protected int setActionBarTitle() {
+        return R.string.teams_title;
     }
 
     @Nullable

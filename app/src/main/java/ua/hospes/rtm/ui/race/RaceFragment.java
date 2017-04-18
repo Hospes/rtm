@@ -60,6 +60,11 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         super.onAttach(context);
     }
 
+    @Override
+    protected int setActionBarTitle() {
+        return R.string.race_title;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

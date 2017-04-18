@@ -1,15 +1,18 @@
 package ua.hospes.rtm.ui.settings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import hugo.weaving.DebugLog;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.preferences.PreferencesManager;
 
@@ -29,15 +32,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+        updateABTitle(getActivity(), R.string.settings_title);
     }
 
-    @DebugLog
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
     }
 
-    @DebugLog
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -55,5 +57,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefAssignPitStops.setEnabled(!((boolean) newValue));
             return true;
         });
+    }
+
+    protected void updateABTitle(Activity activity, @StringRes int title) {
+        if (title == -1 || title == 0 || !(activity instanceof AppCompatActivity)) return;
+
+        ActionBar ab = ((AppCompatActivity) activity).getSupportActionBar();
+        if (ab != null) ab.setTitle(getString(title));
     }
 }
