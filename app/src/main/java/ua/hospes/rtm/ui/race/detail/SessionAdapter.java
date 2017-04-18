@@ -1,12 +1,11 @@
 package ua.hospes.rtm.ui.race.detail;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
+import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.domain.sessions.models.Session;
@@ -19,12 +18,12 @@ import ua.hospes.rtm.utils.UiUtils;
 public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_race_detail_session, parent, false));
+        return new MyHolder(parent, R.layout.item_race_detail_session);
     }
 
     @Override
     public void onBindViewHolder(MyHolder holder, Session item, int position) {
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_detail_not_trans);
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_1 : R.drawable.bg_race_item_detail_not_trans);
 
         Car car = item.getCar();
         holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));
@@ -41,12 +40,15 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
         holder.type.setText(item.getType().getTitle());
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView driver, car, start, duration, type;
+    class MyHolder extends AbsRecyclerHolder {
+        TextView driver, car, start, duration, type;
 
-        public MyHolder(View itemView) {
-            super(itemView);
+        MyHolder(ViewGroup parent, int layoutId) {
+            super(parent, layoutId);
+        }
 
+        @Override
+        protected void findViews(View itemView) {
             start = UiUtils.findView(itemView, R.id.start);
             duration = UiUtils.findView(itemView, R.id.duration);
             car = UiUtils.findView(itemView, R.id.car);

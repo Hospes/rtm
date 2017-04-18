@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -96,7 +97,7 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
                 return true;
 
             case R.id.action_clear:
-                presenter.clear();
+                showClearDialog();
                 return true;
 
             default:
@@ -121,5 +122,13 @@ public class TeamsFragment extends Fragment implements TeamsContract.View {
 
     public void showEditTeamDialog(Team team) {
         EditTeamDialogFragment.newInstance(team).show(getChildFragmentManager(), "add_team");
+    }
+
+    private void showClearDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.teams_remove_all)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 }

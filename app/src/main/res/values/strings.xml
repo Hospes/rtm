@@ -27,9 +27,23 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- Race string -->
+    <!-- Race screen -->
+    <string name="race_title">@string/app_name</string>
     <string name="btn_set_car">Set car</string>
     <string name="btn_set_driver">Set driver</string>
+
+    <!-- Teams screen -->
+    <string name="teams_title">Teams</string>
+    <string name="teams_name">Name</string>
+    <string name="teams_drivers">Drivers</string>
+    <string name="teams_remove_all">Remove all teams?</string>
+
+    <!-- Drivers screen -->
+    <string name="drivers_title">Drivers</string>
+    <string name="drivers_name">Name</string>
+    <string name="drivers_team">Team</string>
+    <string name="drivers_no_team">No team</string>
+    <string name="drivers_remove_all">Remove all drivers?</string>
 
     <!-- Cars screen -->
     <string name="cars_title">Cars</string>
@@ -37,6 +51,7 @@
     <string name="cars_remove_all">Remove all cars?</string>
 
     <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
     <string name="pref_PredefineDriverForPITSTOP">Predefine driver for PIT-STOP from session</string>
     <string name="pref_RemovePITSTOPs">Remove PIT-STOP sessions</string>
 </resources>

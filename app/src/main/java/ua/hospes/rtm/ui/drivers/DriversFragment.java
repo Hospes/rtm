@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,13 +20,14 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import ua.hospes.rtm.R;
+import ua.hospes.rtm.core.ui.AbsFragment;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
-public class DriversFragment extends Fragment implements DriversContract.View {
+public class DriversFragment extends AbsFragment implements DriversContract.View {
     @Inject DriversPresenter presenter;
 
     private RecyclerView rv;
@@ -49,6 +51,11 @@ public class DriversFragment extends Fragment implements DriversContract.View {
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+    }
+
+    @Override
+    protected int setActionBarTitle() {
+        return R.string.drivers_title;
     }
 
     @Nullable
@@ -96,7 +103,7 @@ public class DriversFragment extends Fragment implements DriversContract.View {
                 return true;
 
             case R.id.action_clear:
-                presenter.clear();
+                showClearDialog();
                 return true;
 
             default:
@@ -122,5 +129,13 @@ public class DriversFragment extends Fragment implements DriversContract.View {
     public void showEditDriverDialog(Driver driver) {
         EditDriverDialogFragment dialog = EditDriverDialogFragment.newInstance(driver);
         dialog.show(getChildFragmentManager(), "add_driver");
+    }
+
+    private void showClearDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.drivers_remove_all)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 }

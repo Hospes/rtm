@@ -1,14 +1,14 @@
 package ua.hospes.rtm.ui.drivers;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
+import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.utils.UiUtils;
@@ -19,30 +19,41 @@ import ua.hospes.rtm.utils.UiUtils;
 public class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_driver, parent, false));
+        return new MyHolder(parent, R.layout.item_driver);
     }
 
     @Override
     public void onBindViewHolder(MyHolder holder, Driver item, int position) {
-        holder.id.setText(String.valueOf(item.getId()));
-        holder.name.setText(item.getName());
-        holder.team.setText(TextUtils.isEmpty(item.getTeamName()) ? "no team" : item.getTeamName());
+        Resources res = holder.itemView.getResources();
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_2 : R.drawable.bg_list_item_1);
 
-        holder.edit.setOnClickListener(view -> getOnItemClickListener().onItemClick(item, position));
+        holder.name.setText(item.getName());
+        holder.team.setText(TextUtils.isEmpty(item.getTeamName()) ? res.getString(R.string.drivers_no_team) : item.getTeamName());
     }
 
 
-    public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView id, name, team;
-        private Button edit;
+    class MyHolder extends AbsRecyclerHolder {
+        private TextView name, team;
 
-        public MyHolder(View itemView) {
-            super(itemView);
+        MyHolder(ViewGroup parent, int layoutId) {
+            super(parent, layoutId);
 
-            id = UiUtils.findView(itemView, R.id.id);
+            itemView.setOnClickListener(this::initClickListener);
+        }
+
+
+        @Override
+        protected void findViews(View itemView) {
             name = UiUtils.findView(itemView, R.id.name);
             team = UiUtils.findView(itemView, R.id.team);
-            edit = UiUtils.findView(itemView, R.id.edit);
+        }
+
+        void initClickListener(View view) {
+            final int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
+            if (getOnItemClickListener() == null) return;
+            onItemClick(getItem(position), position);
         }
     }
 }

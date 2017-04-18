@@ -2,6 +2,7 @@ package ua.hospes.rtm.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -55,36 +56,42 @@ public class MainActivity extends AppCompatActivity implements HasDispatchingSup
         switch (position) {
             case 0:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, RaceFragment.newInstance())
                         .commit();
                 break;
 
             case 1:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, TeamsFragment.newInstance())
                         .commit();
                 break;
 
             case 2:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, DriversFragment.newInstance())
                         .commit();
                 break;
 
             case 3:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, CarsFragment.newInstance())
                         .commit();
                 break;
 
             case 4:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, SettingsFragment.newInstance())
                         .commit();
                 break;
 
             default:
                 getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                         .commit();
                 break;

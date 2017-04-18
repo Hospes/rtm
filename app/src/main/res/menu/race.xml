@@ -6,15 +6,16 @@
           android:title="StopWatch"
           app:actionLayout="@layout/action_stopwatch_view"
           app:showAsAction="always" />
+
     <item android:id="@+id/action_start"
           android:title="@string/action_start"
-          app:showAsAction="never" />
+          app:showAsAction="ifRoom" />
     <item android:id="@+id/action_stop"
           android:title="@string/action_stop"
           app:showAsAction="never" />
     <item android:id="@+id/action_add_team"
           android:title="@string/action_add_team"
-          app:showAsAction="never" />
+          app:showAsAction="ifRoom" />
     <item android:id="@+id/action_reset"
           android:title="@string/action_reset"
           app:showAsAction="never" />

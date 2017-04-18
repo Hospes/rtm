@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -131,7 +132,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
                 return true;
 
             case R.id.action_clear:
-                presenter.clear();
+                showClearDialog();
                 return true;
 
             default:
@@ -175,5 +176,14 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         this.currentNanoTime = currentNanoTime;
         tvTime.setText(TimeUtils.format(time));
         adapter.updateDurations(currentNanoTime);
+    }
+
+
+    private void showClearDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.teams_remove_all)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 }

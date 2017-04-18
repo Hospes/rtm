@@ -1,12 +1,11 @@
 package ua.hospes.rtm.ui.race.detail;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
+import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.race.models.DriverDetails;
 import ua.hospes.rtm.ui.race.widgets.DriverTimeView;
@@ -18,16 +17,16 @@ import ua.hospes.rtm.utils.UiUtils;
 public class DriverDetailsAdapter extends AbsRecyclerAdapter<DriverDetails, DriverDetailsAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_driver_details, parent, false));
+        return new MyHolder(parent, R.layout.item_driver_details);
     }
 
     @Override
     public void onBindViewHolder(MyHolder holder, DriverDetails item, int position) {
-        int resBG = R.drawable.bg_race_item_transparent;
+        int resBG;
         if ((position / 2) % 2 == 0) {
-            resBG = position % 2 == 0 ? R.drawable.bg_race_item_transparent : R.drawable.bg_race_item_detail_not_trans;
+            resBG = position % 2 == 0 ? R.drawable.bg_list_item_1 : R.drawable.bg_race_item_detail_not_trans;
         } else {
-            resBG = position % 2 == 0 ? R.drawable.bg_race_item_detail_not_trans : R.drawable.bg_race_item_transparent;
+            resBG = position % 2 == 0 ? R.drawable.bg_race_item_detail_not_trans : R.drawable.bg_list_item_1;
         }
         holder.itemView.setBackgroundResource(resBG);
 
@@ -36,13 +35,16 @@ public class DriverDetailsAdapter extends AbsRecyclerAdapter<DriverDetails, Driv
         holder.driver.setPrevDuration(item.getPrevDuration());
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-        private DriverTimeView driver;
+    class MyHolder extends AbsRecyclerHolder {
+        TextView name;
+        DriverTimeView driver;
 
-        public MyHolder(View itemView) {
-            super(itemView);
+        MyHolder(ViewGroup parent, int layoutId) {
+            super(parent, layoutId);
+        }
 
+        @Override
+        protected void findViews(View itemView) {
             name = UiUtils.findView(itemView, R.id.name);
             driver = UiUtils.findView(itemView, R.id.driver);
         }

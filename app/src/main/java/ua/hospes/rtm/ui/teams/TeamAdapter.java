@@ -1,15 +1,15 @@
 package ua.hospes.rtm.ui.teams;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.common.collect.Collections2;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
+import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.team.models.Team;
@@ -21,32 +21,40 @@ import ua.hospes.rtm.utils.UiUtils;
 public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team, parent, false));
+        return new MyHolder(parent, R.layout.item_team);
     }
 
     @Override
     public void onBindViewHolder(MyHolder holder, Team item, int position) {
-        holder.id.setText(String.valueOf(item.getId()));
+        Resources res = holder.itemView.getResources();
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_2 : R.drawable.bg_list_item_1);
+
         holder.name.setText(item.getName());
-
-
         holder.drivers.setText(Collections2.transform(item.getDrivers(), Driver::getName).toString().replaceAll("(\\[|\\])", ""));
-
-        holder.edit.setOnClickListener(view -> getOnItemClickListener().onItemClick(item, position));
     }
 
 
-    public class MyHolder extends RecyclerView.ViewHolder {
-        private TextView id, name, drivers;
-        private Button edit;
+    class MyHolder extends AbsRecyclerHolder {
+        private TextView name, drivers;
 
-        public MyHolder(View itemView) {
-            super(itemView);
+        MyHolder(ViewGroup parent, int layoutId) {
+            super(parent, layoutId);
 
-            id = UiUtils.findView(itemView, R.id.id);
+            itemView.setOnClickListener(this::initClickListener);
+        }
+
+        @Override
+        protected void findViews(View itemView) {
             name = UiUtils.findView(itemView, R.id.name);
             drivers = UiUtils.findView(itemView, R.id.drivers);
-            edit = UiUtils.findView(itemView, R.id.edit);
+        }
+
+        void initClickListener(View view) {
+            final int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
+            if (getOnItemClickListener() == null) return;
+            onItemClick(getItem(position), position);
         }
     }
 }
