@@ -8,7 +8,7 @@
     <string name="action_add">Добавить</string>
     <string name="action_add_team">Добавить команду</string>
     <string name="action_reset">Обнулить</string>
-    <string name="action_clear">Очистить все команды</string>
+    <string name="action_clear">Очистить</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="delete">Удалить</string>
@@ -37,7 +37,7 @@
     <!-- Cars screen -->
     <string name="cars_title">Карты</string>
     <string name="cars_broken">сломан</string>
-    <string name="cars_remove_all">Очистить весь список картов?</string>
+    <string name="cars_remove_all">Очистить список картов?</string>
 
     <!-- Settings screen -->
     <string name="settings_title">Настройки</string>
