@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="assign_pitstop_dur_titles">
-        <item>Manually</item>
-        <item>Previous session</item>
-        <item>Next session</item>
+        <item>@string/settings_assign_pitstop_manually</item>
+        <item>@string/settings_assign_pitstop_prev</item>
+        <item>@string/settings_assign_pitstop_next</item>
     </string-array>
-    <string-array name="assign_pitstop_dur_values">
+    <string-array name="assign_pitstop_dur_values" translatable="false">
         <item>manual</item>
         <item>previous</item>
         <item>next</item>

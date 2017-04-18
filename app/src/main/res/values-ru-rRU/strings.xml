@@ -43,4 +43,8 @@
     <string name="settings_title">Настройки</string>
     <string name="pref_PredefineDriverForPITSTOP">Predefine driver for PIT-STOP from session</string>
     <string name="pref_RemovePITSTOPs">Убрать PIT-STOP сессии</string>
+
+    <string name="settings_assign_pitstop_manually">Вручную</string>
+    <string name="settings_assign_pitstop_prev">Из предыдущей сессии</string>
+    <string name="settings_assign_pitstop_next">Из следующей сессии</string>
 </resources>
