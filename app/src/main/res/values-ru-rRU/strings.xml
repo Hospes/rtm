@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="action_start">Старт</string>
+    <string name="action_stop">Стоп</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_add_team">Добавить команду</string>
+    <string name="action_reset">Обнулить</string>
+    <string name="action_clear">Очистить все команды</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="delete">Удалить</string>
+    <string name="add_all">Добавить всё</string>
+
+    <string name="action_settings">Настройки</string>
+
+    <!-- Race screen -->
+    <string name="race_title">@string/app_name</string>
+    <string name="btn_set_car">Карт</string>
+    <string name="btn_set_driver">Гонщик</string>
+
+    <!-- Teams screen -->
+    <string name="teams_title">Команды</string>
+    <string name="teams_name">Навзвание</string>
+    <string name="teams_drivers">Гонщики</string>
+    <string name="teams_remove_all">Очистить список команд?</string>
+
+    <!-- Drivers screen -->
+    <string name="drivers_title">Гонщики</string>
+    <string name="drivers_name">Имя</string>
+    <string name="drivers_team">Команда</string>
+    <string name="drivers_no_team">Нет команды</string>
+    <string name="drivers_remove_all">Очистить список гонщиков?</string>
 
     <!-- Cars screen -->
     <string name="cars_title">Карты</string>
     <string name="cars_broken">сломан</string>
     <string name="cars_remove_all">Очистить весь список картов?</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Настройки</string>
+    <string name="pref_PredefineDriverForPITSTOP">Predefine driver for PIT-STOP from session</string>
+    <string name="pref_RemovePITSTOPs">Убрать PIT-STOP сессии</string>
 </resources>

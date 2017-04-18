@@ -71,7 +71,7 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
 
             Driver driver = session.getDriver();
             holder.btnSessionDriver.setText(driver == null ? context.getString(R.string.btn_set_driver) : session.getDriver().getName());
-            holder.driverTimeView.setVisibility(driver == null ? View.GONE : View.VISIBLE);
+            holder.driverTimeView.setVisibility(driver == null ? View.INVISIBLE : View.VISIBLE);
             if (driver != null) {
                 holder.driverTimeView.setPrevDuration(item.getDetails().getDriverDuration(driver.getId()));
             }

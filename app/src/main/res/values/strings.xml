@@ -29,8 +29,8 @@
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>
-    <string name="btn_set_car">Set car</string>
-    <string name="btn_set_driver">Set driver</string>
+    <string name="btn_set_car">Car</string>
+    <string name="btn_set_driver">Driver</string>
 
     <!-- Teams screen -->
     <string name="teams_title">Teams</string>
