@@ -9,17 +9,26 @@
     <string name="action_add_team">Добавить команду</string>
     <string name="action_reset">Обнулить</string>
     <string name="action_clear">Очистить</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="delete">Удалить</string>
-    <string name="add_all">Добавить всё</string>
-
-    <string name="action_settings">Настройки</string>
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>
-    <string name="btn_set_car">Карт</string>
-    <string name="btn_set_driver">Гонщик</string>
+    <string name="race_pit">Пит\n%1$d</string>
+    <string name="race_btn_set_car">Карт</string>
+    <string name="race_btn_set_driver">Гонщик</string>
+    <string name="race_btn_next_session">Next</string>
+    <string name="race_btn_pit">Pit</string>
+    <string name="race_btn_out">Out</string>
+    <string name="race_on_track">На трассе</string>
+    <string name="race_now">Сейчас</string>
+
+    <!-- Race detail screen -->
+    <string name="race_detail_driver">Гонщик</string>
+    <string name="race_detail_car">Машина</string>
+    <string name="race_detail_start_time">Start time</string>
+    <string name="race_detail_duration">Длительность</string>
+    <string name="race_detail_type">Тип</string>
 
     <!-- Teams screen -->
     <string name="teams_title">Команды</string>

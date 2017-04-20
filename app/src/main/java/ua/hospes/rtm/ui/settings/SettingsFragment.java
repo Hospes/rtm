@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
@@ -44,7 +46,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Preference prefAssignPitStops = findPreference("assign_pitstop_dur_to");
-        String currentValue = preferencesManager.getPitStopAssign().name().toLowerCase();
+        String currentValue = preferencesManager.getPitStopAssign().name().toLowerCase(Locale.getDefault());
         prefAssignPitStops.setSummary(currentValue);
         prefAssignPitStops.setOnPreferenceChangeListener((preference, newValue) -> {
             preference.setSummary(String.valueOf(newValue));

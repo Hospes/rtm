@@ -59,18 +59,18 @@ public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHold
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_1 : R.drawable.bg_list_item_2);
 
         holder.team.setText(String.format(Locale.getDefault(), "%1$d - %2$s", item.getTeamNumber(), item.getTeam().getName()));
-        holder.pits.setText(String.valueOf(item.getDetails().getPitStops()));
+        holder.pits.setText(context.getResources().getString(R.string.race_pit, item.getDetails().getPitStops()));
 
         Session session = item.getSession();
         holder.driverTimeView.setSession(session);
         holder.sessionTimeView.setSession(session);
         if (session != null) {
             Car car = session.getCar();
-            holder.btnSessionCar.setText(car == null ? context.getString(R.string.btn_set_car) : String.valueOf(car.getNumber()));
+            holder.btnSessionCar.setText(car == null ? context.getString(R.string.race_btn_set_car) : String.valueOf(car.getNumber()));
             holder.btnSessionCar.setTextColor(car == null ? Color.WHITE : context.getResources().getColor(car.getQuality().getColor()));
 
             Driver driver = session.getDriver();
-            holder.btnSessionDriver.setText(driver == null ? context.getString(R.string.btn_set_driver) : session.getDriver().getName());
+            holder.btnSessionDriver.setText(driver == null ? context.getString(R.string.race_btn_set_driver) : session.getDriver().getName());
             holder.driverTimeView.setVisibility(driver == null ? View.INVISIBLE : View.VISIBLE);
             if (driver != null) {
                 holder.driverTimeView.setPrevDuration(item.getDetails().getDriverDuration(driver.getId()));

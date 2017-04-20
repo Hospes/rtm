@@ -6,7 +6,7 @@
           android:gravity="center"
           android:paddingEnd="16dp"
           android:paddingStart="16dp"
-          android:text="00:00:00"
+          android:text="@string/time_holder"
           android:textColor="@android:color/white"
           android:textSize="18sp"
           android:textStyle="bold" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -8,7 +9,6 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -32,7 +32,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/drivers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_driver_details" />
 
 
             <LinearLayout android:layout_width="match_parent"
@@ -44,34 +45,40 @@
                 <TextView android:layout_width="0dp"
                           android:layout_height="wrap_content"
                           android:layout_weight="1"
-                          android:text="Driver"
+                          android:text="@string/race_detail_driver"
+                          android:textColor="@android:color/white"
                           android:textStyle="bold" />
 
                 <TextView android:layout_width="50dp"
                           android:layout_height="wrap_content"
-                          android:text="Car"
+                          android:text="@string/race_detail_car"
+                          android:textColor="@android:color/white"
                           android:textStyle="bold" />
 
                 <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
-                          android:text="Start time"
+                          android:text="@string/race_detail_start_time"
+                          android:textColor="@android:color/white"
                           android:textStyle="bold" />
 
                 <TextView android:layout_width="100dp"
                           android:layout_height="wrap_content"
-                          android:text="Duration"
+                          android:text="@string/race_detail_duration"
+                          android:textColor="@android:color/white"
                           android:textStyle="bold" />
 
                 <TextView android:layout_width="70dp"
                           android:layout_height="wrap_content"
-                          android:text="Type"
+                          android:text="@string/race_detail_type"
+                          android:textColor="@android:color/white"
                           android:textStyle="bold" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_race_detail_session" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

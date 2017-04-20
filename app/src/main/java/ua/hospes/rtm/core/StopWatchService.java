@@ -1,5 +1,6 @@
 package ua.hospes.rtm.core;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +13,7 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import hugo.weaving.DebugLog;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.ui.MainActivity;
 import ua.hospes.rtm.utils.TimeUtils;
@@ -20,6 +22,7 @@ import ua.hospes.rtm.utils.TimeUtils;
  * @author Andrew Khloponin
  */
 public class StopWatchService extends Service implements StopWatch.OnStopWatchListener {
+    private static final int NOTIFICATION_ID = 1337;
     private static final String KEY_ACTION = "action";
     private static final String KEY_START = "start";
     private static final String KEY_STOP = "stop";
@@ -42,6 +45,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     }
 
 
+    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,6 +61,8 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
         return binder;
     }
 
+    @DebugLog
+    @SuppressLint("WakelockTimeout")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(KEY_ACTION)) {
@@ -65,7 +71,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
                 wakeLock.acquire();
                 stopWatch.reset();
                 stopWatch.start();
-                startForeground(1337, buildNotification(TimeUtils.format(stopWatch.getTime())));
+                startForeground(NOTIFICATION_ID, buildNotification(TimeUtils.format(stopWatch.getTime())));
                 stopWatch.addOnChronometerTickListener(this);
                 return START_STICKY;
             } else if (KEY_STOP.equals(action)) {
@@ -73,13 +79,19 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
                 stopWatch.removeOnChronometerTickListener(this);
                 stopForeground(true);
                 wakeLock.release();
-                return START_STICKY;
+                stopSelf();
+                return START_NOT_STICKY;
             }
         }
         return START_STICKY;
     }
 
-
+    @DebugLog
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        wakeLock.release();
+    }
 
     private Notification buildNotification(String time) {
         Intent startMainActivity = new Intent(this, MainActivity.class);

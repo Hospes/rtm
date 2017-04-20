@@ -34,7 +34,7 @@ public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.M
         }
         holder.driver.setText(item.getDriver() == null ? "" : item.getDriver().getName());
         if (item.getStartDurationTime() == -1 || item.getEndDurationTime() == -1)
-            holder.duration.setText("NOW");
+            holder.duration.setText(R.string.race_now);
         else
             holder.duration.setText(TimeUtils.formatNanoWithMills(item.getEndDurationTime() - item.getStartDurationTime()));
         holder.type.setText(item.getType().getTitle());

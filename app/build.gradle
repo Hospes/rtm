@@ -54,7 +54,9 @@ android {
     }
 
     lintOptions {
-        abortOnError false
+        abortOnError true
+        warning 'ConvertToWebp', 'UnusedIds'
+        disable 'LabelFor', 'IconDensities'
     }
 
     compileOptions {

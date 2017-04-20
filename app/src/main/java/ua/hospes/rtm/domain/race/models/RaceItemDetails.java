@@ -1,14 +1,13 @@
 package ua.hospes.rtm.domain.race.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.util.SparseArray;
 
 /**
  * @author Andrew Khloponin
  */
 public class RaceItemDetails {
     private int pitStops = 0;
-    private Map<Integer, Long> completedDriversDuration = new HashMap<>();
+    private SparseArray<Long> completedDriversDuration = new SparseArray<>();
 
 
     public RaceItemDetails() {}

@@ -1,13 +1,13 @@
 package ua.hospes.rtm.ui.race.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * @author Andrew Khloponin
  */
-public abstract class TimeView extends TextView {
+public abstract class TimeView extends AppCompatTextView {
     private long currentNanoTime = 0L;
 
     public TimeView(Context context) {
