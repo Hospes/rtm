@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import ua.hospes.rtm.domain.drivers.models.Driver;
@@ -18,13 +19,10 @@ public class Team implements Parcelable {
     private List<Driver> drivers = new ArrayList<>();
 
 
-    public Team(String name) {
-        this.name = name;
-    }
+    public Team() {}
 
-    public Team(int id, String name) {
+    public Team(int id) {
         this.id = id;
-        this.name = name;
     }
 
 
@@ -45,6 +43,11 @@ public class Team implements Parcelable {
     //region Setters
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDrivers(Driver... drivers) {
+        this.drivers.clear();
+        Collections.addAll(this.drivers, drivers);
     }
 
     public void setDrivers(Collection<Driver> drivers) {

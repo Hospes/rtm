@@ -10,11 +10,11 @@ import ua.hospes.rtm.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-public class CarsPresenter extends BasePresenter<CarsContract.View> {
+class CarsPresenter extends BasePresenter<CarsContract.View> {
     private final CarsInteractor interactor;
 
     @Inject
-    public CarsPresenter(CarsInteractor interactor) {
+    CarsPresenter(CarsInteractor interactor) {
         this.interactor = interactor;
     }
 

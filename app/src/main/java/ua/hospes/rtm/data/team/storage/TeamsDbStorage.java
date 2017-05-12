@@ -9,6 +9,7 @@ import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.QueryBuilder;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.rtm.core.db.DbHelper;
+import ua.hospes.rtm.core.db.tables.Drivers;
 import ua.hospes.rtm.core.db.tables.Race;
 import ua.hospes.rtm.core.db.tables.Teams;
 import ua.hospes.rtm.data.team.mapper.TeamsMapper;
@@ -54,7 +55,7 @@ public class TeamsDbStorage {
     }
 
     public Observable<List<TeamDb>> listen() {
-        return dbHelper.query(TeamsMapper::map, new QueryBuilder(Teams.name));
+        return dbHelper.query(TeamsMapper::map, new QueryBuilder(Teams.name), Teams.name, Drivers.name);
     }
 
 

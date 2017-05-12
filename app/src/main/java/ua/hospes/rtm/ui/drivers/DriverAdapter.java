@@ -16,7 +16,7 @@ import ua.hospes.rtm.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-public class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHolder> {
+class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyHolder(parent, R.layout.item_driver);

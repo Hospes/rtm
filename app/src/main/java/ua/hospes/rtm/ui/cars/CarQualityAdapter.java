@@ -16,16 +16,16 @@ import ua.hospes.rtm.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-public class CarQualityAdapter extends AbsSpinnerAdapter<CarQuality, CarQualityAdapter.MyHolder> {
-    public CarQualityAdapter(@NonNull Context mContext) {
+class CarQualityAdapter extends AbsSpinnerAdapter<CarQuality, CarQualityAdapter.MyHolder> {
+    CarQualityAdapter(@NonNull Context mContext) {
         super(mContext);
     }
 
-    public CarQualityAdapter(@NonNull Context mContext, List<CarQuality> objects) {
+    CarQualityAdapter(@NonNull Context mContext, List<CarQuality> objects) {
         super(mContext, objects);
     }
 
-    public CarQualityAdapter(@NonNull Context mContext, CarQuality... objects) {
+    CarQualityAdapter(@NonNull Context mContext, CarQuality... objects) {
         super(mContext, objects);
     }
 

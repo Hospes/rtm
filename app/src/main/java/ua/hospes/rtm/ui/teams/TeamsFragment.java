@@ -126,8 +126,9 @@ public class TeamsFragment extends AbsFragment implements TeamsContract.View {
     }
 
 
-    public void showEditTeamDialog(Team team) {
+    public boolean showEditTeamDialog(Team team) {
         EditTeamDialogFragment.newInstance(team).show(getChildFragmentManager(), "add_team");
+        return true;
     }
 
     private void showClearDialog() {

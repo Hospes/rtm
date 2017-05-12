@@ -10,11 +10,11 @@ import ua.hospes.rtm.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-public class TeamsPresenter extends BasePresenter<TeamsContract.View> {
+class TeamsPresenter extends BasePresenter<TeamsContract.View> {
     private final TeamsInteractor interactor;
 
     @Inject
-    public TeamsPresenter(TeamsInteractor interactor) {
+    TeamsPresenter(TeamsInteractor interactor) {
         this.interactor = interactor;
     }
 

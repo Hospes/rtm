@@ -31,7 +31,7 @@ import ua.hospes.rtm.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-public class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
+class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
     private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.3f;
     private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.3f;
     private final boolean isPitStopsRemoved;

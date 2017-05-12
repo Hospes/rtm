@@ -1,5 +1,7 @@
 package ua.hospes.rtm.data.team;
 
+import com.google.common.primitives.Ints;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,9 +64,17 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     @Override
     public Observable<Boolean> save(Team team) {
         if (team.getId() == -1) {
-            return dbStorage.add(TeamsMapper.map(team)).map(result -> result.getResult() != 0);
+            return dbStorage.add(TeamsMapper.map(team))
+                    .flatMap(result -> {
+                        int teamId = (int) result.getResult();
+                        return updateDriversTeam(teamId, team.getDrivers());
+                    });
         } else {
-            return dbStorage.update(TeamsMapper.map(team)).map(result -> result.getResult() != 0);
+            return dbStorage.update(TeamsMapper.map(team))
+                    .flatMap(result -> {
+                        int teamId = result.getData().getId();
+                        return updateDriversTeam(teamId, team.getDrivers());
+                    });
         }
     }
 
@@ -81,5 +91,16 @@ public class TeamsRepositoryImpl implements TeamsRepository {
 
     private Observable<Driver> getDriverByTeamId(int teamId) {
         return driversRepository.getByTeamId(teamId);
+    }
+
+    private Observable<Boolean> updateDriversTeam(int teamId, final List<Driver> drivers) {
+        return Observable.from(drivers).map(Driver::getId)
+                .toList()
+                .flatMap(driverIds -> removeDriversFromTeamZip(driversRepository.removeDriversFromTeam(teamId), driverIds))
+                .flatMap(driverIds -> driversRepository.addDriversToTeam(teamId, Ints.toArray(driverIds)));
+    }
+
+    private Observable<List<Integer>> removeDriversFromTeamZip(Observable<Boolean> driversOperations, List<Integer> driverIds) {
+        return Observable.zip(driversOperations, Observable.just(driverIds), (aBoolean, ids) -> ids);
     }
 }

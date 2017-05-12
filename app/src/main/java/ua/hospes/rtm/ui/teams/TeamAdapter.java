@@ -18,7 +18,7 @@ import ua.hospes.rtm.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-public class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> {
+class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyHolder(parent, R.layout.item_team);

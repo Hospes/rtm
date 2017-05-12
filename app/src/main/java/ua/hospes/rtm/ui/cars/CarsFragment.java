@@ -128,8 +128,9 @@ public class CarsFragment extends AbsFragment implements CarsContract.View {
     }
 
 
-    private void showEditCarDialog(Car car) {
+    private boolean showEditCarDialog(Car car) {
         EditCarDialogFragment.newInstance(car).show(getChildFragmentManager(), "add_car");
+        return true;
     }
 
     private void showClearDialog() {

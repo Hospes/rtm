@@ -8,7 +8,7 @@ import ua.hospes.rtm.domain.sessions.models.Session;
 /**
  * @author Andrew Khloponin
  */
-public interface RaceItemDetailContract {
+interface RaceItemDetailContract {
     interface View {
         void onUpdateRaceItem(RaceItem raceItem);
 

@@ -10,11 +10,11 @@ import ua.hospes.rtm.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-public class DriversPresenter extends BasePresenter<DriversContract.View> {
+class DriversPresenter extends BasePresenter<DriversContract.View> {
     private final DriversInteractor interactor;
 
     @Inject
-    public DriversPresenter(DriversInteractor interactor) {
+    DriversPresenter(DriversInteractor interactor) {
         this.interactor = interactor;
     }
 

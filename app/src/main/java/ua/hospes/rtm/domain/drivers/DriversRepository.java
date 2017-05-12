@@ -22,5 +22,9 @@ public interface DriversRepository {
 
     Observable<Boolean> delete(Driver driver);
 
+    Observable<Boolean> addDriversToTeam(int teamId, int... driverIds);
+
+    Observable<Boolean> removeDriversFromTeam(int teamId);
+
     Observable<Void> clear();
 }

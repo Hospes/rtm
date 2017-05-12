@@ -13,13 +13,13 @@ import ua.hospes.rtm.domain.sessions.models.Session;
 /**
  * @author Andrew Khloponin
  */
-public class RaceItemDetailInteractor {
+class RaceItemDetailInteractor {
     private final RaceRepository raceRepository;
     private final SessionsRepository sessionsRepository;
 
 
     @Inject
-    public RaceItemDetailInteractor(RaceRepository raceRepository, SessionsRepository sessionsRepository) {
+    RaceItemDetailInteractor(RaceRepository raceRepository, SessionsRepository sessionsRepository) {
         this.raceRepository = raceRepository;
         this.sessionsRepository = sessionsRepository;
     }

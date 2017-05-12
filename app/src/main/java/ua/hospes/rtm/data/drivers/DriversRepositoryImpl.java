@@ -71,6 +71,22 @@ public class DriversRepositoryImpl implements DriversRepository {
     }
 
     @Override
+    public Observable<Boolean> addDriversToTeam(int teamId, int... driverIds) {
+        return Observable.just(driverIds)
+                .map(ints -> {
+                    String[] result = new String[ints.length];
+                    for (int i = 0; i < ints.length; i++) result[i] = String.valueOf(ints[i]);
+                    return result;
+                })
+                .flatMap(strings -> dbStorage.addDriversToTeam(teamId, strings));
+    }
+
+    @Override
+    public Observable<Boolean> removeDriversFromTeam(int teamId) {
+        return dbStorage.removeDriversFromTeam(teamId);
+    }
+
+    @Override
     public Observable<Void> clear() {
         return dbStorage.clear();
     }

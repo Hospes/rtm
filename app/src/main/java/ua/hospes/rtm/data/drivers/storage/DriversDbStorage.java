@@ -1,5 +1,7 @@
 package ua.hospes.rtm.data.drivers.storage;
 
+import android.content.ContentValues;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,6 +56,22 @@ public class DriversDbStorage {
 
     public Observable<List<DriverDb>> listen() {
         return dbHelper.query(DriversMapper::map, new QueryBuilder(Drivers.name));
+    }
+
+    public Observable<Boolean> removeDriversFromTeam(int teamId) {
+        ContentValues cv = new ContentValues();
+        cv.put(Drivers.TEAM_ID, -1);
+
+        return dbHelper.update(new QueryBuilder(Drivers.name).where(Drivers.TEAM_ID + " = ?", String.valueOf(teamId)), cv)
+                .map(tUpdateResult -> tUpdateResult.getResult() > 0);
+    }
+
+    public Observable<Boolean> addDriversToTeam(int teamId, String... driverIds) {
+        ContentValues cv = new ContentValues();
+        cv.put(Drivers.TEAM_ID, teamId);
+
+        return dbHelper.update(new QueryBuilder(Drivers.name).whereIn(Drivers._ID, driverIds), cv)
+                .map(tUpdateResult -> tUpdateResult.getResult() > 0);
     }
 
 

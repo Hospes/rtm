@@ -15,7 +15,7 @@ import ua.hospes.rtm.utils.UiUtils;
 /**
  * @author Andrew Khloponin
  */
-public class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder> {
+class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyHolder(parent, R.layout.item_race_detail_session);

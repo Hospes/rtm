@@ -9,11 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatSpinner;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +105,15 @@ public class EditDriverDialogFragment extends AppCompatDialogFragment {
             name.setSelection(driver.getName().length());
         }
 
+        name.setOnEditorActionListener((v, actionId, event) -> {
+            boolean result = onEditorAction(v, actionId, event);
+            if (result) {
+                onOkClick.onClick(null, 0);
+                dismiss();
+            }
+            return result;
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, onOkClick)
@@ -134,6 +145,27 @@ public class EditDriverDialogFragment extends AppCompatDialogFragment {
                         spinner.setSelection(teams.size());
                     }
                 }, Throwable::printStackTrace);
+    }
+
+
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // If triggered by an enter key, this is the event; otherwise, this is null.
+        if (event != null) {
+            // if shift key is down, then we want to insert the '\n' char in the TextView;
+            // otherwise, the default action is to send the message.
+            if (!event.isShiftPressed()) {
+//                if (isPreparedForSending()) {
+//                    confirmSendMessageIfNeeded();
+//                }
+                return true;
+            }
+            return false;
+        }
+
+//        if (isPreparedForSending()) {
+//            confirmSendMessageIfNeeded();
+//        }
+        return true;
     }
 
 

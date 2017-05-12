@@ -15,7 +15,7 @@ public class TeamsInteractor {
 
 
     @Inject
-    public TeamsInteractor(TeamsRepository repository) {
+    TeamsInteractor(TeamsRepository repository) {
         this.repository = repository;
     }
 

@@ -12,6 +12,7 @@ import ua.hospes.rtm.core.di.components.fragments.EditCarDialogFragmentSubCompon
 import ua.hospes.rtm.core.di.components.fragments.EditDriverDialogFragmentSubComponent;
 import ua.hospes.rtm.core.di.components.fragments.EditTeamDialogFragmentSubComponent;
 import ua.hospes.rtm.core.di.components.fragments.RaceFragmentSubComponent;
+import ua.hospes.rtm.core.di.components.fragments.SelectDriversDialogFragmentSubComponent;
 import ua.hospes.rtm.core.di.components.fragments.SetCarDialogFragmentSubComponent;
 import ua.hospes.rtm.core.di.components.fragments.SetDriverDialogFragmentSubComponent;
 import ua.hospes.rtm.core.di.components.fragments.SettingsFragmentSubComponent;
@@ -26,6 +27,7 @@ import ua.hospes.rtm.ui.race.SetCarDialogFragment;
 import ua.hospes.rtm.ui.race.SetDriverDialogFragment;
 import ua.hospes.rtm.ui.settings.SettingsFragment;
 import ua.hospes.rtm.ui.teams.EditTeamDialogFragment;
+import ua.hospes.rtm.ui.teams.SelectDriversDialogFragment;
 import ua.hospes.rtm.ui.teams.TeamsFragment;
 
 /**
@@ -48,6 +50,7 @@ import ua.hospes.rtm.ui.teams.TeamsFragment;
 
         TeamsFragmentSubComponent.class,
         EditTeamDialogFragmentSubComponent.class,
+        SelectDriversDialogFragmentSubComponent.class,
 })
 public abstract class FragmentsModule {
     @Binds
@@ -109,4 +112,8 @@ public abstract class FragmentsModule {
     @FragmentKey(EditTeamDialogFragment.class)
     abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindEditTeamDialogFragmentInjectorFactory(EditTeamDialogFragmentSubComponent.Builder builder);
 
+    @Binds
+    @IntoMap
+    @FragmentKey(SelectDriversDialogFragment.class)
+    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindSelectDriversDialogFragmentInjectorFactory(SelectDriversDialogFragmentSubComponent.Builder builder);
 }

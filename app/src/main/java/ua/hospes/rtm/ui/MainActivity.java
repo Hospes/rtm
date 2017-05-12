@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasDispatchingSupportFragmentInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.core.StopWatchService;
 import ua.hospes.rtm.ui.cars.CarsFragment;
@@ -23,7 +23,7 @@ import ua.hospes.rtm.ui.race.RaceFragment;
 import ua.hospes.rtm.ui.settings.SettingsFragment;
 import ua.hospes.rtm.ui.teams.TeamsFragment;
 
-public class MainActivity extends AppCompatActivity implements HasDispatchingSupportFragmentInjector, NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationDrawerFragment.NavigationDrawerCallbacks {
     @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
 
     /**

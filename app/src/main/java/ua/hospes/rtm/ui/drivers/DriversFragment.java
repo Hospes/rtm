@@ -126,9 +126,10 @@ public class DriversFragment extends AbsFragment implements DriversContract.View
     }
 
 
-    public void showEditDriverDialog(Driver driver) {
+    public boolean showEditDriverDialog(Driver driver) {
         EditDriverDialogFragment dialog = EditDriverDialogFragment.newInstance(driver);
         dialog.show(getChildFragmentManager(), "add_driver");
+        return true;
     }
 
     private void showClearDialog() {

@@ -9,11 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -37,7 +39,7 @@ public class EditCarDialogFragment extends DialogFragment {
 
     private AppCompatSpinner spQuality;
     private EditText etNumber;
-    private CheckBox cbBroken;
+    private CompoundButton cbBroken;
 
     private Car car = null;
     private CarQuality selectedQuality = CarQuality.NORMAL;
@@ -77,6 +79,7 @@ public class EditCarDialogFragment extends DialogFragment {
 
         findViews(view);
 
+
         spQuality.setAdapter(new CarQualityAdapter(getContext(), qualities));
         spQuality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -101,6 +104,15 @@ public class EditCarDialogFragment extends DialogFragment {
             if (qualities[i].equals(selectedQuality)) spQuality.setSelection(i);
         }
 
+        etNumber.setOnEditorActionListener((v, actionId, event) -> {
+            boolean result = onEditorAction(v, actionId, event);
+            if (result) {
+                onOkClick.onClick(null, 0);
+                dismiss();
+            }
+            return result;
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, onOkClick)
@@ -119,6 +131,28 @@ public class EditCarDialogFragment extends DialogFragment {
         spQuality = UiUtils.findView(view, R.id.quality);
         cbBroken = UiUtils.findView(view, R.id.broken);
     }
+
+
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // If triggered by an enter key, this is the event; otherwise, this is null.
+        if (event != null) {
+            // if shift key is down, then we want to insert the '\n' char in the TextView;
+            // otherwise, the default action is to send the message.
+            if (!event.isShiftPressed()) {
+//                if (isPreparedForSending()) {
+//                    confirmSendMessageIfNeeded();
+//                }
+                return true;
+            }
+            return false;
+        }
+
+//        if (isPreparedForSending()) {
+//            confirmSendMessageIfNeeded();
+//        }
+        return true;
+    }
+
 
     private DialogInterface.OnClickListener onOkClick = (dialog, i) -> {
         if (car == null) car = new Car();

@@ -20,12 +20,13 @@ public class TeamsMapper {
     }
 
     public static Team map(TeamDb db, List<Driver> drivers) {
-        Team team = new Team(db.getId(), db.getName());
+        Team team = new Team(db.getId());
+        team.setName(db.getName());
         team.setDrivers(drivers);
         return team;
     }
 
-    public static TeamDb map(Team driver) {
-        return new TeamDb(driver.getId(), driver.getName());
+    public static TeamDb map(Team team) {
+        return new TeamDb(team.getId(), team.getName());
     }
 }

@@ -54,6 +54,8 @@
     <string name="cars_title">Cars</string>
     <string name="cars_broken">broken</string>
     <string name="cars_remove_all">Remove all cars?</string>
+    <string name="cars_add_car_number">Car number</string>
+    <string name="cars_add_car_broken">Car is broken</string>
 
     <!-- Settings screen -->
     <string name="settings_title">Settings</string>

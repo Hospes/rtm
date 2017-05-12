@@ -7,7 +7,7 @@ import ua.hospes.rtm.domain.cars.models.Car;
 /**
  * @author Andrew Khloponin
  */
-public interface CarsContract {
+interface CarsContract {
     interface View {
         void updateCars(List<Car> cars);
     }

@@ -16,11 +16,11 @@ import ua.hospes.rtm.utils.RxUtils;
 /**
  * @author Andrew Khloponin
  */
-public class RacePresenter extends BasePresenter<RaceContract.View> {
+class RacePresenter extends BasePresenter<RaceContract.View> {
     private final RaceInteractor interactor;
 
     @Inject
-    public RacePresenter(RaceInteractor interactor) {
+    RacePresenter(RaceInteractor interactor) {
         this.interactor = interactor;
     }
 
