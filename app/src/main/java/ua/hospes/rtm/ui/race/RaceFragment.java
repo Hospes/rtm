@@ -179,8 +179,10 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     @Override
     public void onStopWatchTick(long time, long nanoTime, long currentNanoTime) {
         this.currentNanoTime = currentNanoTime;
-        tvTime.setText(TimeUtils.format(time));
-        adapter.updateDurations(currentNanoTime);
+        // We have to check tvTime on null cause it couldn't be ready yet
+        if (tvTime != null) tvTime.setText(TimeUtils.format(time));
+        // We have to check adapter on null cause it couldn't be ready yet
+        if (adapter != null) adapter.updateDurations(currentNanoTime);
     }
 
 
