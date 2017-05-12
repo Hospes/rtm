@@ -3,7 +3,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".ui.MainActivity">
     <item android:id="@+id/action_stopwatch"
-          android:title="StopWatch"
+          android:title="@string/holder_stopwatch"
           app:actionLayout="@layout/action_stopwatch_view"
           app:showAsAction="always" />
 

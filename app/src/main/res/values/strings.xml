@@ -1,23 +1,26 @@
 <resources>
     <string name="app_name" translatable="false">Racing Time Manager</string>
 
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="holder_time" translatable="false">00:00:00</string>
+    <string name="holder_time_ms" translatable="false">00:00:00.000</string>
+    <string name="holder_stopwatch" translatable="false">StopWatch</string>
+
+    <!-- Common strings -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="delete">Delete</string>
+    <string name="common_select_team">Select team</string>
 
+    <!-- Action bar -->
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
     <string name="action_add">Add</string>
     <string name="action_add_team">Add team</string>
     <string name="action_reset">Reset</string>
     <string name="action_clear">Clear</string>
-
-    <string name="delete">Delete</string>
-
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
-    <string name="time_holder" translatable="false">00:00:00</string>
-    <string name="time_holder_ms" translatable="false">00:00:00.000</string>
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>
@@ -29,6 +32,7 @@
     <string name="race_btn_out">Out</string>
     <string name="race_on_track">On track</string>
     <string name="race_now">Now</string>
+    <string name="race_team_number">Team number</string>
 
     <!-- Race detail screen -->
     <string name="race_detail_driver">Driver</string>
@@ -42,6 +46,9 @@
     <string name="teams_name">Name</string>
     <string name="teams_drivers">Drivers</string>
     <string name="teams_remove_all">Remove all teams?</string>
+    <string name="teams_team_name">Team name</string>
+    <string name="teams_no_drivers">No drivers</string>
+    <string name="teams_assign_drivers">Assign drivers</string>
 
     <!-- Drivers screen -->
     <string name="drivers_title">Drivers</string>
@@ -49,6 +56,7 @@
     <string name="drivers_team">Team</string>
     <string name="drivers_no_team">No team</string>
     <string name="drivers_remove_all">Remove all drivers?</string>
+    <string name="drivers_driver_name">Driver name</string>
 
     <!-- Cars screen -->
     <string name="cars_title">Cars</string>

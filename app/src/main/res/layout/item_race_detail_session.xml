@@ -18,12 +18,12 @@
     <TextView android:id="@+id/start"
               android:layout_width="100dp"
               android:layout_height="wrap_content"
-              android:text="@string/time_holder_ms" />
+              android:text="@string/holder_time_ms" />
 
     <TextView android:id="@+id/duration"
               android:layout_width="100dp"
               android:layout_height="wrap_content"
-              android:text="@string/time_holder_ms" />
+              android:text="@string/holder_time_ms" />
 
     <TextView android:id="@+id/type"
               android:layout_width="70dp"

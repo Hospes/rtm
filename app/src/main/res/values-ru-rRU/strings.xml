@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Common strings -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="delete">Удалить</string>
+    <string name="common_select_team">Выбрать команду</string>
 
+    <!-- Action bar -->
     <string name="action_start">Старт</string>
     <string name="action_stop">Стоп</string>
     <string name="action_add">Добавить</string>
     <string name="action_add_team">Добавить команду</string>
     <string name="action_reset">Обнулить</string>
     <string name="action_clear">Очистить</string>
-
-    <string name="delete">Удалить</string>
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>
@@ -22,6 +24,7 @@
     <string name="race_btn_out">Out</string>
     <string name="race_on_track">На трассе</string>
     <string name="race_now">Сейчас</string>
+    <string name="race_team_number">Номер команды</string>
 
     <!-- Race detail screen -->
     <string name="race_detail_driver">Гонщик</string>
@@ -35,6 +38,9 @@
     <string name="teams_name">Навзвание</string>
     <string name="teams_drivers">Гонщики</string>
     <string name="teams_remove_all">Очистить список команд?</string>
+    <string name="teams_team_name">Имя команды</string>
+    <string name="teams_no_drivers">Нет гонщиков</string>
+    <string name="teams_assign_drivers">Выбрать гонщиков</string>
 
     <!-- Drivers screen -->
     <string name="drivers_title">Гонщики</string>
@@ -42,11 +48,14 @@
     <string name="drivers_team">Команда</string>
     <string name="drivers_no_team">Нет команды</string>
     <string name="drivers_remove_all">Очистить список гонщиков?</string>
+    <string name="drivers_driver_name">Имя гонщика</string>
 
     <!-- Cars screen -->
     <string name="cars_title">Карты</string>
     <string name="cars_broken">сломан</string>
     <string name="cars_remove_all">Очистить список картов?</string>
+    <string name="cars_add_car_number">Номер машины</string>
+    <string name="cars_add_car_broken">Машина сломана</string>
 
     <!-- Settings screen -->
     <string name="settings_title">Настройки</string>

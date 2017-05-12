@@ -9,7 +9,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Team Name"
+        android:hint="@string/teams_team_name"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true">
 
@@ -26,11 +26,11 @@
         android:id="@+id/drivers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No drivers" />
+        android:text="@string/teams_no_drivers" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/assign_drivers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Assign drivers" />
+        android:text="@string/teams_assign_drivers" />
 </LinearLayout>
