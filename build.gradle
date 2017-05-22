@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
         maven { url 'https://maven.fabric.io/public' }
         maven { url "http://dl.bintray.com/hospes/maven" }
     }
@@ -19,6 +20,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenLocal()
         maven { url 'https://maven.fabric.io/public' }
         maven { url "http://dl.bintray.com/hospes/maven" }
     }
