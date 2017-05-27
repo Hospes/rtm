@@ -48,7 +48,7 @@ ext {
     hospesAbsRecycler = "0.2.6"
 
     dagger2Version = "2.11-rc2"
-    crashlyticsVersion = "2.6.7"
+    crashlyticsVersion = "2.6.8"
 }
 
 task clean(type: Delete) {
