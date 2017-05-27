@@ -1,22 +1,7 @@
 package ua.hospes.rtm.core.di.module;
 
-import dagger.Binds;
 import dagger.Module;
-import dagger.android.AndroidInjector;
-import dagger.android.support.FragmentKey;
-import dagger.multibindings.IntoMap;
-import ua.hospes.rtm.core.di.components.fragments.AddTeamToRaceDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.CarsFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.DriversFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.EditCarDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.EditDriverDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.EditTeamDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.RaceFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.SelectDriversDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.SetCarDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.SetDriverDialogFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.SettingsFragmentSubComponent;
-import ua.hospes.rtm.core.di.components.fragments.TeamsFragmentSubComponent;
+import dagger.android.ContributesAndroidInjector;
 import ua.hospes.rtm.ui.cars.CarsFragment;
 import ua.hospes.rtm.ui.cars.EditCarDialogFragment;
 import ua.hospes.rtm.ui.drivers.DriversFragment;
@@ -33,87 +18,41 @@ import ua.hospes.rtm.ui.teams.TeamsFragment;
 /**
  * @author Andrew Khloponin
  */
-@Module(subcomponents = {
-        CarsFragmentSubComponent.class,
-        EditCarDialogFragmentSubComponent.class,
-
-        DriversFragmentSubComponent.class,
-        EditDriverDialogFragmentSubComponent.class,
-
-        AddTeamToRaceDialogFragmentSubComponent.class,
-
-        RaceFragmentSubComponent.class,
-        SetCarDialogFragmentSubComponent.class,
-        SetDriverDialogFragmentSubComponent.class,
-
-        SettingsFragmentSubComponent.class,
-
-        TeamsFragmentSubComponent.class,
-        EditTeamDialogFragmentSubComponent.class,
-        SelectDriversDialogFragmentSubComponent.class,
-})
+@Module(includes = {NetModule.class, DomainModule.class})
 public abstract class FragmentsModule {
-    @Binds
-    @IntoMap
-    @FragmentKey(CarsFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindCarsFragmentInjectorFactory(CarsFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract CarsFragment contributeCarsFragmentInjector();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(EditCarDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindEditCarDialogFragmentInjectorFactory(EditCarDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract EditCarDialogFragment contributeEditCarDialogFragmentInjectorFactory();
 
+    @ContributesAndroidInjector
+    abstract DriversFragment contributeDriversFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(DriversFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindDriversFragmentInjectorFactory(DriversFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract EditDriverDialogFragment contributeEditDriverDialogFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(EditDriverDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindEditDriverDialogFragmentInjectorFactory(EditDriverDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract AddTeamToRaceDialogFragment contributeAddTeamToRaceDialogFragmentInjectorFactory();
 
+    @ContributesAndroidInjector
+    abstract RaceFragment contributeRaceFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(AddTeamToRaceDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindAddTeamToRaceDialogFragmentInjectorFactory(AddTeamToRaceDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract SetCarDialogFragment contributeSetCarDialogFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(RaceFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindRaceFragmentInjectorFactory(RaceFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract SetDriverDialogFragment contributeSetDriverDialogFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(SetCarDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindSetCarDialogFragmentInjectorFactory(SetCarDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract SettingsFragment contributeSettingsFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(SetDriverDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindSetDriverDialogFragmentInjectorFactory(SetDriverDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract TeamsFragment contributeTeamsFragmentInjectorFactory();
 
+    @ContributesAndroidInjector
+    abstract EditTeamDialogFragment contributeEditTeamDialogFragmentInjectorFactory();
 
-    @Binds
-    @IntoMap
-    @FragmentKey(SettingsFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindSettingsFragmentInjectorFactory(SettingsFragmentSubComponent.Builder builder);
-
-
-    @Binds
-    @IntoMap
-    @FragmentKey(TeamsFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindTeamsFragmentInjectorFactory(TeamsFragmentSubComponent.Builder builder);
-
-    @Binds
-    @IntoMap
-    @FragmentKey(EditTeamDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindEditTeamDialogFragmentInjectorFactory(EditTeamDialogFragmentSubComponent.Builder builder);
-
-    @Binds
-    @IntoMap
-    @FragmentKey(SelectDriversDialogFragment.class)
-    abstract AndroidInjector.Factory<? extends android.support.v4.app.Fragment> bindSelectDriversDialogFragmentInjectorFactory(SelectDriversDialogFragmentSubComponent.Builder builder);
+    @ContributesAndroidInjector
+    abstract SelectDriversDialogFragment contributeSelectDriversDialogFragmentInjectorFactory();
 }

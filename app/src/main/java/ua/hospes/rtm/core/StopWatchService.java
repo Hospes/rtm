@@ -67,7 +67,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(KEY_ACTION)) {
             String action = intent.getStringExtra(KEY_ACTION);
-            if (KEY_START.equals(action)) {
+            if (KEY_START.equals(action) && !stopWatch.isStarted()) {
                 wakeLock.acquire();
                 stopWatch.reset();
                 stopWatch.start();
@@ -78,7 +78,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
                 stopWatch.stop();
                 stopWatch.removeOnChronometerTickListener(this);
                 stopForeground(true);
-                wakeLock.release();
+                if (wakeLock.isHeld()) wakeLock.release();
                 stopSelf();
                 return START_NOT_STICKY;
             }
@@ -90,7 +90,7 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        wakeLock.release();
+        if (wakeLock.isHeld()) wakeLock.release();
     }
 
     private Notification buildNotification(String time) {
@@ -121,16 +121,16 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     }
 
 
-    public class StopWatchBinder extends Binder {
-        public void addStopWatchListener(StopWatch.OnStopWatchListener listener) {
+    class StopWatchBinder extends Binder {
+        void addStopWatchListener(StopWatch.OnStopWatchListener listener) {
             stopWatch.addOnChronometerTickListener(listener);
         }
 
-        public void removeStopWatchListener(StopWatch.OnStopWatchListener listener) {
+        void removeStopWatchListener(StopWatch.OnStopWatchListener listener) {
             stopWatch.removeOnChronometerTickListener(listener);
         }
 
-        public StopWatch getStopWatch() {
+        StopWatch getStopWatch() {
             return stopWatch;
         }
     }

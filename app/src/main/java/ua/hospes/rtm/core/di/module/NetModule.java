@@ -16,13 +16,13 @@ import ua.hospes.rtm.domain.preferences.PreferencesManagerImpl;
 @Module
 public class NetModule {
     @Provides
-    public PreferencesManager providePreferencesManager(PreferencesManagerImpl manager) {
+    PreferencesManager providePreferencesManager(PreferencesManagerImpl manager) {
         return manager;
     }
 
     @Provides
     @Singleton
-    public Gson provideGson() {
+    Gson provideGson() {
         return new GsonBuilder().create();
     }
 }

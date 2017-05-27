@@ -121,6 +121,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_start:
+                bindToService();
                 StopWatchService.start(getContext());
                 return true;
 
