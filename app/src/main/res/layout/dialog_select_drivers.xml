@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minWidth="350dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:minWidth="350dp"
+              android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:minHeight="300dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="300dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_driver_selectable" />
 
     <LinearLayout android:id="@+id/linearLayout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
                   android:gravity="end"
                   android:orientation="horizontal">
 
@@ -34,4 +35,4 @@
             android:layout_height="wrap_content"
             android:text="@android:string/ok" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
