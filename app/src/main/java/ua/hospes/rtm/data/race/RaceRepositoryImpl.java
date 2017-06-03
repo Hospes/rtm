@@ -89,7 +89,7 @@ public class RaceRepositoryImpl implements RaceRepository {
 
     @Override
     public Observable<Boolean> delete(RaceItem item) {
-        return raceDbStorage.remove(RaceMapper.map(item)).map(integer -> integer > 0);
+        return raceDbStorage.remove(RaceMapper.map(item)).map(integer -> integer > 0).toObservable();
     }
 
 
@@ -100,7 +100,7 @@ public class RaceRepositoryImpl implements RaceRepository {
 
     @Override
     public Observable<Void> clean() {
-        return raceDbStorage.clean();
+        return raceDbStorage.clean().toObservable();
     }
 
 

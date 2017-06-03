@@ -7,13 +7,13 @@ def buildNumber = project.hasProperty("build.number") ? project.ext["build.numbe
 def version = "1.0"
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdk
+    buildToolsVersion rootProject.ext.buildTools
 
     defaultConfig {
         applicationId "ua.hospes.rtm"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
         versionCode 4
         versionName version + (buildNumber != null ? ".$buildNumber" : ".dev")
 
@@ -69,34 +69,33 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:multidex:1.0.1'
 
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:preference-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLib}"
+    compile "com.android.support:design:${rootProject.ext.supportLib}"
+    compile "com.android.support:support-annotations:${rootProject.ext.supportLib}"
+    compile "com.android.support:preference-v7:${rootProject.ext.supportLib}"
 
-    compile "com.google.code.gson:gson:${rootProject.ext.gsonVersion}"
-    compile "com.google.guava:guava:${rootProject.ext.guavaVersion}"
-    compile "com.google.android:flexbox:${rootProject.ext.flexboxVersion}"
+    compile "com.google.code.gson:gson:${rootProject.ext.gson}"
+    compile "com.google.guava:guava:${rootProject.ext.guava}"
+    compile "com.google.android:flexbox:${rootProject.ext.flexbox}"
     compile "com.android.support.constraint:constraint-layout:1.1.0-beta1"
 
-    compile "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
+    compile "com.github.bumptech.glide:glide:${rootProject.ext.glide}"
 
-    compile "ua.hospes.dbhelper:dbhelper:${rootProject.ext.hospesDbHelper}"
-    compile "ua.hospes.absrvadapter:absrvadapter:${rootProject.ext.hospesAbsRecycler}"
+    compile "ua.hospes.dbhelper:dbhelper:${rootProject.ext.dbHelper}"
+    compile "ua.hospes.absrvadapter:absrvadapter:${rootProject.ext.absRecycler}"
 
     //Rx1 [START]
-    compile "io.reactivex:rxandroid:${rootProject.ext.rxAndroidVersion}"
-    compile "io.reactivex:rxjava:${rootProject.ext.rxJavaVersion}"
-    compile "com.jakewharton.rxbinding:rxbinding:${rootProject.ext.rxBindingVersion}"
+    compile "io.reactivex:rxandroid:${rootProject.ext.rxAndroid}"
+    compile "io.reactivex:rxjava:${rootProject.ext.rxJava}"
     //Rx1  [END]
 
     // Dagger [START]
-    compile "com.google.dagger:dagger:${rootProject.ext.dagger2Version}"
-    //compile "com.google.dagger:dagger-android:${rootProject.ext.dagger2Version}"
-    compile "com.google.dagger:dagger-android-support:${rootProject.ext.dagger2Version}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2Version}"
-    annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger2Version}"
+    compile "com.google.dagger:dagger:${rootProject.ext.dagger2}"
+    //compile "com.google.dagger:dagger-android:${rootProject.ext.dagger2}"
+    compile "com.google.dagger:dagger-android-support:${rootProject.ext.dagger2}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2}"
+    annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger2}"
     // Dagger  [END]
 
-    compile("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlyticsVersion}@aar") { transitive = true }
+    compile("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlytics}@aar") { transitive = true }
 }

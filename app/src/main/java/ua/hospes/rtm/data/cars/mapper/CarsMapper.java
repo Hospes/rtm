@@ -12,10 +12,10 @@ import ua.hospes.rtm.domain.cars.models.CarQuality;
  */
 public class CarsMapper {
     public static CarDb map(Cursor cursor) {
-        CarDb db = new CarDb(cursor.getInt(cursor.getColumnIndex(Cars._ID)));
-        db.setNumber(cursor.getInt(cursor.getColumnIndex(Cars.NUMBER)));
-        db.setQuality(CarQuality.fromString(cursor.getString(cursor.getColumnIndex(Cars.QUALITY))));
-        db.setBroken(cursor.getInt(cursor.getColumnIndex(Cars.BROKEN)) == 1);
+        CarDb db = new CarDb(cursor.getInt(cursor.getColumnIndex(Cars.ID.name())));
+        db.setNumber(cursor.getInt(cursor.getColumnIndex(Cars.NUMBER.name())));
+        db.setQuality(CarQuality.fromString(cursor.getString(cursor.getColumnIndex(Cars.QUALITY.name()))));
+        db.setBroken(cursor.getInt(cursor.getColumnIndex(Cars.BROKEN.name())) == 1);
         return db;
     }
 

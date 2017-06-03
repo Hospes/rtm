@@ -13,9 +13,9 @@ import ua.hospes.rtm.domain.drivers.models.Driver;
  */
 public class DriversMapper {
     public static DriverDb map(Cursor cursor) {
-        DriverDb db = new DriverDb(cursor.getInt(cursor.getColumnIndex(Drivers._ID)));
-        db.setName(cursor.getString(cursor.getColumnIndex(Drivers.NAME)));
-        db.setTeamId(cursor.getInt(cursor.getColumnIndex(Drivers.TEAM_ID)));
+        DriverDb db = new DriverDb(cursor.getInt(cursor.getColumnIndex(Drivers.ID.name())));
+        db.setName(cursor.getString(cursor.getColumnIndex(Drivers.NAME.name())));
+        db.setTeamId(cursor.getInt(cursor.getColumnIndex(Drivers.TEAM_ID.name())));
         return db;
     }
 

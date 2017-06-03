@@ -1,25 +1,33 @@
 package ua.hospes.rtm.core.db.tables;
 
-import ua.hospes.dbhelper.AbsDbTable;
+import java.util.Arrays;
+import java.util.List;
+
+import ua.hospes.dbhelper.builder.CreateQuery;
+import ua.hospes.dbhelper.builder.DropQuery;
+import ua.hospes.dbhelper.builder.models.Column;
+import ua.hospes.dbhelper.builder.models.DataType;
+import ua.hospes.dbhelper.builder.models.DbColumn;
 
 /**
  * @author Andrew Khloponin
  */
-public class Teams extends AbsDbTable {
-    public static final String name = "Teams";
+@SuppressWarnings("unchecked")
+public interface Teams {
+    String name = "Teams";
+    Column<Integer> ID = DbColumn.ID();
+    Column<String> NAME = DbColumn.newInstance("name", DataType.TEXT);
 
-    public static final String NAME = "name";
 
-
-    @Override
-    public String create() {
-        return CREATE_TABLE + name + " (" +
-                NAME + TEXT_TYPE +
-                " );";
+    static List<Column> columns() {
+        return Arrays.asList(ID, NAME);
     }
 
-    @Override
-    public String drop() {
-        return DROP_TABLE_IF_EXISTS + name;
+    static CreateQuery create() {
+        return new CreateQuery().tableName(name).columns(columns()).ifNotExists(true);
+    }
+
+    static DropQuery drop() {
+        return new DropQuery().tableName(name).ifExists(true);
     }
 }

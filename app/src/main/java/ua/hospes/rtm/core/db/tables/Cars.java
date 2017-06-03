@@ -1,30 +1,37 @@
 package ua.hospes.rtm.core.db.tables;
 
-import ua.hospes.dbhelper.AbsDbTable;
+import java.util.Arrays;
+import java.util.List;
+
+import ua.hospes.dbhelper.builder.CreateQuery;
+import ua.hospes.dbhelper.builder.DropQuery;
+import ua.hospes.dbhelper.builder.models.Column;
+import ua.hospes.dbhelper.builder.models.Constraint;
+import ua.hospes.dbhelper.builder.models.DataType;
+import ua.hospes.dbhelper.builder.models.DbColumn;
 import ua.hospes.rtm.domain.cars.models.CarQuality;
 
 /**
  * @author Andrew Khloponin
  */
-public class Cars extends AbsDbTable {
-    public static final String name = "Cars";
+@SuppressWarnings("unchecked")
+public interface Cars {
+    String name = "Cars";
+    Column<Integer> ID = DbColumn.ID();
+    Column<Integer> NUMBER = DbColumn.newInstance("numb", DataType.INTEGER, Constraint.NOT_NULL());
+    Column<String> QUALITY = DbColumn.newInstance("quality", DataType.TEXT, Constraint.NOT_NULL(), Constraint.DEFAULT(CarQuality.NORMAL.toString()));
+    Column<Integer> BROKEN = DbColumn.newInstance("broken", DataType.INTEGER, Constraint.NOT_NULL(), Constraint.DEFAULT(0));
 
-    public static final String NUMBER = "numb";
-    public static final String QUALITY = "quality";
-    public static final String BROKEN = "broken";
 
-
-    @Override
-    public String create() {
-        return CREATE_TABLE + name + " (" +
-                NUMBER + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
-                QUALITY + TEXT_TYPE + NOT_NULL + DEFAULT + " " + CarQuality.NORMAL + " " + COMMA_SEP +
-                BROKEN + INTEGER_TYPE + NOT_NULL + DEFAULT + " 0 " +
-                " );";
+    static List<Column> columns() {
+        return Arrays.asList(ID, NUMBER, QUALITY, BROKEN);
     }
 
-    @Override
-    public String drop() {
-        return DROP_TABLE_IF_EXISTS + name;
+    static CreateQuery create() {
+        return new CreateQuery().tableName(name).columns(columns()).ifNotExists(true);
+    }
+
+    static DropQuery drop() {
+        return new DropQuery().tableName(name).ifExists(true);
     }
 }

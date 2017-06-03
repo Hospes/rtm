@@ -1,13 +1,20 @@
 package ua.hospes.rtm.data.sessions.storage;
 
+import android.database.sqlite.SQLiteDatabase;
+
+import com.google.common.primitives.Ints;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
 import ua.hospes.dbhelper.InsertResult;
-import ua.hospes.dbhelper.QueryBuilder;
 import ua.hospes.dbhelper.UpdateResult;
+import ua.hospes.dbhelper.builder.DeleteQuery;
+import ua.hospes.dbhelper.builder.SelectQuery;
+import ua.hospes.dbhelper.builder.UpdateQuery;
+import ua.hospes.dbhelper.builder.conditions.Condition;
 import ua.hospes.rtm.core.db.DbHelper;
 import ua.hospes.rtm.core.db.tables.Sessions;
 import ua.hospes.rtm.data.sessions.mapper.SessionsMapper;
@@ -17,7 +24,6 @@ import ua.hospes.rtm.data.sessions.operations.OpenSessionOperation;
 import ua.hospes.rtm.data.sessions.operations.RaceStartTimeOperation;
 import ua.hospes.rtm.data.sessions.operations.SetCarOperation;
 import ua.hospes.rtm.data.sessions.operations.SetDriverOperation;
-import ua.hospes.rtm.utils.ArrayUtils;
 
 /**
  * @author Andrew Khloponin
@@ -26,24 +32,23 @@ public class SessionsDbStorage {
     private final DbHelper dbHelper;
 
     @Inject
-    public SessionsDbStorage(DbHelper dbHelper) {
+    SessionsDbStorage(DbHelper dbHelper) {
         this.dbHelper = dbHelper;
     }
 
     public Observable<InsertResult<SessionDb>> add(List<SessionDb> sessions) {
-        return dbHelper.insert(Sessions.name, sessions)
-                .map(result -> {
-                    result.getData().setId((int) result.getResult());
-                    return result;
-                });
+        return dbHelper.insert(Sessions.name, SQLiteDatabase.CONFLICT_ABORT, sessions).map(result -> {
+            result.getData().setId((int) result.getResult());
+            return result;
+        });
     }
 
     public Observable<UpdateResult<SessionDb>> update(SessionDb session) {
-        return dbHelper.update(new QueryBuilder(Sessions.name).where(Sessions._ID + " = ?", String.valueOf(session.getId())), session);
+        return dbHelper.update(new UpdateQuery(Sessions.name).where(Condition.eq(Sessions.ID, session.getId())), session);
     }
 
     public Observable<Integer> remove(SessionDb session) {
-        return dbHelper.delete(new QueryBuilder(Sessions.name).where(Sessions._ID + " = ?", String.valueOf(session.getId())));
+        return dbHelper.delete(new DeleteQuery(Sessions.name).where(Condition.eq(Sessions.ID, session.getId()))).toObservable();
     }
 
 
@@ -69,34 +74,33 @@ public class SessionsDbStorage {
 
 
     public Observable<SessionDb> get() {
-        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name));
+        return dbHelper.querySingle(SessionsMapper::map, new SelectQuery(Sessions.name));
     }
 
     public Observable<SessionDb> get(int... ids) {
-        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name).whereIn(Sessions._ID, ArrayUtils.convert(ids)));
+        return dbHelper.querySingle(SessionsMapper::map, new SelectQuery(Sessions.name).where(Condition.in(Sessions.ID, Ints.asList(ids))));
     }
 
     public Observable<SessionDb> getByTeamId(int teamId) {
-        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name).where(Sessions.TEAM_ID + " = ?", String.valueOf(teamId)));
+        return dbHelper.querySingle(SessionsMapper::map, new SelectQuery(Sessions.name).where(Condition.eq(Sessions.TEAM_ID, teamId)));
     }
 
     public Observable<SessionDb> getByTeamIdAndDriverId(int teamId, int driverId) {
-        return dbHelper.singleQuery(SessionsMapper::map, new QueryBuilder(Sessions.name)
-                .where(Sessions.TEAM_ID + " = ?", String.valueOf(teamId))
-                .and()
-                .where(Sessions.DRIVER_ID + " = ?", String.valueOf(driverId))
+        return dbHelper.querySingle(SessionsMapper::map, new SelectQuery(Sessions.name)
+                .where(Condition.eq(Sessions.TEAM_ID, teamId))
+                .where(Condition.eq(Sessions.DRIVER_ID, driverId))
         );
     }
 
     public Observable<List<SessionDb>> listen() {
-        return dbHelper.query(SessionsMapper::map, new QueryBuilder(Sessions.name));
+        return dbHelper.query(SessionsMapper::map, new SelectQuery(Sessions.name));
     }
 
     public Observable<List<SessionDb>> listenByTeamId(int teamId) {
-        return dbHelper.query(SessionsMapper::map, new QueryBuilder(Sessions.name).where(Sessions.TEAM_ID + " = ?", String.valueOf(teamId)));
+        return dbHelper.query(SessionsMapper::map, new SelectQuery(Sessions.name).where(Condition.eq(Sessions.TEAM_ID, teamId)));
     }
 
     public Observable<Void> clean() {
-        return dbHelper.delete(new QueryBuilder(Sessions.name)).map(integer -> null);
+        return dbHelper.delete(new DeleteQuery(Sessions.name)).toObservable().map(integer -> null);
     }
 }
