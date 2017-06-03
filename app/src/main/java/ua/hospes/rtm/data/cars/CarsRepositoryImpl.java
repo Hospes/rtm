@@ -61,11 +61,11 @@ public class CarsRepositoryImpl implements CarsRepository {
 
     @Override
     public Observable<Boolean> delete(Car car) {
-        return carsDbStorage.remove(CarsMapper.map(car)).map(count -> count != 0);
+        return carsDbStorage.remove(CarsMapper.map(car)).map(count -> count != 0).toObservable();
     }
 
     @Override
     public Observable<Void> clear() {
-        return carsDbStorage.clear();
+        return carsDbStorage.clear().toObservable();
     }
 }

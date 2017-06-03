@@ -2,13 +2,13 @@ package ua.hospes.rtm.data.team.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.dbhelper.BaseModelInterface;
+import ua.hospes.dbhelper.IDbModel;
 import ua.hospes.rtm.core.db.tables.Teams;
 
 /**
  * @author Andrew Khloponin
  */
-public class TeamDb implements BaseModelInterface {
+public class TeamDb implements IDbModel {
     private int id = -1;
     private String name;
 
@@ -34,7 +34,7 @@ public class TeamDb implements BaseModelInterface {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
 
-        cv.put(Teams.NAME, name);
+        cv.put(Teams.NAME.name(), name);
 
         return cv;
     }

@@ -13,12 +13,12 @@ import ua.hospes.rtm.domain.team.models.Team;
  */
 public class RaceMapper {
     public static RaceItemDb map(Cursor cursor) {
-        int teamId = cursor.getInt(cursor.getColumnIndex(Race.TEAM_ID));
+        int teamId = cursor.getInt(cursor.getColumnIndex(Race.TEAM_ID.name()));
         RaceItemDb result = new RaceItemDb(teamId);
-        result.setId(cursor.getInt(cursor.getColumnIndex(Race._ID)));
-        result.setTeamNumber(cursor.getInt(cursor.getColumnIndex(Race.TEAM_NUMBER)));
-        result.setSessionId(cursor.getInt(cursor.getColumnIndex(Race.SESSION_ID)));
-        result.setOrder(cursor.getInt(cursor.getColumnIndex(Race.ORDER)));
+        result.setId(cursor.getInt(cursor.getColumnIndex(Race.ID.name())));
+        result.setTeamNumber(cursor.getInt(cursor.getColumnIndex(Race.TEAM_NUMBER.name())));
+        result.setSessionId(cursor.getInt(cursor.getColumnIndex(Race.SESSION_ID.name())));
+        result.setOrder(cursor.getInt(cursor.getColumnIndex(Race.ORDER.name())));
         return result;
     }
 

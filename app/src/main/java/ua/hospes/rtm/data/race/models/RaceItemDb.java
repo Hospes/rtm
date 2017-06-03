@@ -2,13 +2,13 @@ package ua.hospes.rtm.data.race.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.dbhelper.BaseModelInterface;
+import ua.hospes.dbhelper.IDbModel;
 import ua.hospes.rtm.core.db.tables.Race;
 
 /**
  * @author Andrew Khloponin
  */
-public class RaceItemDb implements BaseModelInterface {
+public class RaceItemDb implements IDbModel {
     private int id = -1;
     private final int teamId;
     private int teamNumber = -1;
@@ -77,9 +77,9 @@ public class RaceItemDb implements BaseModelInterface {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
 
-        cv.put(Race.TEAM_ID, teamId);
-        cv.put(Race.TEAM_NUMBER, teamNumber);
-        cv.put(Race.SESSION_ID, sessionId);
+        cv.put(Race.TEAM_ID.name(), teamId);
+        cv.put(Race.TEAM_NUMBER.name(), teamNumber);
+        cv.put(Race.SESSION_ID.name(), sessionId);
 
         return cv;
     }

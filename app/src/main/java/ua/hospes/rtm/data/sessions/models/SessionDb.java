@@ -2,13 +2,13 @@ package ua.hospes.rtm.data.sessions.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.dbhelper.BaseModelInterface;
+import ua.hospes.dbhelper.IDbModel;
 import ua.hospes.rtm.core.db.tables.Sessions;
 
 /**
  * @author Andrew Khloponin
  */
-public class SessionDb implements BaseModelInterface {
+public class SessionDb implements IDbModel {
     private int id = -1;
     private final int teamId;
     private int driverId = -1;
@@ -107,13 +107,13 @@ public class SessionDb implements BaseModelInterface {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
 
-        cv.put(Sessions.TEAM_ID, teamId);
-        cv.put(Sessions.DRIVER_ID, driverId);
-        cv.put(Sessions.CAR_ID, carId);
-        cv.put(Sessions.RACE_START_TIME, raceStartTime);
-        cv.put(Sessions.START_DURATION_TIME, startDurationTime);
-        cv.put(Sessions.END_DURATION_TIME, endDurationTime);
-        cv.put(Sessions.TYPE, type);
+        cv.put(Sessions.TEAM_ID.name(), teamId);
+        cv.put(Sessions.DRIVER_ID.name(), driverId);
+        cv.put(Sessions.CAR_ID.name(), carId);
+        cv.put(Sessions.RACE_START_TIME.name(), raceStartTime);
+        cv.put(Sessions.START_DURATION_TIME.name(), startDurationTime);
+        cv.put(Sessions.END_DURATION_TIME.name(), endDurationTime);
+        cv.put(Sessions.TYPE.name(), type);
 
         return cv;
     }

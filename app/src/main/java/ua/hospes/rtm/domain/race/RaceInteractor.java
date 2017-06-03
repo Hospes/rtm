@@ -59,7 +59,7 @@ public class RaceInteractor {
         return sessionsRepository.newSessions(type, teamIds)
                 .map(session -> {
                     ContentValues cv = new ContentValues();
-                    cv.put(Race.SESSION_ID, session.getId());
+                    cv.put(Race.SESSION_ID.name(), session.getId());
                     return new Pair<>(session.getTeamId(), cv);
                 })
                 .toList()

@@ -2,14 +2,14 @@ package ua.hospes.rtm.data.cars.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.dbhelper.BaseModelInterface;
+import ua.hospes.dbhelper.IDbModel;
 import ua.hospes.rtm.core.db.tables.Cars;
 import ua.hospes.rtm.domain.cars.models.CarQuality;
 
 /**
  * @author Andrew Khloponin
  */
-public class CarDb implements BaseModelInterface {
+public class CarDb implements IDbModel {
     private final int id;
     private int number = -1;
     private CarQuality quality = CarQuality.NORMAL;
@@ -73,9 +73,9 @@ public class CarDb implements BaseModelInterface {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
 
-        cv.put(Cars.NUMBER, number);
-        cv.put(Cars.QUALITY, quality.toString());
-        cv.put(Cars.BROKEN, broken ? 1 : 0);
+        cv.put(Cars.NUMBER.name(), number);
+        cv.put(Cars.QUALITY.name(), quality.toString());
+        cv.put(Cars.BROKEN.name(), broken ? 1 : 0);
 
         return cv;
     }

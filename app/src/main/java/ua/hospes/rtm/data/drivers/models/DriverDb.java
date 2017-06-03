@@ -2,13 +2,13 @@ package ua.hospes.rtm.data.drivers.models;
 
 import android.content.ContentValues;
 
-import ua.hospes.dbhelper.BaseModelInterface;
+import ua.hospes.dbhelper.IDbModel;
 import ua.hospes.rtm.core.db.tables.Drivers;
 
 /**
  * @author Andrew Khloponin
  */
-public class DriverDb implements BaseModelInterface {
+public class DriverDb implements IDbModel {
     private final int id;
     private String name;
     private int teamId = -1;
@@ -62,8 +62,8 @@ public class DriverDb implements BaseModelInterface {
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
 
-        cv.put(Drivers.NAME, name);
-        cv.put(Drivers.TEAM_ID, teamId);
+        cv.put(Drivers.NAME.name(), name);
+        cv.put(Drivers.TEAM_ID.name(), teamId);
 
         return cv;
     }

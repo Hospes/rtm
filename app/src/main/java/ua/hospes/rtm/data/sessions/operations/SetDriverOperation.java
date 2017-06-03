@@ -5,7 +5,8 @@ import android.content.ContentValues;
 import com.squareup.sqlbrite.BriteDatabase;
 
 import ua.hospes.dbhelper.Operation;
-import ua.hospes.dbhelper.QueryBuilder;
+import ua.hospes.dbhelper.builder.UpdateQuery;
+import ua.hospes.dbhelper.builder.conditions.Condition;
 import ua.hospes.rtm.core.db.tables.Sessions;
 
 /**
@@ -22,12 +23,12 @@ public class SetDriverOperation implements Operation<Integer> {
 
     @Override
     public Integer doOperation(BriteDatabase db) {
-        QueryBuilder builder = new QueryBuilder(Sessions.name).where(Sessions._ID + " = ?", String.valueOf(sessionId));
+        UpdateQuery builder = new UpdateQuery(Sessions.name).where(Condition.eq(Sessions.ID, sessionId));
 
         ContentValues cv = new ContentValues();
-        cv.put(Sessions.DRIVER_ID, driverId);
+        cv.put(Sessions.DRIVER_ID.name(), driverId);
 
-        db.update(builder.getTable(), cv, builder.getSelection(), builder.getSelectionArgs());
+        db.update(builder.getTable(), cv, builder.getWhereClause(), builder.getWhereArgs());
 
         return sessionId;
     }

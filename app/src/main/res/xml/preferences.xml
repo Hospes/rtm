@@ -1,11 +1,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference android:defaultValue="manual"
-                    android:entries="@array/assign_pitstop_dur_titles"
-                    android:entryValues="@array/assign_pitstop_dur_values"
-                    android:key="assign_pitstop_dur_to"
-                    android:title="@string/pref_PredefineDriverForPITSTOP" />
+    <PreferenceCategory android:title="Race UI">
+        <CheckBoxPreference android:defaultValue="true"
+                            android:key="show_team_number"
+                            android:title="Show team number" />
+        <CheckBoxPreference android:defaultValue="true"
+                            android:key="show_team_name"
+                            android:title="Show team name" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Race Controls">
+        <CheckBoxPreference android:defaultValue="false"
+                            android:key="remove_pit_stops"
+                            android:title="@string/pref_RemovePITSTOPs" />
 
-    <CheckBoxPreference android:defaultValue="false"
-                        android:key="remove_pit_stops"
-                        android:title="@string/pref_RemovePITSTOPs" />
+        <ListPreference android:defaultValue="manual"
+                        android:entries="@array/assign_pitstop_dur_titles"
+                        android:entryValues="@array/assign_pitstop_dur_values"
+                        android:key="assign_pitstop_dur_to"
+                        android:title="@string/pref_PredefineDriverForPITSTOP" />
+    </PreferenceCategory>
 </PreferenceScreen>

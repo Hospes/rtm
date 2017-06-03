@@ -14,8 +14,8 @@ import ua.hospes.rtm.domain.team.models.Team;
  */
 public class TeamsMapper {
     public static TeamDb map(Cursor cursor) {
-        int id = cursor.getInt(cursor.getColumnIndex(Teams._ID));
-        String name = cursor.getString(cursor.getColumnIndex(Teams.NAME));
+        int id = cursor.getInt(cursor.getColumnIndex(Teams.ID.name()));
+        String name = cursor.getString(cursor.getColumnIndex(Teams.NAME.name()));
         return new TeamDb(id, name);
     }
 
