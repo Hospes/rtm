@@ -16,6 +16,11 @@
     <item android:id="@+id/action_add_team"
           android:title="@string/action_add_team"
           app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_export"
+          android:title="@string/action_export"
+          app:showAsAction="never" />
+
     <item android:id="@+id/action_reset"
           android:title="@string/action_reset"
           app:showAsAction="never" />

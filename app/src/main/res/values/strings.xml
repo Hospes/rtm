@@ -19,6 +19,7 @@
     <string name="action_stop">Stop</string>
     <string name="action_add">Add</string>
     <string name="action_add_team">Add team</string>
+    <string name="action_export">Export via XLS</string>
     <string name="action_reset">Reset</string>
     <string name="action_clear">Remove all</string>
 
@@ -69,6 +70,7 @@
     <string name="settings_title">Settings</string>
     <string name="pref_PredefineDriverForPITSTOP">Predefine driver for PIT-STOP from session</string>
     <string name="pref_RemovePITSTOPs">Remove PIT-STOP sessions</string>
+    <string name="pref_EnableExportXLS">Enable export XLS</string>
 
     <string name="settings_assign_pitstop_manually">Manually</string>
     <string name="settings_assign_pitstop_prev">Previous session</string>

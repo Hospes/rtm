@@ -2,7 +2,6 @@ package ua.hospes.rtm.ui.race.detail;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
 import ua.hospes.rtm.core.ui.BasePresenter;
 import ua.hospes.rtm.utils.RxUtils;
 
@@ -13,7 +12,7 @@ public class RaceItemDetailPresenter extends BasePresenter<RaceItemDetailContrac
     private final RaceItemDetailInteractor interactor;
 
     @Inject
-    public RaceItemDetailPresenter(RaceItemDetailInteractor interactor) {
+    RaceItemDetailPresenter(RaceItemDetailInteractor interactor) {
         this.interactor = interactor;
     }
 
@@ -29,21 +28,19 @@ public class RaceItemDetailPresenter extends BasePresenter<RaceItemDetailContrac
     }
 
 
-    public void listenRaceItem(int raceItemId) {
-        Subscription subscription = interactor.listenRaceItem(raceItemId)
+    void listenRaceItem(int raceItemId) {
+        RxUtils.manage(this, interactor.listenRaceItem(raceItemId)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(raceItem -> {
                     getView().onUpdateRaceItem(raceItem);
                     if (raceItem == null) return;
                     listenSessions(raceItem.getTeam().getId());
-                }, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                }, Throwable::printStackTrace));
     }
 
-    public void listenSessions(int teamId) {
-        Subscription subscription = interactor.listenSessions(teamId)
+    private void listenSessions(int teamId) {
+        RxUtils.manage(this, interactor.listenSessions(teamId)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(sessions -> getView().onUpdateSessions(sessions), Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(sessions -> getView().onUpdateSessions(sessions), Throwable::printStackTrace));
     }
 }

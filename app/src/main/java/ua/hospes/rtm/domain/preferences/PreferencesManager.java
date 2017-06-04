@@ -9,4 +9,6 @@ public interface PreferencesManager {
     PitStopAssign getPitStopAssign();
 
     boolean isPitStopSessionsRemoved();
+
+    boolean isExportXLSEnabled();
 }

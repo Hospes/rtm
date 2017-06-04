@@ -2,6 +2,7 @@ package ua.hospes.rtm.ui.race;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -75,18 +76,24 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
         RxUtils.manage(this, subscription);
     }
 
+    void exportXLS() {
+        RxUtils.manage(this, interactor.exportXLS()
+                .compose(RxUtils.applySchedulersSingle())
+                .subscribe(result -> {
+                    Toast.makeText(getView().getContext(), "File located at: " + result.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                }, Throwable::printStackTrace));
+    }
+
     void resetRace() {
-        Subscription subscription = interactor.resetRace()
+        RxUtils.manage(this, interactor.resetRace()
                 .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void removeAll() {
-        Subscription subscription = interactor.removeAll()
+        RxUtils.manage(this, interactor.removeAll()
                 .compose(RxUtils.applySchedulersSingle())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void showRaceItemDetail(Context context, RaceItem item) {

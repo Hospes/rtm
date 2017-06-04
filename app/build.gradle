@@ -37,8 +37,6 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            //versionNameSuffix ".debug"
-
             minifyEnabled false
         }
         release {
@@ -93,5 +91,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger2}"
     // Dagger  [END]
 
+    compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    
     compile("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlytics}@aar") { transitive = true }
 }

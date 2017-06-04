@@ -17,7 +17,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import hugo.weaving.DebugLog;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.race.models.DriverDetails;
@@ -91,7 +90,6 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
         presenter.detachView();
     }
 
-    @DebugLog
     @Override
     public void onUpdateRaceItem(RaceItem raceItem) {
         getSupportActionBar().setTitle(raceItem.getTeam().getName());

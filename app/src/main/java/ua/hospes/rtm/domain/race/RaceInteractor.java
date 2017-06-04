@@ -7,10 +7,15 @@ import android.util.Pair;
 import com.google.common.collect.Collections2;
 import com.google.common.primitives.Ints;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import jxl.write.WriteException;
 import rx.Observable;
 import rx.Single;
 import ua.hospes.rtm.core.db.tables.Race;
@@ -24,6 +29,7 @@ import ua.hospes.rtm.domain.sessions.SessionsRepository;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.domain.team.TeamsRepository;
 import ua.hospes.rtm.domain.team.models.Team;
+import ua.hospes.rtm.utils.XLSTest;
 
 /**
  * @author Andrew Khloponin
@@ -167,6 +173,31 @@ public class RaceInteractor {
 
     public Single<Void> removeAll() {
         return Single.zip(raceRepository.removeAll(), sessionsRepository.removeAll(), (aVoid, aVoid2) -> null);
+    }
+
+
+    public Single<File> exportXLS() {
+        return raceRepository.get()
+                .map(RaceItem::getTeam)
+                .flatMap(team -> Observable.zip(Observable.just(team), getTeamSessions(team.getId()), Pair::new))
+                .toList().map(pairs -> {
+                    Map<Team, List<Session>> data = new HashMap<>();
+                    for (Pair<Team, List<Session>> pair : pairs) {
+                        data.put(pair.first, pair.second);
+                    }
+                    return data;
+                }).toSingle()
+                .flatMap(teams -> Single.create(subscriber -> {
+                    try {
+                        subscriber.onSuccess(XLSTest.createWorkbook(teams));
+                    } catch (IOException | WriteException e) {
+                        subscriber.onError(e);
+                    }
+                }));
+    }
+
+    private Observable<List<Session>> getTeamSessions(int teamId) {
+        return sessionsRepository.getByTeamId(teamId).toList();
     }
 
 

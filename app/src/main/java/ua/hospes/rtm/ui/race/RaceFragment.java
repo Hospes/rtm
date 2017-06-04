@@ -1,9 +1,13 @@
 package ua.hospes.rtm.ui.race;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +37,7 @@ import ua.hospes.rtm.utils.UiUtils;
  * @author Andrew Khloponin
  */
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
+    private final static int REQUEST_CODE_PERMISSION = 11;
     @Inject RacePresenter presenter;
     @Inject PreferencesManager preferencesManager;
     private TextView tvTime;
@@ -107,6 +112,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         boolean stopWatchStarted = isStopWatchStarted();
         menu.findItem(R.id.action_start).setVisible(!stopWatchStarted);
         menu.findItem(R.id.action_add_team).setVisible(!stopWatchStarted);
+        menu.findItem(R.id.action_export).setVisible(preferencesManager.isExportXLSEnabled() && !stopWatchStarted);
         menu.findItem(R.id.action_reset).setVisible(!stopWatchStarted);
         menu.findItem(R.id.action_clear).setVisible(!stopWatchStarted);
         menu.findItem(R.id.action_stop).setVisible(stopWatchStarted);
@@ -133,6 +139,13 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
                 presenter.showAddTeamDialog(getChildFragmentManager());
                 return true;
 
+            case R.id.action_export:
+                // Assume thisActivity is the current activity
+                int permissionCheck = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) presenter.exportXLS();
+                else requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+                return true;
+
             case R.id.action_reset:
                 presenter.resetRace();
                 return true;
@@ -147,6 +160,19 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     }
     //endregion
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    presenter.exportXLS();
+                }
+                break;
+
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     @Override
     public void onDestroyView() {
