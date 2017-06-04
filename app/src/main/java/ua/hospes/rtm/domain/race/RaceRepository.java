@@ -6,6 +6,7 @@ import android.util.Pair;
 import java.util.List;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 
 /**
@@ -22,9 +23,9 @@ public interface RaceRepository {
 
     Observable<Boolean> updateByTeamId(Iterable<Pair<Integer, ContentValues>> items);
 
-    Observable<Boolean> delete(RaceItem item);
+    Single<Integer> remove(RaceItem item);
 
     Observable<Void> reset();
 
-    Observable<Void> clean();
+    Single<Integer> removeAll();
 }

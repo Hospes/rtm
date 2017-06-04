@@ -193,8 +193,8 @@ public class EditDriverDialogFragment extends AppCompatDialogFragment {
 
     private DialogInterface.OnClickListener onDeleteClick = (dialog, i) -> {
         if (driver == null) return;
-        driversRepository.delete(driver)
-                .compose(RxUtils.applySchedulers())
+        driversRepository.remove(driver)
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 }

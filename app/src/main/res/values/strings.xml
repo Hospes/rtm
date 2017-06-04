@@ -20,7 +20,7 @@
     <string name="action_add">Add</string>
     <string name="action_add_team">Add team</string>
     <string name="action_reset">Reset</string>
-    <string name="action_clear">Clear</string>
+    <string name="action_clear">Remove all</string>
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.core.db.tables.Race;
 import ua.hospes.rtm.domain.cars.CarsRepository;
 import ua.hospes.rtm.domain.cars.models.Car;
@@ -150,9 +151,8 @@ public class RaceInteractor {
     }
 
     public Observable<Void> resetRace() {
-        return sessionsRepository.clean()
-                .flatMap(aVoid -> raceRepository.get())
-                .toList()
+        return sessionsRepository.removeAll()
+                .flatMapObservable(aVoid -> raceRepository.get().toList())
                 .flatMap(raceItems ->
                         Observable.zip(
                                 Observable.from(raceItems),
@@ -160,14 +160,13 @@ public class RaceInteractor {
                                 (item, session) -> {
                                     item.setSession(session);
                                     return item;
-                                }))
-                .toList()
+                                })).toList()
                 .flatMap(raceRepository::update)
                 .map(list -> null);
     }
 
-    public Observable<Void> clear() {
-        return Observable.zip(raceRepository.clean(), sessionsRepository.clean(), (aVoid, aVoid2) -> null);
+    public Single<Void> removeAll() {
+        return Single.zip(raceRepository.removeAll(), sessionsRepository.removeAll(), (aVoid, aVoid2) -> null);
     }
 
 

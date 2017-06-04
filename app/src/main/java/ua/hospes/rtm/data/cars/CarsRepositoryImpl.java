@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.data.cars.mapper.CarsMapper;
 import ua.hospes.rtm.data.cars.storage.CarsDbStorage;
 import ua.hospes.rtm.domain.cars.CarsRepository;
@@ -60,12 +61,12 @@ public class CarsRepositoryImpl implements CarsRepository {
     }
 
     @Override
-    public Observable<Boolean> delete(Car car) {
-        return carsDbStorage.remove(CarsMapper.map(car)).map(count -> count != 0).toObservable();
+    public Single<Integer> remove(Car car) {
+        return carsDbStorage.remove(CarsMapper.map(car));
     }
 
     @Override
-    public Observable<Void> clear() {
-        return carsDbStorage.clear().toObservable();
+    public Single<Integer> removeAll() {
+        return carsDbStorage.removeAll();
     }
 }

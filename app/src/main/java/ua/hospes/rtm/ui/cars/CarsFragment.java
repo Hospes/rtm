@@ -136,7 +136,7 @@ public class CarsFragment extends AbsFragment implements CarsContract.View {
     private void showClearDialog() {
         new AlertDialog.Builder(getContext())
                 .setMessage(R.string.cars_remove_all)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.removeAll())
                 .setNegativeButton(R.string.no, (dialog, which) -> {})
                 .show();
     }

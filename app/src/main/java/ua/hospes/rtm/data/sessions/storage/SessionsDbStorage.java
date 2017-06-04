@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;
@@ -45,10 +46,6 @@ public class SessionsDbStorage {
 
     public Observable<UpdateResult<SessionDb>> update(SessionDb session) {
         return dbHelper.update(new UpdateQuery(Sessions.name).where(Condition.eq(Sessions.ID, session.getId())), session);
-    }
-
-    public Observable<Integer> remove(SessionDb session) {
-        return dbHelper.delete(new DeleteQuery(Sessions.name).where(Condition.eq(Sessions.ID, session.getId()))).toObservable();
     }
 
 
@@ -100,7 +97,12 @@ public class SessionsDbStorage {
         return dbHelper.query(SessionsMapper::map, new SelectQuery(Sessions.name).where(Condition.eq(Sessions.TEAM_ID, teamId)));
     }
 
-    public Observable<Void> clean() {
-        return dbHelper.delete(new DeleteQuery(Sessions.name)).toObservable().map(integer -> null);
+
+    public Single<Integer> remove(SessionDb session) {
+        return dbHelper.delete(new DeleteQuery(Sessions.name).where(Condition.eq(Sessions.ID, session.getId())));
+    }
+
+    public Single<Integer> removeAll() {
+        return dbHelper.delete(new DeleteQuery(Sessions.name));
     }
 }

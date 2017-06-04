@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Single;
 import rx.functions.Func2;
 import ua.hospes.rtm.data.race.mapper.RaceMapper;
 import ua.hospes.rtm.data.race.operations.UpdateRaceOperation;
@@ -88,8 +89,8 @@ public class RaceRepositoryImpl implements RaceRepository {
     }
 
     @Override
-    public Observable<Boolean> delete(RaceItem item) {
-        return raceDbStorage.remove(RaceMapper.map(item)).map(integer -> integer > 0).toObservable();
+    public Single<Integer> remove(RaceItem item) {
+        return raceDbStorage.remove(RaceMapper.map(item));
     }
 
 
@@ -99,8 +100,8 @@ public class RaceRepositoryImpl implements RaceRepository {
     }
 
     @Override
-    public Observable<Void> clean() {
-        return raceDbStorage.clean().toObservable();
+    public Single<Integer> removeAll() {
+        return raceDbStorage.removeAll();
     }
 
 

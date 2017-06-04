@@ -15,13 +15,13 @@ public class PreferencesManagerImpl extends AbsPreferencesManager implements Pre
     private SharedPreferences _preferences;
 
     @Inject
-    public PreferencesManagerImpl(Context context) {
+    PreferencesManagerImpl(Context context) {
         _preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
 
-    public static final String KEY_ASSIGN_PITSTOP = "assign_pitstop_dur_to";
-    public static final String KEY_PITSTOP_SESSIONS_REMOVED = "remove_pit_stops";
+    private static final String KEY_ASSIGN_PITSTOP = "assign_pitstop_dur_to";
+    private static final String KEY_PITSTOP_SESSIONS_REMOVED = "remove_pit_stops";
 
     @NonNull
     @Override

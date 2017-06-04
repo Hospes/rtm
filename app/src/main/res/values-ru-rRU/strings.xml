@@ -12,7 +12,7 @@
     <string name="action_add">Добавить</string>
     <string name="action_add_team">Добавить команду</string>
     <string name="action_reset">Обнулить</string>
-    <string name="action_clear">Очистить</string>
+    <string name="action_clear">Удалить всё</string>
 
     <!-- Race screen -->
     <string name="race_title">@string/app_name</string>

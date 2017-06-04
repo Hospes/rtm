@@ -33,11 +33,9 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
     @Inject RaceItemDetailPresenter presenter;
     private int raceItemId = -1;
 
-    private RecyclerView rvDrivers;
     private DriverDetailsAdapter driverDetailsAdapter;
 
     private SessionAdapter adapter;
-    private RecyclerView rvSessions;
 
 
     public static void start(Context context, int raceItemId) {
@@ -58,8 +56,8 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rvDrivers = UiUtils.findView(this, R.id.drivers);
-        rvSessions = UiUtils.findView(this, R.id.list);
+        RecyclerView rvDrivers = UiUtils.findView(this, R.id.drivers);
+        RecyclerView rvSessions = UiUtils.findView(this, R.id.list);
 
         presenter.attachView(this);
         if (getIntent() != null) {
@@ -68,12 +66,10 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
         presenter.listenRaceItem(raceItemId);
 
         rvDrivers.setHasFixedSize(true);
-        rvDrivers.setNestedScrollingEnabled(true);
         rvDrivers.setLayoutManager(new GridLayoutManager(this, 2));
         rvDrivers.setAdapter(driverDetailsAdapter = new DriverDetailsAdapter());
 
         rvSessions.setHasFixedSize(true);
-        rvSessions.setNestedScrollingEnabled(true);
         rvSessions.setLayoutManager(new LinearLayoutManager(this));
         rvSessions.setAdapter(adapter = new SessionAdapter());
     }

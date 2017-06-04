@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Single;
 import rx.Subscriber;
 import ua.hospes.rtm.data.cars.CarsRepositoryImpl;
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
@@ -238,8 +239,8 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
 
     @Override
-    public Observable<Void> clean() {
-        return dbStorage.clean();
+    public Single<Integer> removeAll() {
+        return dbStorage.removeAll();
     }
 
 

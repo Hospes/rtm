@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 
 /**
@@ -14,7 +15,7 @@ public class DriversInteractor {
     private final DriversRepository repository;
 
     @Inject
-    public DriversInteractor(DriversRepository repository) {
+    DriversInteractor(DriversRepository repository) {
         this.repository = repository;
     }
 
@@ -23,7 +24,7 @@ public class DriversInteractor {
     }
 
 
-    public Observable<Void> clear() {
-        return repository.clear();
+    public Single<Integer> removeAll() {
+        return repository.removeAll();
     }
 }

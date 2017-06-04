@@ -42,11 +42,6 @@ public class DriversDbStorage {
     }
 
 
-    public Single<Integer> remove(DriverDb driver) {
-        return dbHelper.delete(new DeleteQuery(Drivers.name).where(Condition.eq(Drivers.ID, driver.getId())));
-    }
-
-
     public Observable<DriverDb> get() {
         return dbHelper.querySingle(DriversMapper::map, new SelectQuery(Drivers.name));
     }
@@ -80,7 +75,11 @@ public class DriversDbStorage {
     }
 
 
-    public Single<Integer> clear() {
+    public Single<Integer> remove(DriverDb driver) {
+        return dbHelper.delete(new DeleteQuery(Drivers.name).where(Condition.eq(Drivers.ID, driver.getId())));
+    }
+
+    public Single<Integer> removeAll() {
         return dbHelper.delete(new DeleteQuery(Drivers.name));
     }
 }

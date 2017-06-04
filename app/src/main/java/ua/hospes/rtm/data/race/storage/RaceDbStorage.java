@@ -42,10 +42,6 @@ public class RaceDbStorage {
         return dbHelper.update(new UpdateQuery(Race.name).where(Condition.eq(Race.ID, item.getId())), item);
     }
 
-    public Single<Integer> remove(RaceItemDb session) {
-        return dbHelper.delete(new DeleteQuery(Race.name).where(Condition.eq(Race.ID, session.getId())));
-    }
-
     public Observable<Boolean> updateRaces(Iterable<UpdateRaceOperation> operations) {
         return dbHelper.multiOperationTransaction(operations);
     }
@@ -66,7 +62,12 @@ public class RaceDbStorage {
         return dbHelper.updateCV(new UpdateQuery(Race.name), cv).map(result -> null);
     }
 
-    public Single<Void> clean() {
-        return dbHelper.delete(new DeleteQuery(Race.name)).map(integer -> null);
+
+    public Single<Integer> remove(RaceItemDb session) {
+        return dbHelper.delete(new DeleteQuery(Race.name).where(Condition.eq(Race.ID, session.getId())));
+    }
+
+    public Single<Integer> removeAll() {
+        return dbHelper.delete(new DeleteQuery(Race.name));
     }
 }

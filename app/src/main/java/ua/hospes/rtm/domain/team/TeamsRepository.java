@@ -3,6 +3,7 @@ package ua.hospes.rtm.domain.team;
 import java.util.List;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.team.models.Team;
 
 /**
@@ -25,7 +26,7 @@ public interface TeamsRepository {
 
     Observable<Boolean> save(Team driver);
 
-    Observable<Boolean> delete(Team driver);
+    Single<Integer> remove(Team driver);
 
-    Observable<Void> clear();
+    Single<Integer> removeAll();
 }

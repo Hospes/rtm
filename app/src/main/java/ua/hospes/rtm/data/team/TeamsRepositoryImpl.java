@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
 import ua.hospes.rtm.data.team.mapper.TeamsMapper;
 import ua.hospes.rtm.data.team.storage.TeamsDbStorage;
@@ -79,13 +80,13 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     }
 
     @Override
-    public Observable<Boolean> delete(Team team) {
-        return dbStorage.remove(TeamsMapper.map(team)).map(count -> count != 0);
+    public Single<Integer> remove(Team team) {
+        return dbStorage.remove(TeamsMapper.map(team));
     }
 
     @Override
-    public Observable<Void> clear() {
-        return dbStorage.clear();
+    public Single<Integer> removeAll() {
+        return dbStorage.removeAll();
     }
 
 

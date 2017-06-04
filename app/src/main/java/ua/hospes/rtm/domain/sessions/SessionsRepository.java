@@ -3,6 +3,7 @@ package ua.hospes.rtm.domain.sessions;
 import java.util.List;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.sessions.models.Session;
 
 /**
@@ -51,5 +52,5 @@ public interface SessionsRepository {
      */
     Observable<Session> closeSessions(long stopTime, int... sessionIds);
 
-    Observable<Void> clean();
+    Single<Integer> removeAll();
 }

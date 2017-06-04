@@ -3,6 +3,7 @@ package ua.hospes.rtm.domain.drivers;
 import java.util.List;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 
 /**
@@ -20,11 +21,12 @@ public interface DriversRepository {
 
     Observable<Boolean> save(Driver driver);
 
-    Observable<Boolean> delete(Driver driver);
-
     Observable<Boolean> addDriversToTeam(int teamId, int... driverIds);
 
     Observable<Boolean> removeDriversFromTeam(int teamId);
 
-    Observable<Void> clear();
+
+    Single<Integer> remove(Driver driver);
+
+    Single<Integer> removeAll();
 }

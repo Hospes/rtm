@@ -190,7 +190,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     private void showClearDialog() {
         new AlertDialog.Builder(getContext())
                 .setMessage(R.string.teams_remove_all)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.removeAll())
                 .setNegativeButton(R.string.no, (dialog, which) -> {})
                 .show();
     }

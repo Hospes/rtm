@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="?android:attr/selectableItemBackground">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="?android:attr/selectableItemBackground">
 
 
     <TextView android:id="@+id/number"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:layout_margin="16dp"
+              android:layout_marginBottom="8dp"
+              android:layout_marginEnd="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              android:padding="4dp"
               android:textColor="@android:color/white"
-              android:textSize="52sp" />
+              android:textSize="52sp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView android:id="@+id/broken"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_gravity="start|top"
               android:text="@string/cars_broken"
               android:textColor="@color/car_quality_low"
-              android:visibility="gone" />
-</FrameLayout>
+              android:visibility="gone"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp" />
+</android.support.constraint.ConstraintLayout>

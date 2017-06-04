@@ -79,7 +79,7 @@ public class CarsDbStorage {
         return dbHelper.delete(new DeleteQuery(Cars.name).where(Condition.eq(Cars.ID, carDb.getId())));
     }
 
-    public Single<Void> clear() {
-        return dbHelper.delete(new DeleteQuery(Cars.name)).map(integer -> null);
+    public Single<Integer> removeAll() {
+        return dbHelper.delete(new DeleteQuery(Cars.name));
     }
 }

@@ -33,6 +33,7 @@
                 android:id="@+id/drivers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/item_driver_details" />
 
 
@@ -51,6 +52,7 @@
 
                 <TextView android:layout_width="50dp"
                           android:layout_height="wrap_content"
+                          android:gravity="center"
                           android:text="@string/race_detail_car"
                           android:textColor="@android:color/white"
                           android:textStyle="bold" />
@@ -78,6 +80,7 @@
                 android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/item_race_detail_session" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

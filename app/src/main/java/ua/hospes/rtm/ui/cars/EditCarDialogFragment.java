@@ -174,8 +174,8 @@ public class EditCarDialogFragment extends DialogFragment {
 
     private DialogInterface.OnClickListener onDeleteClick = (dialog, i) -> {
         if (car == null) return;
-        carsRepository.delete(car)
-                .compose(RxUtils.applySchedulers())
+        carsRepository.remove(car)
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };
 }

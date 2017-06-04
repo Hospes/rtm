@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.data.drivers.mapper.DriversMapper;
 import ua.hospes.rtm.data.drivers.storage.DriversDbStorage;
 import ua.hospes.rtm.data.team.models.TeamDb;
@@ -66,8 +67,8 @@ public class DriversRepositoryImpl implements DriversRepository {
     }
 
     @Override
-    public Observable<Boolean> delete(Driver driver) {
-        return dbStorage.remove(DriversMapper.map(driver)).toObservable().map(count -> count != 0);
+    public Single<Integer> remove(Driver driver) {
+        return dbStorage.remove(DriversMapper.map(driver));
     }
 
     @Override
@@ -81,8 +82,8 @@ public class DriversRepositoryImpl implements DriversRepository {
     }
 
     @Override
-    public Observable<Void> clear() {
-        return dbStorage.clear().toObservable().map(integer -> null);
+    public Single<Integer> removeAll() {
+        return dbStorage.removeAll();
     }
 
 

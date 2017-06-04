@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.team.models.Team;
 
 /**
@@ -24,7 +25,7 @@ public class TeamsInteractor {
         return repository.listen();
     }
 
-    public Observable<Void> clear() {
-        return repository.clear();
+    public Single<Integer> removeAll() {
+        return repository.removeAll();
     }
 }

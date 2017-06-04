@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;
@@ -41,13 +42,10 @@ public class TeamsDbStorage {
     }
 
 
-    public Observable<Integer> remove(TeamDb team) {
-        return dbHelper.delete(new DeleteQuery(Teams.name).where(Condition.eq(Teams.ID, team.getId()))).toObservable();
-    }
-
-
     public Observable<TeamDb> getNotInRace() {
-        return dbHelper.querySingle(TeamsMapper::map, "SELECT t1.rowid, t1.* FROM " + Teams.name + " t1 LEFT JOIN " + Race.name + " t2 ON t2." + Race.TEAM_ID + " = t1." + Teams.ID + " WHERE t2." + Race.TEAM_ID + " IS NULL");
+        return dbHelper.querySingle(TeamsMapper::map, "SELECT t1.rowid, t1.* FROM " + Teams.name +
+                " t1 LEFT JOIN " + Race.name + " t2 ON t2." + Race.TEAM_ID.name() + " = t1." + Teams.ID.name() +
+                " WHERE t2." + Race.TEAM_ID.name() + " IS NULL");
     }
 
 
@@ -64,7 +62,11 @@ public class TeamsDbStorage {
     }
 
 
-    public Observable<Void> clear() {
-        return dbHelper.delete(new DeleteQuery(Teams.name)).toObservable().map(integer -> null);
+    public Single<Integer> remove(TeamDb team) {
+        return dbHelper.delete(new DeleteQuery(Teams.name).where(Condition.eq(Teams.ID, team.getId())));
+    }
+
+    public Single<Integer> removeAll() {
+        return dbHelper.delete(new DeleteQuery(Teams.name));
     }
 }

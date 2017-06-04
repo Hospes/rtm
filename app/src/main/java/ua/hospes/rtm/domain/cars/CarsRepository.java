@@ -3,6 +3,7 @@ package ua.hospes.rtm.domain.cars;
 import java.util.List;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.cars.models.Car;
 
 /**
@@ -21,7 +22,7 @@ public interface CarsRepository {
 
     Observable<Boolean> save(Car car);
 
-    Observable<Boolean> delete(Car car);
+    Single<Integer> remove(Car car);
 
-    Observable<Void> clear();
+    Single<Integer> removeAll();
 }

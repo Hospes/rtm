@@ -25,12 +25,12 @@ class RaceItemDetailInteractor {
     }
 
 
-    public Observable<RaceItem> listenRaceItem(int raceItemId) {
+    Observable<RaceItem> listenRaceItem(int raceItemId) {
         return raceRepository.listen()
                 .flatMap(items -> Observable.from(items).singleOrDefault(null, item -> item.getId() == raceItemId));
     }
 
-    public Observable<List<Session>> listenSessions(int teamId) {
+    Observable<List<Session>> listenSessions(int teamId) {
         return sessionsRepository.listenByTeamId(teamId);
     }
 }

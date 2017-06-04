@@ -3,6 +3,7 @@ package ua.hospes.rtm.utils;
 import java.util.HashMap;
 
 import rx.Observable;
+import rx.Single;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -16,13 +17,14 @@ import rx.subscriptions.CompositeSubscription;
 public class RxUtils {
     @SuppressWarnings("unchecked")
     public static <T> Observable.Transformer<T, T> applySchedulers() {
-        return new Observable.Transformer<T, T>() {
-            @Override
-            public Observable<T> call(Observable<T> observable) {
-                return observable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Single.Transformer<T, T> applySchedulersSingle() {
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static final HashMap<Object, CompositeSubscription> sSubscriptions = new HashMap<Object, CompositeSubscription>();

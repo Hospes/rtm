@@ -40,60 +40,60 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
         RxUtils.unsubscribe(this);
     }
 
-    public void startRace(long startTime) {
+    void startRace(long startTime) {
         Subscription subscription = interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void stopRace(long stopTime) {
+    void stopRace(long stopTime) {
         Subscription subscription = interactor.stopRace(stopTime)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void initSession(int teamId) {
+    void initSession(int teamId) {
         Subscription subscription = interactor.initSession(Session.Type.TRACK, teamId)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void onPit(RaceItem item, long time) {
+    void onPit(RaceItem item, long time) {
         Subscription subscription = interactor.teamPit(item, time)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void onOut(RaceItem item, long time) {
+    void onOut(RaceItem item, long time) {
         Subscription subscription = interactor.teamOut(item, time)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void resetRace() {
+    void resetRace() {
         Subscription subscription = interactor.resetRace()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void clear() {
-        Subscription subscription = interactor.clear()
-                .compose(RxUtils.applySchedulers())
+    void removeAll() {
+        Subscription subscription = interactor.removeAll()
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }
 
-    public void showRaceItemDetail(Context context, RaceItem item) {
+    void showRaceItemDetail(Context context, RaceItem item) {
         RaceItemDetailActivity.start(context, item.getId());
     }
 
-    public void showSetCarDialog(FragmentManager managerFragment, Session session) {
+    void showSetCarDialog(FragmentManager managerFragment, Session session) {
         Subscription subscription = interactor.getCarsNotInRace()
                 .toList()
                 .compose(RxUtils.applySchedulers())
@@ -103,7 +103,7 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
         RxUtils.manage(this, subscription);
     }
 
-    public void showSetDriverDialog(FragmentManager managerFragment, Session session) {
+    void showSetDriverDialog(FragmentManager managerFragment, Session session) {
         Subscription subscription = interactor.getDrivers(session.getTeamId())
                 .toList()
                 .compose(RxUtils.applySchedulers())
@@ -113,7 +113,7 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
         RxUtils.manage(this, subscription);
     }
 
-    public void showAddTeamDialog(FragmentManager managerFragment) {
+    void showAddTeamDialog(FragmentManager managerFragment) {
         AddTeamToRaceDialogFragment.newInstance().show(managerFragment, "add_team_to_race");
     }
 }

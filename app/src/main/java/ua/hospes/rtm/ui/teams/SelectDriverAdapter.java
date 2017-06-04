@@ -34,7 +34,13 @@ class SelectDriverAdapter extends AbsRecyclerAdapter<Driver, SelectDriverAdapter
 
     @Override
     public void onBindViewHolder(MyHolder holder, Driver item, int position) {
-        holder.text.setText(item.getName());
+        String text;
+        if (item.getTeamId() != -1) {
+            text = String.format("%s (%s)", item.getName(), item.getTeamName());
+        } else {
+            text = item.getName();
+        }
+        holder.text.setText(text);
         holder.text.setChecked(selectedIds.contains(item.getId()));
     }
 

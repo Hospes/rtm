@@ -93,6 +93,14 @@ public class SelectDriversDialogFragment extends AppCompatDialogFragment {
         rv.setAdapter(adapter = new SelectDriverAdapter(drivers));
 
         RxUtils.manage(this, driversRepository.get()
+                // Sort by Driver Name
+                .sorted((driver, driver2) -> driver.getName().compareTo(driver2.getName()))
+                // Sort by Driver Team
+                .sorted((driver, driver2) -> {
+                    String team1 = driver.getTeamName() == null ? "" : driver.getTeamName();
+                    String team2 = driver2.getTeamName() == null ? "" : driver2.getTeamName();
+                    return team1.compareTo(team2);
+                })
                 .toList()
                 .compose(RxUtils.applySchedulers())
                 .subscribe(this::updateDrivers, Throwable::printStackTrace));

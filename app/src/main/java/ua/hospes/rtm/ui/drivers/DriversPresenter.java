@@ -1,5 +1,7 @@
 package ua.hospes.rtm.ui.drivers;
 
+import java.util.Collections;
+
 import javax.inject.Inject;
 
 import rx.Subscription;
@@ -23,6 +25,11 @@ class DriversPresenter extends BasePresenter<DriversContract.View> {
         super.attachView(view);
 
         Subscription subscription = interactor.listen()
+                .map(drivers -> {
+                    // Sort by Driver Name
+                    Collections.sort(drivers, (driver, driver2) -> driver.getName().compareTo(driver2.getName()));
+                    return drivers;
+                })
                 .compose(RxUtils.applySchedulers())
                 .subscribe(list -> getView().updateDrivers(list), Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
@@ -35,9 +42,9 @@ class DriversPresenter extends BasePresenter<DriversContract.View> {
     }
 
 
-    public void clear() {
-        Subscription subscription = interactor.clear()
-                .compose(RxUtils.applySchedulers())
+    public void removeAll() {
+        Subscription subscription = interactor.removeAll()
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(result -> {}, Throwable::printStackTrace);
         RxUtils.manage(this, subscription);
     }

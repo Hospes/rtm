@@ -135,7 +135,7 @@ public class DriversFragment extends AbsFragment implements DriversContract.View
     private void showClearDialog() {
         new AlertDialog.Builder(getContext())
                 .setMessage(R.string.drivers_remove_all)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.clear())
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.removeAll())
                 .setNegativeButton(R.string.no, (dialog, which) -> {})
                 .show();
     }

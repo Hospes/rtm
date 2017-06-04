@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import ua.hospes.rtm.domain.cars.models.Car;
 
 /**
@@ -15,7 +16,7 @@ public class CarsInteractor {
 
 
     @Inject
-    public CarsInteractor(CarsRepository repository) {
+    CarsInteractor(CarsRepository repository) {
         this.repository = repository;
     }
 
@@ -24,7 +25,7 @@ public class CarsInteractor {
         return repository.listen();
     }
 
-    public Observable<Void> clear() {
-        return repository.clear();
+    public Single<Integer> removeAll() {
+        return repository.removeAll();
     }
 }
