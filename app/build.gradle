@@ -14,7 +14,7 @@ android {
         applicationId "ua.hospes.rtm"
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 5
+        versionCode 6
         versionName version + (buildNumber != null ? ".$buildNumber" : ".dev")
 
         archivesBaseName = "rtm-v$version" + (buildNumber != null ? ".$buildNumber" : ".dev")
