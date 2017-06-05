@@ -1,6 +1,5 @@
 package ua.hospes.rtm.ui;
 
-
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;

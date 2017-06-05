@@ -26,11 +26,6 @@ import ua.hospes.rtm.ui.teams.TeamsFragment;
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationDrawerFragment.NavigationDrawerCallbacks {
     @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        /* Fragment managing the behaviors, interactions and presentation of the navigation drawer. */
+        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
