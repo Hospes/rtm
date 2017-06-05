@@ -17,3 +17,5 @@
 #}
 -dontwarn com.google.errorprone.annotations.**
 -dontwarn com.google.j2objc.annotations.**
+
+-dontwarn org.apache.log4j.**
