@@ -17,7 +17,7 @@ import ua.hospes.rtm.core.di.module.AppModule;
  * @author Andrew Khloponin
  */
 public class App extends MultiDexApplication implements HasActivityInjector {
-    @Inject DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
+    @Inject DispatchingAndroidInjector<Activity> activityInjector;
 
     @Override
     public void onCreate() {
@@ -31,6 +31,6 @@ public class App extends MultiDexApplication implements HasActivityInjector {
 
     @Override
     public DispatchingAndroidInjector<Activity> activityInjector() {
-        return dispatchingActivityInjector;
+        return activityInjector;
     }
 }
