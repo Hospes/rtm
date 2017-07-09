@@ -38,6 +38,7 @@ import ua.hospes.rtm.utils.UiUtils;
  */
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
     private final static int REQUEST_CODE_PERMISSION = 11;
+    private TimerListController timerListController;
     @Inject RacePresenter presenter;
     @Inject PreferencesManager preferencesManager;
     private TextView tvTime;
@@ -89,13 +90,15 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(rv, preferencesManager));
+        rv.setAdapter(adapter = new RaceAdapter(preferencesManager));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
         adapter.setOnSetCarClickListener((item, position) -> presenter.showSetCarDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
+
+        rv.addOnScrollListener(timerListController = new TimerListController());
 
         presenter.attachView(this);
     }
@@ -129,6 +132,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
             case R.id.action_start:
                 bindToService();
                 StopWatchService.start(getContext());
+                timerListController.forceUpdate(rv);
                 return true;
 
             case R.id.action_stop:
@@ -177,6 +181,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        timerListController.unsubscribe();
         presenter.detachView();
     }
 
@@ -209,7 +214,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         // We have to check tvTime on null cause it couldn't be ready yet
         if (tvTime != null) tvTime.setText(TimeUtils.format(time));
         // We have to check adapter on null cause it couldn't be ready yet
-        if (adapter != null) adapter.updateDurations(currentNanoTime);
+        if (timerListController != null) timerListController.updateTime(currentNanoTime);
     }
 
 

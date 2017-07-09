@@ -10,9 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
@@ -25,25 +23,20 @@ import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.ui.race.widgets.DriverTimeView;
 import ua.hospes.rtm.ui.race.widgets.SessionTimeView;
-import ua.hospes.rtm.ui.race.widgets.TimeView;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**
  * @author Andrew Khloponin
  */
 class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
-    private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.3f;
-    private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.3f;
     private final boolean isPitStopsRemoved;
-    private RecyclerView rv;
     private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
     private OnItemClickListener<RaceItem> onOutClickListener;
 
 
-    RaceAdapter(RecyclerView rv, @NonNull PreferencesManager preferencesManager) {
-        this.rv = rv;
+    RaceAdapter(@NonNull PreferencesManager preferencesManager) {
         this.isPitStopsRemoved = preferencesManager.isPitStopSessionsRemoved();
     }
 
@@ -100,38 +93,6 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
                     break;
             }
         }
-    }
-
-
-    void updateDurations(long currentNanoTime) {
-        for (TimeView tv : collectShouldPlayItems()) tv.setCurrentNanoTime(currentNanoTime);
-    }
-
-    private Set<TimeView> collectShouldPlayItems() {
-        Set<TimeView> set = new HashSet<>();
-
-        RecyclerView.LayoutManager lm = rv.getLayoutManager();
-
-        int autoPlayAreaStart = (int) (rv.getTop() + rv.getHeight() * AUTO_PLAY_AREA_START_PADDING_RELATIVE);
-        int autoPlayAreaEnd = (int) (rv.getBottom() - rv.getHeight() * AUTO_PLAY_AREA_END_PADDING_RELATIVE);
-
-        int count = lm.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = lm.getChildAt(i);
-            int viewStart = lm.getDecoratedTop(child);
-            int viewEnd = lm.getDecoratedBottom(child);
-
-            boolean shouldPlay = false;
-            shouldPlay = shouldPlay || (rv.getTop() <= viewStart && rv.getBottom() >= viewEnd); // completely visible
-            shouldPlay = shouldPlay || !(autoPlayAreaStart > viewEnd || autoPlayAreaEnd < viewStart); // near center;
-
-            if (shouldPlay) {
-                MyHolder viewHolder = (MyHolder) rv.getChildViewHolder(child);
-                set.add(viewHolder.sessionTimeView);
-                set.add(viewHolder.driverTimeView);
-            }
-        }
-        return set;
     }
 
 
