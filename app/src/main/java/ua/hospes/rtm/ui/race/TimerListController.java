@@ -16,8 +16,8 @@ import ua.hospes.rtm.utils.RxUtils;
  * @author Andrew Khloponin
  */
 class TimerListController extends RxScrollListener {
-    private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.3f;
-    private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.3f;
+    private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.1f;
+    private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.1f;
 
     private Set<TimeView> playingItems = new HashSet<>();
     private static final long SKIP_RECALCULATION_DURATION = 300;
