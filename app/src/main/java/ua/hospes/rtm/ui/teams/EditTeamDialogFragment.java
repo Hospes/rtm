@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.common.collect.Collections2;
@@ -42,7 +42,7 @@ public class EditTeamDialogFragment extends AppCompatDialogFragment {
     @Inject DriversRepository driversRepository;
     @Inject TeamsRepository repository;
 
-    private TextInputEditText name;
+    private EditText name;
     private TextView drivers;
     private Button btnAssignDrivers;
     @NonNull private Team team = new Team();
