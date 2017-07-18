@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="70dp"
               android:background="?android:attr/selectableItemBackground"
@@ -53,14 +54,15 @@
         android:gravity="center"
         android:text="@string/holder_time" />
 
-    <Button android:id="@+id/btn_next"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/race_btn_next_session"
-            android:visibility="gone" />
+    <ua.hospes.undobutton.UndoButton android:id="@+id/btn_next"
+                                     android:layout_width="80dp"
+                                     android:layout_height="wrap_content"
+                                     android:layout_gravity="center_vertical"
+                                     android:layout_marginLeft="8dp"
+                                     android:layout_marginRight="8dp"
+                                     android:text="@string/race_btn_next_session"
+                                     android:visibility="gone"
+                                     app:delb_textUndo="Undo" />
 
     <ua.hospes.rtm.ui.race.widgets.CustomToggleButton
         android:id="@+id/btn_pit_out"

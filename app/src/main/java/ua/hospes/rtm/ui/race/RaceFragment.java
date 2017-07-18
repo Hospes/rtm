@@ -32,12 +32,15 @@ import ua.hospes.rtm.domain.preferences.PreferencesManager;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.utils.TimeUtils;
 import ua.hospes.rtm.utils.UiUtils;
+import ua.hospes.undobutton.UndoButton;
+import ua.hospes.undobutton.UndoButtonController;
 
 /**
  * @author Andrew Khloponin
  */
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
     private final static int REQUEST_CODE_PERMISSION = 11;
+    private UndoButtonController undoController;
     private TimerListController timerListController;
     @Inject RacePresenter presenter;
     @Inject PreferencesManager preferencesManager;
@@ -88,9 +91,26 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        undoController = new UndoButtonController<RaceAdapter.MyHolder>(getContext()) {
+            @Override
+            public UndoButton[] provideUndos(RaceAdapter.MyHolder holder) {
+                return new UndoButton[]{holder.btnNextSession};
+            }
+
+            @Override
+            public boolean defaultTimeSHow() {
+                return true;
+            }
+
+            @Override
+            public int defaultDelay() {
+                return 5;
+            }
+        };
+
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(preferencesManager));
+        rv.setAdapter(adapter = new RaceAdapter(preferencesManager, undoController));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
@@ -98,7 +118,9 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
-        rv.addOnScrollListener(timerListController = new TimerListController());
+        timerListController = new TimerListController();
+        //rv.addOnScrollListener(timerListController = new TimerListController());
+        rv.addOnScrollListener(undoController);
 
         presenter.attachView(this);
     }
@@ -132,7 +154,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
             case R.id.action_start:
                 bindToService();
                 StopWatchService.start(getContext());
-                timerListController.forceUpdate(rv);
+                //timerListController.forceUpdate(rv);
                 return true;
 
             case R.id.action_stop:
@@ -182,6 +204,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onDestroyView() {
         super.onDestroyView();
         timerListController.unsubscribe();
+        undoController.release();
         presenter.detachView();
     }
 

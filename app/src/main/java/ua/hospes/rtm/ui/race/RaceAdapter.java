@@ -24,20 +24,25 @@ import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.ui.race.widgets.DriverTimeView;
 import ua.hospes.rtm.ui.race.widgets.SessionTimeView;
 import ua.hospes.rtm.utils.UiUtils;
+import ua.hospes.undobutton.UndoButton;
+import ua.hospes.undobutton.UndoButtonController;
 
 /**
  * @author Andrew Khloponin
  */
 class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
+    private final UndoButtonController undoButtonController;
     private final boolean isPitStopsRemoved;
     private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
     private OnItemClickListener<RaceItem> onOutClickListener;
+    private OnItemClickListener<RaceItem> onUndoClickListener;
 
 
-    RaceAdapter(@NonNull PreferencesManager preferencesManager) {
+    RaceAdapter(@NonNull PreferencesManager preferencesManager, UndoButtonController undoButtonController) {
         this.isPitStopsRemoved = preferencesManager.isPitStopSessionsRemoved();
+        this.undoButtonController = undoButtonController;
     }
 
 
@@ -57,6 +62,9 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         Session session = item.getSession();
         holder.driverTimeView.setSession(session);
         holder.sessionTimeView.setSession(session);
+
+        undoButtonController.onBind(item.getId(), holder.btnNextSession);
+
         if (session != null) {
             Car car = session.getCar();
             holder.btnSessionCar.setText(car == null ? context.getString(R.string.race_btn_set_car) : String.valueOf(car.getNumber()));
@@ -73,6 +81,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             holder.sessionType.setVisibility(View.VISIBLE);
 
             holder.btnNextSession.setVisibility(isPitStopsRemoved ? View.VISIBLE : View.GONE);
+
             holder.btnPitOut.setVisibility(isPitStopsRemoved ? View.GONE : View.VISIBLE);
             switch (session.getType()) {
                 case TRACK:
@@ -112,6 +121,10 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         this.onOutClickListener = onOutClickListener;
     }
 
+    void setOnUndoClickListener(OnItemClickListener<RaceItem> onUndoClickListener) {
+        this.onUndoClickListener = onUndoClickListener;
+    }
+
 
     class MyHolder extends AbsRecyclerHolder {
         // Car
@@ -125,7 +138,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         SessionTimeView sessionTimeView;
         ToggleButton btnPitOut;
 
-        Button btnNextSession;
+        UndoButton btnNextSession;
 
 
         MyHolder(ViewGroup parent, int layoutId) {
@@ -137,6 +150,8 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             btnSessionDriver.setOnClickListener(this::initOnSetDriverClickListener);
 
             btnNextSession.setOnClickListener(this::initOnOutClickListener);
+            btnNextSession.setOnUndoClickListener(this::initOnUndoClickListener);
+            btnNextSession.setController(undoButtonController);
             btnPitOut.setOnClickListener(this::initOnPitClickListener);
         }
 
@@ -201,6 +216,14 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
             if (onOutClickListener == null) return;
             onOutClickListener.onItemClick(getItem(position), position);
+        }
+
+        void initOnUndoClickListener(View view) {
+            final int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
+            if (onUndoClickListener == null) return;
+            onUndoClickListener.onItemClick(getItem(position), position);
         }
     }
 }
