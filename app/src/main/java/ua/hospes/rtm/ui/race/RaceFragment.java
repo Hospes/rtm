@@ -118,8 +118,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
-        timerListController = new TimerListController();
-        //rv.addOnScrollListener(timerListController = new TimerListController());
+        rv.addOnScrollListener(timerListController = new TimerListController());
         rv.addOnScrollListener(undoController);
 
         presenter.attachView(this);
@@ -154,7 +153,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
             case R.id.action_start:
                 bindToService();
                 StopWatchService.start(getContext());
-                //timerListController.forceUpdate(rv);
+                timerListController.forceUpdate(rv);
                 return true;
 
             case R.id.action_stop:
