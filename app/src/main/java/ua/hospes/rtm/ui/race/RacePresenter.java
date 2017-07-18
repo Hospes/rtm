@@ -42,38 +42,33 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     void startRace(long startTime) {
-        Subscription subscription = interactor.startRace(startTime)
+        RxUtils.manage(this, interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void stopRace(long stopTime) {
-        Subscription subscription = interactor.stopRace(stopTime)
+        RxUtils.manage(this, interactor.stopRace(stopTime)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
-    }
-
-    void initSession(int teamId) {
-        Subscription subscription = interactor.initSession(Session.Type.TRACK, teamId)
-                .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void onPit(RaceItem item, long time) {
-        Subscription subscription = interactor.teamPit(item, time)
+        RxUtils.manage(this, interactor.teamPit(item, time)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void onOut(RaceItem item, long time) {
-        Subscription subscription = interactor.teamOut(item, time)
+        RxUtils.manage(this, interactor.teamOut(item, time)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
+    }
+
+    void undoLastSession(RaceItem item) {
+        RxUtils.manage(this, interactor.removeLastSession(item)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     void exportXLS() {

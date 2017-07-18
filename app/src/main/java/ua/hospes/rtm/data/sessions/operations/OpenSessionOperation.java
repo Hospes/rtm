@@ -14,10 +14,12 @@ import ua.hospes.rtm.core.db.tables.Sessions;
  */
 public class OpenSessionOperation implements Operation<Integer> {
     private final int sessionId;
+    private final long raceStartTime;
     private final long startTime;
 
-    public OpenSessionOperation(int sessionId, long startTime) {
+    public OpenSessionOperation(int sessionId, long raceStartTime, long startTime) {
         this.sessionId = sessionId;
+        this.raceStartTime = raceStartTime;
         this.startTime = startTime;
     }
 
@@ -26,7 +28,9 @@ public class OpenSessionOperation implements Operation<Integer> {
         UpdateQuery builder = new UpdateQuery(Sessions.name).where(Condition.eq(Sessions.ID, sessionId));
 
         ContentValues cv = new ContentValues();
+        cv.put(Sessions.RACE_START_TIME.name(), raceStartTime);
         cv.put(Sessions.START_DURATION_TIME.name(), startTime);
+        cv.put(Sessions.END_DURATION_TIME.name(), -1);
 
         db.update(builder.getTable(), cv, builder.getWhereClause(), builder.getWhereArgs());
 

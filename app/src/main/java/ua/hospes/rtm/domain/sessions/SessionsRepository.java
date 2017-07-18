@@ -28,9 +28,7 @@ public interface SessionsRepository {
 
     Observable<Session> setSessionCar(int sessionId, int carId);
 
-    Observable<Session> setRaceStartTime(long raceStartTime, int... sessionIds);
-
-    Observable<Session> startSessions(long startTime, int... sessionIds);
+    Observable<Session> startSessions(long raceStartTime, long startTime, int... sessionIds);
 
     Observable<Session> startNewSessions(long raceStartTime, long startTime, Session.Type type, int... teamIds);
 
@@ -51,6 +49,8 @@ public interface SessionsRepository {
      * @param sessionIds Array of sessions that should be closed
      */
     Observable<Session> closeSessions(long stopTime, int... sessionIds);
+
+    Observable<Session> removeLastSession(int teamId);
 
     Single<Integer> removeAll();
 }

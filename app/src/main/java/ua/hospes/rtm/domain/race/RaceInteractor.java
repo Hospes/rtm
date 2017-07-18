@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.google.common.collect.Collections2;
 import com.google.common.primitives.Ints;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import jxl.write.WriteException;
 import rx.Observable;
 import rx.Single;
@@ -91,16 +93,14 @@ public class RaceInteractor {
                 .map(session -> true);
     }
 
+    @DebugLog
     public Observable<Boolean> startRace(long startTime) {
         return raceRepository.get()
                 .filter(item -> item.getSession() != null)
                 .map(item -> item.getSession().getId())
                 .toList().map(Ints::toArray)
-                .flatMap(sessionIds -> Observable.zip(
-                        sessionsRepository.startSessions(startTime, sessionIds).toList().singleOrDefault(null),
-                        sessionsRepository.setRaceStartTime(startTime, sessionIds).toList().singleOrDefault(null),
-                        (sessions, sessions2) -> true)
-                );
+                .flatMap(sessionIds -> sessionsRepository.startSessions(startTime, startTime, sessionIds).toList().singleOrDefault(null))
+                .map(sessions -> true);
     }
 
     public Observable<Boolean> stopRace(long stopTime) {
@@ -147,6 +147,18 @@ public class RaceInteractor {
                 .toList()
                 .flatMap(raceRepository::update);
     }
+
+    public Observable<Boolean> removeLastSession(@NonNull RaceItem raceItem) {
+        return Observable.zip(sessionsRepository.removeLastSession(raceItem.getTeam().getId()), Observable.just(raceItem), this::updateRaceItemSession)
+                .toList()
+                .flatMap(raceRepository::update);
+    }
+
+    private RaceItem updateRaceItemSession(Session session, RaceItem item) {
+        item.setSession(session);
+        return item;
+    }
+
 
     public Observable<Driver> getDrivers(int teamId) {
         return driversRepository.getByTeamId(teamId);

@@ -13,7 +13,6 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
-import hugo.weaving.DebugLog;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.ui.MainActivity;
 import ua.hospes.rtm.utils.TimeUtils;
@@ -45,7 +44,6 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
     }
 
 
-    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
@@ -61,7 +59,6 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
         return binder;
     }
 
-    @DebugLog
     @SuppressLint("WakelockTimeout")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -79,14 +76,12 @@ public class StopWatchService extends Service implements StopWatch.OnStopWatchLi
                 stopWatch.removeOnChronometerTickListener(this);
                 stopForeground(true);
                 if (wakeLock.isHeld()) wakeLock.release();
-                stopSelf();
                 return START_NOT_STICKY;
             }
         }
         return START_STICKY;
     }
 
-    @DebugLog
     @Override
     public void onDestroy() {
         super.onDestroy();

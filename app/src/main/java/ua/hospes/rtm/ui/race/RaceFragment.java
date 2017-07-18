@@ -39,7 +39,7 @@ import ua.hospes.undobutton.UndoButtonController;
  * @author Andrew Khloponin
  */
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
-    private final static int REQUEST_CODE_PERMISSION = 11;
+    private static final int REQUEST_CODE_PERMISSION = 11;
     private UndoButtonController undoController;
     private TimerListController timerListController;
     @Inject RacePresenter presenter;
@@ -114,6 +114,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
+        adapter.setOnUndoClickListener((item, position) -> presenter.undoLastSession(item));
         adapter.setOnSetCarClickListener((item, position) -> presenter.showSetCarDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnSetDriverClickListener((item, position) -> presenter.showSetDriverDialog(getChildFragmentManager(), item.getSession()));
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
@@ -151,7 +152,6 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_start:
-                bindToService();
                 StopWatchService.start(getContext());
                 timerListController.forceUpdate(rv);
                 return true;

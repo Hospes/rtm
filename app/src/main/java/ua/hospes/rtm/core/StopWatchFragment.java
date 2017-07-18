@@ -17,10 +17,6 @@ public abstract class StopWatchFragment extends AbsFragment implements StopWatch
     @Override
     public void onStart() {
         super.onStart();
-        bindToService();
-    }
-
-    protected void bindToService() {
         getContext().bindService(new Intent(getContext(), StopWatchService.class), connection, Context.BIND_IMPORTANT);
     }
 

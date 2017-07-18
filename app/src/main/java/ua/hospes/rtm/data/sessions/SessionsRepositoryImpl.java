@@ -5,16 +5,16 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import rx.Emitter;
 import rx.Observable;
 import rx.Single;
-import rx.Subscriber;
+import rx.functions.Action1;
 import ua.hospes.rtm.data.cars.CarsRepositoryImpl;
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
 import ua.hospes.rtm.data.sessions.mapper.SessionsMapper;
 import ua.hospes.rtm.data.sessions.models.SessionDb;
 import ua.hospes.rtm.data.sessions.operations.CloseSessionOperation;
 import ua.hospes.rtm.data.sessions.operations.OpenSessionOperation;
-import ua.hospes.rtm.data.sessions.operations.RaceStartTimeOperation;
 import ua.hospes.rtm.data.sessions.operations.SetCarOperation;
 import ua.hospes.rtm.data.sessions.operations.SetDriverOperation;
 import ua.hospes.rtm.data.sessions.storage.SessionsDbStorage;
@@ -124,12 +124,12 @@ public class SessionsRepositoryImpl implements SessionsRepository {
             subscriber.onCompleted();
         })
                 .toList()
-                .flatMap(dbStorage::add)
-                .flatMap(result ->
+                .flatMap(dbStorage::add).map(result -> result.getData())
+                .flatMap(sessionDb1 ->
                         Observable.zip(
-                                Observable.just(result.getData()),
-                                getDriverById(result.getData().getDriverId()),
-                                getCarById(result.getData().getCarId()),
+                                Observable.just(sessionDb1),
+                                getDriverById(sessionDb1.getDriverId()),
+                                getCarById(sessionDb1.getCarId()),
                                 SessionsMapper::map)
                 );
     }
@@ -151,23 +151,10 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     @Override
-    public Observable<Session> setRaceStartTime(long raceStartTime, int... sessionIds) {
-        return Observable.create((Observable.OnSubscribe<RaceStartTimeOperation>) subscriber -> {
-            for (int sessionId : sessionIds) {
-                subscriber.onNext(new RaceStartTimeOperation(sessionId, raceStartTime));
-            }
-            subscriber.onCompleted();
-        })
-                .toList()
-                .flatMap(dbStorage::applyRaceStartOperations)
-                .flatMap(this::get);
-    }
-
-    @Override
-    public Observable<Session> startSessions(long startTime, int... sessionIds) {
+    public Observable<Session> startSessions(long raceStartTime, long startTime, int... sessionIds) {
         return Observable.create((Observable.OnSubscribe<OpenSessionOperation>) subscriber -> {
             for (int sessionId : sessionIds) {
-                subscriber.onNext(new OpenSessionOperation(sessionId, startTime));
+                subscriber.onNext(new OpenSessionOperation(sessionId, raceStartTime, startTime));
             }
             subscriber.onCompleted();
         })
@@ -223,18 +210,56 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
     @Override
     public Observable<Session> closeSessions(long stopTime, int... sessionIds) {
-        return Observable.create(new Observable.OnSubscribe<CloseSessionOperation>() {
-            @Override
-            public void call(Subscriber<? super CloseSessionOperation> subscriber) {
-                for (int sessionId : sessionIds) {
-                    subscriber.onNext(new CloseSessionOperation(sessionId, stopTime));
-                }
-                subscriber.onCompleted();
+        return Observable.create((Action1<Emitter<CloseSessionOperation>>) emitter -> {
+            for (int sessionId : sessionIds) {
+                emitter.onNext(new CloseSessionOperation(sessionId, stopTime));
             }
-        })
+            emitter.onCompleted();
+        }, Emitter.BackpressureMode.NONE)
                 .toList()
                 .flatMap(dbStorage::applyCloseOperations)
                 .flatMap(this::get);
+    }
+
+    @Override
+    public Observable<Session> removeLastSession(int teamId) {
+        return dbStorage.getByTeamId(teamId)
+                .toSortedList((sessionDb, sessionDb2) -> Long.compare(sessionDb.getStartDurationTime(), sessionDb2.getStartDurationTime()))
+                .flatMap(sessionDbs -> {
+                    int count = sessionDbs.size();
+                    if (count >= 2) {
+                        return Single.zip(
+                                zipOpenSession(sessionDbs.get(count - 2)),
+                                removeSession(sessionDbs.get(count - 1)),
+                                (sdb1, i) -> sdb1
+                        ).toObservable();
+                    } else if (count == 1) {
+                        return Observable.just(sessionDbs.get(0));
+                    } else throw new RuntimeException("No sessions in the database");
+                })
+                .flatMap(session -> Observable.zip(
+                        Observable.just(session),
+                        getDriverById(session.getDriverId()),
+                        getCarById(session.getCarId()),
+                        SessionsMapper::map)
+                );
+    }
+
+    private Single<SessionDb> zipOpenSession(SessionDb sessionDb) {
+        return Single.zip(
+                Single.just(sessionDb),
+                openSession(sessionDb.getId(), sessionDb.getRaceStartTime(), sessionDb.getStartDurationTime()),
+                (sessionDb1, integer) -> sessionDb1
+        );
+    }
+
+    private Single<Integer> openSession(int id, long raceStartTime, long startTime) {
+        return Observable.just(new OpenSessionOperation(id, raceStartTime, startTime))
+                .toList().flatMap(dbStorage::applyOpenOperations).singleOrDefault(0).toSingle();
+    }
+
+    private Single<Integer> removeSession(SessionDb sessionDb) {
+        return dbStorage.remove(sessionDb);
     }
 
 
