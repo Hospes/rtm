@@ -29,6 +29,7 @@
     <string name="race_btn_set_car">Car</string>
     <string name="race_btn_set_driver">Driver</string>
     <string name="race_btn_next_session">Next</string>
+    <string name="race_btn_undo_session">Undo</string>
     <string name="race_btn_pit">Pit</string>
     <string name="race_btn_out">Out</string>
     <string name="race_on_track">On track</string>

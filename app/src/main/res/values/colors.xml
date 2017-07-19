@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#e7651a</color>
-    <color name="colorPrimaryDark">#c25a1e</color>
-    <color name="colorAccent">#ff8641</color>
+    <!-- Theme default -->
+    <color name="default_primary">#FF9800</color>
+    <color name="default_primary_dark">#F57C00</color>
+    <color name="default_accent">#FFC107</color>
+    <color name="light_accent">#F57C00</color>
 
     <color name="car_quality_low">#ff0000</color>
     <color name="car_quality_normal">#ffd000</color>
     <color name="car_quality_high">#00ff00</color>
+
+    <color name="session_track">#00ff00</color>
+    <color name="session_track_light">#009700</color>
+    <color name="session_pit">#ff0000</color>
+    <color name="session_pit_light">#970000</color>
 </resources>

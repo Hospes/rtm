@@ -1,7 +1,9 @@
 package ua.hospes.rtm.ui.race;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,6 +35,7 @@ import ua.hospes.undobutton.UndoButtonController;
 class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
     private final UndoButtonController undoButtonController;
     private final boolean isPitStopsRemoved;
+    @ColorInt private final int carDefaultColor, sessionTrackColor, sessionPitColor;
     private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
@@ -40,9 +43,12 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
     private OnItemClickListener<RaceItem> onUndoClickListener;
 
 
-    RaceAdapter(@NonNull PreferencesManager preferencesManager, UndoButtonController undoButtonController) {
+    RaceAdapter(Context context, @NonNull PreferencesManager preferencesManager, UndoButtonController undoButtonController) {
         this.isPitStopsRemoved = preferencesManager.isPitStopSessionsRemoved();
         this.undoButtonController = undoButtonController;
+        this.carDefaultColor = getButtonTextAppearance(context);
+        this.sessionTrackColor = getSessionTrackColor(context);
+        this.sessionPitColor = getSessionPitColor(context);
     }
 
 
@@ -68,7 +74,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         if (session != null) {
             Car car = session.getCar();
             holder.btnSessionCar.setText(car == null ? context.getString(R.string.race_btn_set_car) : String.valueOf(car.getNumber()));
-            holder.btnSessionCar.setTextColor(car == null ? Color.WHITE : context.getResources().getColor(car.getQuality().getColor()));
+            holder.btnSessionCar.setTextColor(car == null ? carDefaultColor : context.getResources().getColor(car.getQuality().getColor()));
 
             Driver driver = session.getDriver();
             holder.btnSessionDriver.setText(driver == null ? context.getString(R.string.race_btn_set_driver) : session.getDriver().getName());
@@ -85,14 +91,14 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             holder.btnPitOut.setVisibility(isPitStopsRemoved ? View.GONE : View.VISIBLE);
             switch (session.getType()) {
                 case TRACK:
-                    holder.sessionType.setTextColor(Color.GREEN);
-                    holder.sessionTimeView.setTextColor(Color.GREEN);
+                    holder.sessionType.setTextColor(sessionTrackColor);
+                    holder.sessionTimeView.setTextColor(sessionTrackColor);
                     holder.btnPitOut.setChecked(false);
                     break;
 
                 case PIT:
-                    holder.sessionType.setTextColor(Color.RED);
-                    holder.sessionTimeView.setTextColor(Color.RED);
+                    holder.sessionType.setTextColor(sessionPitColor);
+                    holder.sessionTimeView.setTextColor(sessionPitColor);
                     holder.btnPitOut.setChecked(true);
                     break;
 
@@ -224,6 +230,43 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
             if (onUndoClickListener == null) return;
             onUndoClickListener.onItemClick(getItem(position), position);
+        }
+    }
+
+
+    @ColorInt
+    private int getButtonTextAppearance(Context context) {
+        TypedArray ta = null;
+        try {
+            int[] attrs = {android.R.attr.textColorPrimary};
+            ta = context.obtainStyledAttributes(attrs);
+            return ta.getColor(0, Color.WHITE);
+        } finally {
+            if (ta != null) ta.recycle();
+        }
+    }
+
+    @ColorInt
+    private int getSessionTrackColor(Context context) {
+        TypedArray ta = null;
+        try {
+            int[] attrs = {R.attr.timeView_OnTrack};
+            ta = context.obtainStyledAttributes(attrs);
+            return ta.getColor(0, Color.GREEN);
+        } finally {
+            if (ta != null) ta.recycle();
+        }
+    }
+
+    @ColorInt
+    private int getSessionPitColor(Context context) {
+        TypedArray ta = null;
+        try {
+            int[] attrs = {R.attr.timeView_OnPit};
+            ta = context.obtainStyledAttributes(attrs);
+            return ta.getColor(0, Color.RED);
+        } finally {
+            if (ta != null) ta.recycle();
         }
     }
 }

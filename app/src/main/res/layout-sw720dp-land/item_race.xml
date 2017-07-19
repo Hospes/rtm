@@ -14,7 +14,6 @@
               android:layout_weight="1"
               android:ellipsize="end"
               android:maxLines="1"
-              android:textColor="@android:color/white"
               android:textSize="24sp" />
 
     <TextView android:id="@+id/tv_pits"
@@ -26,7 +25,6 @@
               android:minWidth="80dp"
               android:text="@string/race_pit"
               android:textAllCaps="true"
-              android:textColor="@android:color/white"
               android:textSize="18sp" />
 
     <Button android:id="@+id/btn_session_car"
@@ -63,7 +61,7 @@
                                      android:layout_marginRight="8dp"
                                      android:text="@string/race_btn_next_session"
                                      android:visibility="gone"
-                                     app:delb_textUndo="Undo" />
+                                     app:delb_textUndo="@string/race_btn_undo_session" />
 
     <ua.hospes.rtm.ui.race.widgets.CustomToggleButton
         android:id="@+id/btn_pit_out"

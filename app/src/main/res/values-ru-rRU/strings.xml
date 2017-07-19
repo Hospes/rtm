@@ -20,7 +20,8 @@
     <string name="race_pit">Пит\n%1$d</string>
     <string name="race_btn_set_car">Карт</string>
     <string name="race_btn_set_driver">Гонщик</string>
-    <string name="race_btn_next_session">Next</string>
+    <string name="race_btn_next_session">След</string>
+    <string name="race_btn_undo_session">Назад</string>
     <string name="race_btn_pit">Pit</string>
     <string name="race_btn_out">Out</string>
     <string name="race_on_track">На трассе</string>

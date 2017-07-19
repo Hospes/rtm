@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.ftinc.scoop.Scoop;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
+        Scoop.getInstance().applyDialog(this);
         setContentView(R.layout.activity_race_item_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

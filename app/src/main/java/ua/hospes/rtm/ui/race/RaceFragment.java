@@ -110,7 +110,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(preferencesManager, undoController));
+        rv.setAdapter(adapter = new RaceAdapter(getContext(), preferencesManager, undoController));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));

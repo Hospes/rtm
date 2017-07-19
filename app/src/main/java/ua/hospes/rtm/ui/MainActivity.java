@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.ftinc.scoop.Scoop;
 
 import javax.inject.Inject;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
+        Scoop.getInstance().apply(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -45,6 +49,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         StopWatchService.checkDeath(this);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 999) {
+            recreate();
+        }
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

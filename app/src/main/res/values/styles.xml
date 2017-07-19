@@ -1,34 +1,62 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primary_dark</item>
+        <item name="colorAccent">@color/default_accent</item>
+
+        <item name="timeView_OnTrack">@color/session_track</item>
+        <item name="timeView_OnPit">@color/session_pit</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
         <item name="delayedButtonStyle">@style/UndoButton</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay"
-           parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay"
-           parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.DialogWhenLarge" parent="Theme.AppCompat.DialogWhenLarge">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primary_dark</item>
+        <item name="colorAccent">@color/default_accent</item>
+
+        <item name="timeView_OnTrack">@color/session_track</item>
+        <item name="timeView_OnPit">@color/session_pit</item>
     </style>
+
+
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primary_dark</item>
+        <item name="colorAccent">@color/light_accent</item>
+
+        <item name="timeView_OnTrack">@color/session_track_light</item>
+        <item name="timeView_OnPit">@color/session_pit_light</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="delayedButtonStyle">@style/UndoButton</item>
+    </style>
+
+    <style name="AppTheme.Light.DialogWhenLarge" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primary_dark</item>
+        <item name="colorAccent">@color/light_accent</item>
+
+        <item name="timeView_OnTrack">@color/session_track_light</item>
+        <item name="timeView_OnPit">@color/session_pit_light</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

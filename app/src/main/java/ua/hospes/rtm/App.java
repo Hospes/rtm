@@ -1,9 +1,11 @@
 package ua.hospes.rtm;
 
 import android.app.Activity;
+import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.ftinc.scoop.Scoop;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,12 @@ public class App extends MultiDexApplication implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+
+        Scoop.waffleCone()
+                .addFlavor("Default", R.style.AppTheme, R.style.AppTheme_DialogWhenLarge, true)
+                .addFlavor("Light", R.style.AppTheme_Light, R.style.AppTheme_Light_DialogWhenLarge)
+                .setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this))
+                .initialize();
 
         DaggerAppComponent.builder()
                 .appModule(new AppModule(this))

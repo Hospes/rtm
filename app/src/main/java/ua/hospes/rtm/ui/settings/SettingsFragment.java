@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.ftinc.scoop.ui.ScoopSettingsActivity;
+
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -58,6 +60,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefIsPitStopsRemoved.setOnPreferenceChangeListener((preference, newValue) -> {
             prefAssignPitStops.setEnabled(!((boolean) newValue));
             return true;
+        });
+
+        findPreference("theme").setOnPreferenceClickListener(preference -> {
+            getActivity().startActivityForResult(ScoopSettingsActivity.createIntent(getContext()), 999);
+            return false;
         });
     }
 

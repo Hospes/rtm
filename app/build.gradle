@@ -93,6 +93,7 @@ dependencies {
     // Dagger  [END]
 
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    implementation 'com.52inc:scoops:1.0.0'
 
     implementation("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlytics}@aar") { transitive = true }
 }
