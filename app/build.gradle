@@ -4,7 +4,7 @@ apply plugin: 'com.fernandocejas.frodo'
 apply plugin: 'io.fabric'
 
 def buildNumber = project.hasProperty("build.number") ? project.ext["build.number"] : null
-def version = "1.1"
+def version = "1.2"
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
@@ -14,7 +14,7 @@ android {
         applicationId "ua.hospes.rtm"
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 6
+        versionCode 7
         versionName version + (buildNumber != null ? ".$buildNumber" : ".dev")
 
         archivesBaseName = "rtm-v$version" + (buildNumber != null ? ".$buildNumber" : ".dev")
