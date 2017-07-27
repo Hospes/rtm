@@ -102,7 +102,7 @@ public class SelectDriversDialogFragment extends AppCompatDialogFragment {
                     return team1.compareTo(team2);
                 })
                 .toList()
-                .compose(RxUtils.applySchedulers())
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(this::updateDrivers, Throwable::printStackTrace));
     }
 
@@ -121,7 +121,7 @@ public class SelectDriversDialogFragment extends AppCompatDialogFragment {
         RxUtils.manage(this, adapter.emmitSelectedDrivers()
                 .toList()
                 .map(drivers -> drivers.toArray(new Driver[drivers.size()]))
-                .compose(RxUtils.applySchedulers())
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(drivers -> {
                     getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent().putExtra("drivers", drivers));
                 }, Throwable::printStackTrace));

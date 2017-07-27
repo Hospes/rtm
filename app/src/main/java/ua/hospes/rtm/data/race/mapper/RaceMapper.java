@@ -7,13 +7,14 @@ import ua.hospes.rtm.data.race.models.RaceItemDb;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.domain.team.models.Team;
+import ua.hospes.rtm.utils.Optional;
 
 /**
  * @author Andrew Khloponin
  */
 public class RaceMapper {
     public static RaceItemDb map(Cursor cursor) {
-        int teamId = cursor.getInt(cursor.getColumnIndex(Race.TEAM_ID.name()));
+        int        teamId = cursor.getInt(cursor.getColumnIndex(Race.TEAM_ID.name()));
         RaceItemDb result = new RaceItemDb(teamId);
         result.setId(cursor.getInt(cursor.getColumnIndex(Race.ID.name())));
         result.setTeamNumber(cursor.getInt(cursor.getColumnIndex(Race.TEAM_NUMBER.name())));
@@ -22,10 +23,10 @@ public class RaceMapper {
         return result;
     }
 
-    public static RaceItem map(RaceItemDb db, Team team, Session session) {
-        RaceItem result = new RaceItem(db.getId(), team);
+    public static RaceItem map(RaceItemDb db, Optional<Team> team, Optional<Session> session) {
+        RaceItem result = new RaceItem(db.getId(), team.get());
         result.setTeamNumber(db.getTeamNumber());
-        result.setSession(session);
+        result.setSession(session.get());
         return result;
     }
 

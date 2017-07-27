@@ -38,13 +38,13 @@ public class EditDriverDialogFragment extends AppCompatDialogFragment {
     private static final String KEY_DRIVER = "driver";
 
     @Inject DriversRepository driversRepository;
-    @Inject TeamsRepository teamsRepository;
+    @Inject TeamsRepository   teamsRepository;
 
     private List<Team> teams = new ArrayList<>();
     private AppCompatSpinner spinner;
-    private EditText name;
+    private EditText         name;
     private Driver driver = null;
-    private Team team = null;
+    private Team   team   = null;
 
 
     public static EditDriverDialogFragment newInstance(Driver driver) {
@@ -193,7 +193,7 @@ public class EditDriverDialogFragment extends AppCompatDialogFragment {
 
     private DialogInterface.OnClickListener onDeleteClick = (dialog, i) -> {
         if (driver == null) return;
-        driversRepository.remove(driver)
+        driversRepository.remove(driver.getId())
                 .compose(RxUtils.applySchedulersSingle())
                 .subscribe(aBoolean -> {}, Throwable::printStackTrace);
     };

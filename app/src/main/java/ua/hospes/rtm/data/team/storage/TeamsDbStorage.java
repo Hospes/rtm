@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;
@@ -62,8 +62,8 @@ public class TeamsDbStorage {
     }
 
 
-    public Single<Integer> remove(TeamDb team) {
-        return dbHelper.delete(new DeleteQuery(Teams.name).where(Condition.eq(Teams.ID, team.getId())));
+    public Single<Integer> remove(int id) {
+        return dbHelper.delete(new DeleteQuery(Teams.name).where(Condition.eq(Teams.ID, id)));
     }
 
     public Single<Integer> removeAll() {

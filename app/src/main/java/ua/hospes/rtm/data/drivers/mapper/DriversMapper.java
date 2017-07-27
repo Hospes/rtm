@@ -1,12 +1,13 @@
 package ua.hospes.rtm.data.drivers.mapper;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import ua.hospes.rtm.core.db.tables.Drivers;
 import ua.hospes.rtm.data.drivers.models.DriverDb;
 import ua.hospes.rtm.data.team.models.TeamDb;
 import ua.hospes.rtm.domain.drivers.models.Driver;
+import ua.hospes.rtm.utils.Optional;
 
 /**
  * @author Andrew Khloponin
@@ -19,10 +20,11 @@ public class DriversMapper {
         return db;
     }
 
-    public static Driver map(DriverDb db, @Nullable TeamDb team) {
+    @SuppressWarnings("ConstantConditions")
+    public static Driver map(DriverDb db, @NonNull Optional<TeamDb> team) {
         Driver driver = new Driver(db.getId(), db.getName());
-        driver.setTeamId(team == null ? -1 : team.getId());
-        driver.setTeamName(team == null ? null : team.getName());
+        driver.setTeamId(team.isPresent() ? team.get().getId() : -1);
+        driver.setTeamName(team.isPresent() ? team.get().getName() : null);
         return driver;
     }
 

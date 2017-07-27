@@ -69,7 +69,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         holder.driverTimeView.setSession(session);
         holder.sessionTimeView.setSession(session);
 
-        undoButtonController.onBind(item.getId(), holder.btnNextSession);
+//        undoButtonController.onBind(item.getId(), holder.btnNextSession);
 
         if (session != null) {
             Car car = session.getCar();

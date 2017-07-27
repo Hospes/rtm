@@ -21,7 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import rx.Observable;
+import io.reactivex.Observable;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.race.RaceRepository;
 import ua.hospes.rtm.domain.race.models.RaceItem;

@@ -3,7 +3,7 @@ package ua.hospes.rtm.data.race.operations;
 import android.content.ContentValues;
 import android.util.Pair;
 
-import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite2.BriteDatabase;
 
 import ua.hospes.dbhelper.Operation;
 import ua.hospes.dbhelper.builder.UpdateQuery;
@@ -15,7 +15,7 @@ import ua.hospes.rtm.data.race.models.RaceItemDb;
  * @author Andrew Khloponin
  */
 public class UpdateRaceOperation implements Operation<Boolean> {
-    private final UpdateQuery query;
+    private final UpdateQuery   query;
     private final ContentValues cv;
 
     public UpdateRaceOperation(RaceItemDb item) {

@@ -1,10 +1,8 @@
 package ua.hospes.rtm.domain.race;
 
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.google.common.collect.Collections2;
 import com.google.common.primitives.Ints;
 
@@ -17,10 +15,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import jxl.write.WriteException;
-import rx.Observable;
-import rx.Single;
-import ua.hospes.rtm.core.db.tables.Race;
 import ua.hospes.rtm.domain.cars.CarsRepository;
 import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.domain.drivers.DriversRepository;
@@ -29,8 +26,8 @@ import ua.hospes.rtm.domain.preferences.PreferencesManager;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
 import ua.hospes.rtm.domain.sessions.models.Session;
-import ua.hospes.rtm.domain.team.TeamsRepository;
 import ua.hospes.rtm.domain.team.models.Team;
+import ua.hospes.rtm.utils.Optional;
 import ua.hospes.rtm.utils.XLSTest;
 
 /**
@@ -38,18 +35,16 @@ import ua.hospes.rtm.utils.XLSTest;
  */
 public class RaceInteractor {
     private final PreferencesManager preferencesManager;
-    private final RaceRepository raceRepository;
-    private final TeamsRepository teamsRepository;
+    private final RaceRepository     raceRepository;
     private final SessionsRepository sessionsRepository;
-    private final DriversRepository driversRepository;
-    private final CarsRepository carsRepository;
+    private final DriversRepository  driversRepository;
+    private final CarsRepository     carsRepository;
 
 
     @Inject
-    public RaceInteractor(PreferencesManager preferencesManager, RaceRepository raceRepository, TeamsRepository teamsRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository, CarsRepository carsRepository) {
+    RaceInteractor(PreferencesManager preferencesManager, RaceRepository raceRepository, SessionsRepository sessionsRepository, DriversRepository driversRepository, CarsRepository carsRepository) {
         this.preferencesManager = preferencesManager;
         this.raceRepository = raceRepository;
-        this.teamsRepository = teamsRepository;
         this.sessionsRepository = sessionsRepository;
         this.driversRepository = driversRepository;
         this.carsRepository = carsRepository;
@@ -58,21 +53,6 @@ public class RaceInteractor {
 
     public Observable<List<RaceItem>> listen() {
         return raceRepository.listen();
-    }
-
-    public Observable<List<Team>> getNotInRace() {
-        return teamsRepository.getNotInRace().toList();
-    }
-
-    public Observable<Boolean> initSession(Session.Type type, int... teamIds) {
-        return sessionsRepository.newSessions(type, teamIds)
-                .map(session -> {
-                    ContentValues cv = new ContentValues();
-                    cv.put(Race.SESSION_ID.name(), session.getId());
-                    return new Pair<>(session.getTeamId(), cv);
-                })
-                .toList()
-                .flatMap(raceRepository::updateByTeamId);
     }
 
     public Observable<Boolean> setDriver(int sessionId, int teamId, int driverId) {
@@ -94,27 +74,26 @@ public class RaceInteractor {
     }
 
     @DebugLog
-    public Observable<Boolean> startRace(long startTime) {
+    public Single<Boolean> startRace(long startTime) {
         return raceRepository.get()
                 .filter(item -> item.getSession() != null)
                 .map(item -> item.getSession().getId())
                 .toList().map(Ints::toArray)
-                .flatMap(sessionIds -> sessionsRepository.startSessions(startTime, startTime, sessionIds).toList().singleOrDefault(null))
+                .flatMap(sessionIds -> sessionsRepository.startSessions(startTime, startTime, sessionIds).toList())
                 .map(sessions -> true);
     }
 
-    public Observable<Boolean> stopRace(long stopTime) {
+    public Single<Boolean> stopRace(long stopTime) {
         return raceRepository.get()
                 .filter(item -> item.getSession() != null)
                 .map(item -> item.getSession().getId())
-                .toList()
-                .flatMap(teamIds -> sessionsRepository.closeSessions(stopTime, Ints.toArray(teamIds)))
-                .toList()
+                .toList().map(Ints::toArray)
+                .flatMap(teamIds -> sessionsRepository.closeSessions(stopTime, teamIds).toList())
                 .map(sessions -> true);
     }
 
     public Observable<Boolean> teamPit(@NonNull RaceItem item, long time) {
-        int driverId = -1;
+        int  driverId      = -1;
         long raceStartTime = -1;
         if (item.getSession() != null) raceStartTime = item.getSession().getRaceStartTime();
         switch (preferencesManager.getPitStopAssign()) {
@@ -131,7 +110,7 @@ public class RaceInteractor {
                     return item;
                 })
                 .toList()
-                .flatMap(raceRepository::update);
+                .flatMapObservable(raceRepository::update);
     }
 
     public Observable<Boolean> teamOut(@NonNull RaceItem item, long time) {
@@ -145,13 +124,13 @@ public class RaceInteractor {
                     return item;
                 })
                 .toList()
-                .flatMap(raceRepository::update);
+                .flatMapObservable(raceRepository::update);
     }
 
     public Observable<Boolean> removeLastSession(@NonNull RaceItem raceItem) {
         return Observable.zip(sessionsRepository.removeLastSession(raceItem.getTeam().getId()), Observable.just(raceItem), this::updateRaceItemSession)
                 .toList()
-                .flatMap(raceRepository::update);
+                .flatMapObservable(raceRepository::update);
     }
 
     private RaceItem updateRaceItemSession(Session session, RaceItem item) {
@@ -168,19 +147,20 @@ public class RaceInteractor {
         return carsRepository.getNotInRace();
     }
 
-    public Observable<Void> resetRace() {
+    public Observable<Optional> resetRace() {
         return sessionsRepository.removeAll()
-                .flatMapObservable(aVoid -> raceRepository.get().toList())
+                .flatMap(count -> raceRepository.get().toList())
                 .flatMap(raceItems ->
                         Observable.zip(
-                                Observable.from(raceItems),
+                                Observable.fromIterable(raceItems),
                                 sessionsRepository.newSessions(Session.Type.TRACK, Ints.toArray(Collections2.transform(raceItems, input -> input.getTeam().getId()))),
                                 (item, session) -> {
                                     item.setSession(session);
                                     return item;
-                                })).toList()
-                .flatMap(raceRepository::update)
-                .map(list -> null);
+                                }).toList()
+                )
+                .flatMapObservable(raceRepository::update)
+                .map(list -> Optional.empty());
     }
 
     public Single<Void> removeAll() {
@@ -198,7 +178,7 @@ public class RaceInteractor {
                         data.put(pair.first, pair.second);
                     }
                     return data;
-                }).toSingle()
+                })
                 .flatMap(teams -> Single.create(subscriber -> {
                     try {
                         subscriber.onSuccess(XLSTest.createWorkbook(teams));
@@ -209,7 +189,7 @@ public class RaceInteractor {
     }
 
     private Observable<List<Session>> getTeamSessions(int teamId) {
-        return sessionsRepository.getByTeamId(teamId).toList();
+        return sessionsRepository.getByTeamId(teamId).toList().toObservable();
     }
 
 
@@ -217,9 +197,11 @@ public class RaceInteractor {
         return session == null ? Observable.empty() : sessionsRepository.closeSessions(time, session.getId());
     }
 
+    @SuppressWarnings("ConstantConditions")
     private Observable<Session> setDriverForLatestPitSession(int teamId, int driverId) {
         return sessionsRepository.getByTeamId(teamId)
-                .last(session -> session.getType() == Session.Type.PIT)
-                .flatMap(session -> sessionsRepository.setSessionDriver(session.getId(), driverId));
+                .filter(session -> session.getType() == Session.Type.PIT)
+                .map(Optional::of).last(Optional.empty())
+                .flatMapObservable(session -> session.isPresent() ? sessionsRepository.setSessionDriver(session.get().getId(), driverId) : Observable.empty());
     }
 }

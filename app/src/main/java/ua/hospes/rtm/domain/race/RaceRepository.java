@@ -5,8 +5,8 @@ import android.util.Pair;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 
 /**
@@ -16,6 +16,8 @@ public interface RaceRepository {
     Observable<RaceItem> get();
 
     Observable<List<RaceItem>> listen();
+
+    Observable<RaceItem> listen(int id);
 
     Observable<Boolean> addNew(RaceItem... items);
 

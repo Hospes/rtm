@@ -2,7 +2,7 @@ package ua.hospes.rtm.data.sessions.operations;
 
 import android.content.ContentValues;
 
-import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite2.BriteDatabase;
 
 import ua.hospes.dbhelper.Operation;
 import ua.hospes.dbhelper.builder.UpdateQuery;
@@ -13,7 +13,7 @@ import ua.hospes.rtm.core.db.tables.Sessions;
  * @author Andrew Khloponin
  */
 public class RaceStartTimeOperation implements Operation<Integer> {
-    private final int sessionId;
+    private final int  sessionId;
     private final long startTime;
 
     public RaceStartTimeOperation(int sessionId, long startTime) {

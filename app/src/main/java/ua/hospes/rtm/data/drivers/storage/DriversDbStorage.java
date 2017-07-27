@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;
@@ -75,8 +75,8 @@ public class DriversDbStorage {
     }
 
 
-    public Single<Integer> remove(DriverDb driver) {
-        return dbHelper.delete(new DeleteQuery(Drivers.name).where(Condition.eq(Drivers.ID, driver.getId())));
+    public Single<Integer> remove(int id) {
+        return dbHelper.delete(new DeleteQuery(Drivers.name).where(Condition.eq(Drivers.ID, id)));
     }
 
     public Single<Integer> removeAll() {

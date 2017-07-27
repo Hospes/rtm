@@ -77,11 +77,11 @@ dependencies {
 
     implementation "ua.hospes.dbhelper:dbhelper:${rootProject.ext.dbHelper}"
     implementation "ua.hospes.absrvadapter:absrvadapter:${rootProject.ext.absRecycler}"
-    implementation "ua.hospes.undobutton:undobutton:0.1.1"
+    implementation "ua.hospes.undobutton:undobutton:${rootProject.ext.undoButton}"
 
     //Rx1 [START]
-    implementation "io.reactivex:rxandroid:${rootProject.ext.rxAndroid}"
-    implementation "io.reactivex:rxjava:${rootProject.ext.rxJava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.ext.rxAndroid2}"
+    implementation "io.reactivex.rxjava2:rxjava:${rootProject.ext.rxJava2}"
     //Rx1  [END]
 
     // Dagger [START]

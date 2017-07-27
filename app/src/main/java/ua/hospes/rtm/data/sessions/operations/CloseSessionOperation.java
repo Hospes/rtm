@@ -2,8 +2,9 @@ package ua.hospes.rtm.data.sessions.operations;
 
 import android.content.ContentValues;
 
-import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite2.BriteDatabase;
 
+import io.reactivex.Observable;
 import ua.hospes.dbhelper.Operation;
 import ua.hospes.dbhelper.builder.UpdateQuery;
 import ua.hospes.dbhelper.builder.conditions.Condition;
@@ -13,10 +14,10 @@ import ua.hospes.rtm.core.db.tables.Sessions;
  * @author Andrew Khloponin
  */
 public class CloseSessionOperation implements Operation<Integer> {
-    private final int sessionId;
+    private final int  sessionId;
     private final long stopTime;
 
-    public CloseSessionOperation(int sessionId, long stopTime) {
+    private CloseSessionOperation(int sessionId, long stopTime) {
         this.sessionId = sessionId;
         this.stopTime = stopTime;
     }
@@ -31,5 +32,14 @@ public class CloseSessionOperation implements Operation<Integer> {
         db.update(builder.getTable(), cv, builder.getWhereClause(), builder.getWhereArgs());
 
         return sessionId;
+    }
+
+
+    public static Observable<CloseSessionOperation> from(long stopTime, int... sessionIds) {
+        return Observable.create(emitter -> {
+            for (int sessionId : sessionIds)
+                emitter.onNext(new CloseSessionOperation(sessionId, stopTime));
+            emitter.onComplete();
+        });
     }
 }

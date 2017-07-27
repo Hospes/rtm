@@ -4,18 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
+import com.squareup.sqlbrite2.BriteDatabase;
+import com.squareup.sqlbrite2.SqlBrite;
 
 import java.util.Arrays;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import ua.hospes.dbhelper.AbsDbHelper;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.UpdateQuery;
@@ -44,7 +42,7 @@ public class DbHelper extends AbsDbHelper {
 
     @SuppressWarnings({"unchecked", "WeakerAccess"})
     public final Observable<UpdateResult<ContentValues>> updateCV(UpdateQuery query, Iterable<ContentValues> cvs) {
-        return query != null && cvs != null ? Observable.create((Action1<Emitter<UpdateResult<ContentValues>>>) emitter -> {
+        return query != null && cvs != null ? Observable.create(emitter -> {
             BriteDatabase.Transaction transaction = DbHelper.this.getDb().newTransaction();
             try {
                 for (ContentValues cv : cvs) {
@@ -54,8 +52,8 @@ public class DbHelper extends AbsDbHelper {
                 transaction.markSuccessful();
             } finally {
                 transaction.end();
-                emitter.onCompleted();
+                emitter.onComplete();
             }
-        }, Emitter.BackpressureMode.NONE) : Observable.empty();
+        }) : Observable.empty();
     }
 }

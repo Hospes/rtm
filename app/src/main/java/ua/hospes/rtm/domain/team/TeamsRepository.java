@@ -2,8 +2,8 @@ package ua.hospes.rtm.domain.team;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.domain.team.models.Team;
 
 /**
@@ -24,9 +24,9 @@ public interface TeamsRepository {
 
     Observable<List<Team>> listen();
 
-    Observable<Boolean> save(Team driver);
+    Observable<Boolean> save(Team team);
 
-    Single<Integer> remove(Team driver);
+    Single<Integer> remove(int id);
 
     Single<Integer> removeAll();
 }

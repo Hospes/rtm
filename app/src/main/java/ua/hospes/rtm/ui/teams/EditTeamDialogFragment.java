@@ -162,7 +162,7 @@ public class EditTeamDialogFragment extends AppCompatDialogFragment {
     private DialogInterface.OnClickListener onDeleteClick = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            repository.remove(team)
+            repository.remove(team.getId())
                     .compose(RxUtils.applySchedulersSingle())
                     .subscribe(aBoolean -> {}, Throwable::printStackTrace);
         }

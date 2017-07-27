@@ -5,12 +5,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.data.cars.mapper.CarsMapper;
 import ua.hospes.rtm.data.cars.storage.CarsDbStorage;
 import ua.hospes.rtm.domain.cars.CarsRepository;
 import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.utils.RxUtils;
 
 /**
  * @author Andrew Khloponin
@@ -21,7 +22,7 @@ public class CarsRepositoryImpl implements CarsRepository {
 
 
     @Inject
-    public CarsRepositoryImpl(CarsDbStorage carsDbStorage) {
+    CarsRepositoryImpl(CarsDbStorage carsDbStorage) {
         this.carsDbStorage = carsDbStorage;
     }
 
@@ -32,8 +33,8 @@ public class CarsRepositoryImpl implements CarsRepository {
     }
 
     @Override
-    public Observable<Car> getByIds(int... ids) {
-        return carsDbStorage.getByIds(ids).map(CarsMapper::map);
+    public Observable<Car> get(int... ids) {
+        return carsDbStorage.get(ids).map(CarsMapper::map);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class CarsRepositoryImpl implements CarsRepository {
 
     @Override
     public Observable<List<Car>> listen() {
-        return carsDbStorage.listen().flatMap(carDbs -> Observable.from(carDbs).map(CarsMapper::map).toList());
+        return carsDbStorage.listen().map(carDbs -> RxUtils.listMap(carDbs, CarsMapper::map));
     }
 
     @Override

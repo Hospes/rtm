@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.HashSet;
 import java.util.Set;
 
-import rx.Observable;
+import io.reactivex.Observable;
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
@@ -69,8 +69,8 @@ class SelectDriverAdapter extends AbsRecyclerAdapter<Driver, SelectDriverAdapter
             final int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION) return;
 
-            Driver item = getItem(position);
-            boolean alreadyChecked = selectedIds.contains(item.getId());
+            Driver  item             = getItem(position);
+            boolean alreadyChecked   = selectedIds.contains(item.getId());
             boolean allowCheckChange = onAllowItemCheck(item, position, alreadyChecked);
 
             if (allowCheckChange) {
@@ -99,7 +99,7 @@ class SelectDriverAdapter extends AbsRecyclerAdapter<Driver, SelectDriverAdapter
 
     Observable<Driver> emmitSelectedDrivers() {
         ImmutableList<Integer> immIds = ImmutableList.copyOf(selectedIds);
-        return Observable.from(ImmutableList.copyOf(getItems()))
+        return Observable.fromIterable(ImmutableList.copyOf(getItems()))
                 .filter(driver -> immIds.contains(driver.getId()));
     }
 }

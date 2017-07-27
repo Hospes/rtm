@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;
@@ -53,6 +53,10 @@ public class RaceDbStorage {
 
     public Observable<List<RaceItemDb>> listen() {
         return dbHelper.query(RaceMapper::map, new SelectQuery(Race.name), Race.name, Sessions.name);
+    }
+
+    public Observable<List<RaceItemDb>> listen(int id) {
+        return dbHelper.query(RaceMapper::map, new SelectQuery(Race.name).where(Condition.eq(Race.ID, id)), Race.name, Sessions.name);
     }
 
     public Observable<Void> reset() {

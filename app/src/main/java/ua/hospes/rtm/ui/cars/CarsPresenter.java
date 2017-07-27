@@ -2,7 +2,6 @@ package ua.hospes.rtm.ui.cars;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
 import ua.hospes.rtm.core.ui.BasePresenter;
 import ua.hospes.rtm.domain.cars.CarsInteractor;
 import ua.hospes.rtm.utils.RxUtils;
@@ -22,10 +21,9 @@ class CarsPresenter extends BasePresenter<CarsContract.View> {
     public void attachView(CarsContract.View view) {
         super.attachView(view);
 
-        Subscription subscription = interactor.listen()
+        RxUtils.manage(this, interactor.listen()
                 .compose(RxUtils.applySchedulers())
-                .subscribe(list -> getView().updateCars(list), Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(list -> getView().updateCars(list), Throwable::printStackTrace));
     }
 
     @Override
@@ -36,9 +34,8 @@ class CarsPresenter extends BasePresenter<CarsContract.View> {
 
 
     public void removeAll() {
-        Subscription subscription = interactor.removeAll()
+        RxUtils.manage(this, interactor.removeAll()
                 .compose(RxUtils.applySchedulersSingle())
-                .subscribe(result -> {}, Throwable::printStackTrace);
-        RxUtils.manage(this, subscription);
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 }

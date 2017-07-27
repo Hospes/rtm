@@ -7,8 +7,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
 import ua.hospes.rtm.data.team.mapper.TeamsMapper;
 import ua.hospes.rtm.data.team.storage.TeamsDbStorage;
@@ -22,12 +22,12 @@ import ua.hospes.rtm.domain.team.models.Team;
  */
 @Singleton
 public class TeamsRepositoryImpl implements TeamsRepository {
-    private final TeamsDbStorage dbStorage;
+    private final TeamsDbStorage    dbStorage;
     private final DriversRepository driversRepository;
 
 
     @Inject
-    public TeamsRepositoryImpl(TeamsDbStorage dbStorage, DriversRepositoryImpl driversRepository) {
+    TeamsRepositoryImpl(TeamsDbStorage dbStorage, DriversRepositoryImpl driversRepository) {
         this.dbStorage = dbStorage;
         this.driversRepository = driversRepository;
     }
@@ -36,28 +36,28 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     @Override
     public Observable<Team> get() {
         return dbStorage.get()
-                .flatMap(teamDb -> Observable.zip(Observable.just(teamDb), getDriverByTeamId(teamDb.getId()).toList(), TeamsMapper::map));
+                .flatMapSingle(teamDb -> Single.zip(Single.just(teamDb), getDriversByTeamId(teamDb.getId()), TeamsMapper::map));
     }
 
     @Override
     public Observable<Team> get(int id) {
         return dbStorage.get(id)
-                .flatMap(teamDb -> Observable.zip(Observable.just(teamDb), getDriverByTeamId(teamDb.getId()).toList(), TeamsMapper::map));
+                .flatMapSingle(teamDb -> Single.zip(Single.just(teamDb), getDriversByTeamId(teamDb.getId()), TeamsMapper::map));
     }
 
     @Override
     public Observable<Team> getNotInRace() {
         return dbStorage.getNotInRace()
-                .flatMap(teamDb -> Observable.zip(Observable.just(teamDb), getDriverByTeamId(teamDb.getId()).toList(), TeamsMapper::map));
+                .flatMapSingle(teamDb -> Single.zip(Single.just(teamDb), getDriversByTeamId(teamDb.getId()), TeamsMapper::map));
     }
 
     @Override
     public Observable<List<Team>> listen() {
         return dbStorage.listen()
-                .flatMap(teamDbs -> Observable.from(teamDbs)
-                        .flatMap(teamDb -> Observable.zip(
-                                Observable.just(teamDb),
-                                getDriverByTeamId(teamDb.getId()).toList(),
+                .flatMapSingle(teamDbs -> Observable.fromIterable(teamDbs)
+                        .flatMapSingle(teamDb -> Single.zip(
+                                Single.just(teamDb),
+                                getDriversByTeamId(teamDb.getId()),
                                 TeamsMapper::map)).toList()
                 );
     }
@@ -80,8 +80,8 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     }
 
     @Override
-    public Single<Integer> remove(Team team) {
-        return dbStorage.remove(TeamsMapper.map(team));
+    public Single<Integer> remove(int id) {
+        return dbStorage.remove(id);
     }
 
     @Override
@@ -90,14 +90,14 @@ public class TeamsRepositoryImpl implements TeamsRepository {
     }
 
 
-    private Observable<Driver> getDriverByTeamId(int teamId) {
-        return driversRepository.getByTeamId(teamId);
+    private Single<List<Driver>> getDriversByTeamId(int teamId) {
+        return driversRepository.getByTeamId(teamId).toList();
     }
 
     private Observable<Boolean> updateDriversTeam(int teamId, final List<Driver> drivers) {
-        return Observable.from(drivers).map(Driver::getId)
+        return Observable.fromIterable(drivers).map(Driver::getId)
                 .toList()
-                .flatMap(driverIds -> removeDriversFromTeamZip(driversRepository.removeDriversFromTeam(teamId), driverIds))
+                .flatMapObservable(driverIds -> removeDriversFromTeamZip(driversRepository.removeDriversFromTeam(teamId), driverIds))
                 .flatMap(driverIds -> driversRepository.addDriversToTeam(teamId, Ints.toArray(driverIds)));
     }
 

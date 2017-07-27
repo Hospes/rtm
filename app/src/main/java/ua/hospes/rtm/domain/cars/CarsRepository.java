@@ -2,8 +2,8 @@ package ua.hospes.rtm.domain.cars;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.domain.cars.models.Car;
 
 /**
@@ -12,7 +12,7 @@ import ua.hospes.rtm.domain.cars.models.Car;
 public interface CarsRepository {
     Observable<Car> get();
 
-    Observable<Car> getByIds(int... ids);
+    Observable<Car> get(int... ids);
 
     Observable<Car> getByNumbers(int... numbers);
 

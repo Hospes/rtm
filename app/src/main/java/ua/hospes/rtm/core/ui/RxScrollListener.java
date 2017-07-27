@@ -2,7 +2,7 @@ package ua.hospes.rtm.core.ui;
 
 import android.support.v7.widget.RecyclerView;
 
-import rx.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * @author Andrew Khloponin

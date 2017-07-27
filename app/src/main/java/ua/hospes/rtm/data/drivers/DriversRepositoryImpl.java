@@ -5,14 +5,16 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.rtm.data.drivers.mapper.DriversMapper;
+import ua.hospes.rtm.data.drivers.models.DriverDb;
 import ua.hospes.rtm.data.drivers.storage.DriversDbStorage;
 import ua.hospes.rtm.data.team.models.TeamDb;
 import ua.hospes.rtm.data.team.storage.TeamsDbStorage;
 import ua.hospes.rtm.domain.drivers.DriversRepository;
 import ua.hospes.rtm.domain.drivers.models.Driver;
+import ua.hospes.rtm.utils.Optional;
 
 /**
  * @author Andrew Khloponin
@@ -20,11 +22,11 @@ import ua.hospes.rtm.domain.drivers.models.Driver;
 @Singleton
 public class DriversRepositoryImpl implements DriversRepository {
     private final DriversDbStorage dbStorage;
-    private final TeamsDbStorage teamsDbStorage;
+    private final TeamsDbStorage   teamsDbStorage;
 
 
     @Inject
-    public DriversRepositoryImpl(DriversDbStorage dbStorage, TeamsDbStorage teamsDbStorage) {
+    DriversRepositoryImpl(DriversDbStorage dbStorage, TeamsDbStorage teamsDbStorage) {
         this.dbStorage = dbStorage;
         this.teamsDbStorage = teamsDbStorage;
     }
@@ -32,28 +34,22 @@ public class DriversRepositoryImpl implements DriversRepository {
 
     @Override
     public Observable<Driver> get() {
-        return dbStorage.get()
-                .flatMap(driverDb -> Observable.zip(Observable.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map));
+        return dbStorage.get().flatMap(this::transform);
     }
 
     @Override
     public Observable<Driver> get(int... ids) {
-        return dbStorage.get(ids)
-                .flatMap(driverDb -> Observable.zip(Observable.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map));
+        return dbStorage.get(ids).flatMap(this::transform);
     }
 
     @Override
     public Observable<Driver> getByTeamId(int teamId) {
-        return dbStorage.getTeamById(teamId)
-                .flatMap(driverDb -> Observable.zip(Observable.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map));
+        return dbStorage.getTeamById(teamId).flatMap(this::transform);
     }
 
     @Override
     public Observable<List<Driver>> listen() {
-        return dbStorage.listen()
-                .flatMap(driverDbs -> Observable.from(driverDbs)
-                        .flatMap(driverDb -> Observable.zip(Observable.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map))
-                        .toList());
+        return dbStorage.listen().flatMap(this::transform);
     }
 
 
@@ -67,8 +63,8 @@ public class DriversRepositoryImpl implements DriversRepository {
     }
 
     @Override
-    public Single<Integer> remove(Driver driver) {
-        return dbStorage.remove(DriversMapper.map(driver));
+    public Single<Integer> remove(int id) {
+        return dbStorage.remove(id);
     }
 
     @Override
@@ -87,7 +83,17 @@ public class DriversRepositoryImpl implements DriversRepository {
     }
 
 
-    private Observable<TeamDb> getTeamById(int id) {
-        return teamsDbStorage.get().singleOrDefault(null, team -> id == team.getId());
+    private Observable<Driver> transform(DriverDb driverDb) {
+        return Single.zip(Single.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map).toObservable();
+    }
+
+    private Observable<List<Driver>> transform(List<DriverDb> driverDbs) {
+        return Observable.fromIterable(driverDbs)
+                .flatMapSingle(driverDb -> Single.zip(Single.just(driverDb), getTeamById(driverDb.getTeamId()), DriversMapper::map))
+                .toList().toObservable();
+    }
+
+    private Single<Optional<TeamDb>> getTeamById(int id) {
+        return teamsDbStorage.get(id).map(Optional::of).single(Optional.empty());
     }
 }

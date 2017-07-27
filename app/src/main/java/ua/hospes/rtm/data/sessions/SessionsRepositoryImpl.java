@@ -5,10 +5,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.Single;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.Single;
+import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.rtm.data.cars.CarsRepositoryImpl;
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
 import ua.hospes.rtm.data.sessions.mapper.SessionsMapper;
@@ -24,6 +24,7 @@ import ua.hospes.rtm.domain.drivers.DriversRepository;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
 import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.utils.Optional;
 
 /**
  * @author Andrew Khloponin
@@ -32,11 +33,11 @@ import ua.hospes.rtm.domain.sessions.models.Session;
 public class SessionsRepositoryImpl implements SessionsRepository {
     private final SessionsDbStorage dbStorage;
     private final DriversRepository driversRepository;
-    private final CarsRepository carsRepository;
+    private final CarsRepository    carsRepository;
 
 
     @Inject
-    public SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepositoryImpl driversRepository, CarsRepositoryImpl carsRepository) {
+    SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepositoryImpl driversRepository, CarsRepositoryImpl carsRepository) {
         this.dbStorage = dbStorage;
         this.driversRepository = driversRepository;
         this.carsRepository = carsRepository;
@@ -45,100 +46,54 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
     @Override
     public Observable<Session> get() {
-        return dbStorage.get()
-                .flatMap(sessionItemDb ->
-                        Observable.zip(
-                                Observable.just(sessionItemDb),
-                                getDriverById(sessionItemDb.getDriverId()),
-                                getCarById(sessionItemDb.getCarId()),
-                                SessionsMapper::map));
+        return dbStorage.get().flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> get(int... id) {
-        return dbStorage.get(id)
-                .flatMap(sessionItemDb ->
-                        Observable.zip(
-                                Observable.just(sessionItemDb),
-                                getDriverById(sessionItemDb.getDriverId()),
-                                getCarById(sessionItemDb.getCarId()),
-                                SessionsMapper::map));
+        return dbStorage.get(id).flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> getByTeamId(int teamId) {
-        return dbStorage.getByTeamId(teamId)
-                .flatMap(sessionItemDb ->
-                        Observable.zip(
-                                Observable.just(sessionItemDb),
-                                getDriverById(sessionItemDb.getDriverId()),
-                                getCarById(sessionItemDb.getCarId()),
-                                SessionsMapper::map));
+        return dbStorage.getByTeamId(teamId).flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> getByTeamIdAndDriverId(int teamId, int driverId) {
-        return dbStorage.getByTeamIdAndDriverId(teamId, driverId)
-                .flatMap(sessionItemDb ->
-                        Observable.zip(
-                                Observable.just(sessionItemDb),
-                                getDriverById(sessionItemDb.getDriverId()),
-                                getCarById(sessionItemDb.getCarId()),
-                                SessionsMapper::map));
+        return dbStorage.getByTeamIdAndDriverId(teamId, driverId).flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<List<Session>> listen() {
-        return dbStorage.listen()
-                .flatMap(sessionItemDbs -> Observable.from(sessionItemDbs)
-                        .flatMap(sessionItemDb ->
-                                Observable.zip(
-                                        Observable.just(sessionItemDb),
-                                        getDriverById(sessionItemDb.getDriverId()),
-                                        getCarById(sessionItemDb.getCarId()),
-                                        SessionsMapper::map))
-                        .toList());
+        return dbStorage.listen().flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<List<Session>> listenByTeamId(int teamId) {
-        return dbStorage.listenByTeamId(teamId)
-                .flatMap(sessionItemDbs -> Observable.from(sessionItemDbs)
-                        .flatMap(sessionItemDb ->
-                                Observable.zip(
-                                        Observable.just(sessionItemDb),
-                                        getDriverById(sessionItemDb.getDriverId()),
-                                        getCarById(sessionItemDb.getCarId()),
-                                        SessionsMapper::map))
-                        .toList());
+        return dbStorage.listenByTeamId(teamId).flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> newSessions(Session.Type type, int... teamIds) {
-        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+        return Observable.create((ObservableEmitter<SessionDb> subscriber) -> {
             for (int teamId : teamIds) {
                 SessionDb sessionDb = new SessionDb(teamId);
                 sessionDb.setType(type.name());
                 subscriber.onNext(sessionDb);
             }
-            subscriber.onCompleted();
+            subscriber.onComplete();
         })
                 .toList()
-                .flatMap(dbStorage::add).map(result -> result.getData())
-                .flatMap(sessionDb1 ->
-                        Observable.zip(
-                                Observable.just(sessionDb1),
-                                getDriverById(sessionDb1.getDriverId()),
-                                getCarById(sessionDb1.getCarId()),
-                                SessionsMapper::map)
-                );
+                .flatMapObservable(dbStorage::add).map(result -> result.getData())
+                .flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> setSessionDriver(int sessionId, int driverId) {
         return Observable.just(new SetDriverOperation(sessionId, driverId))
                 .toList()
-                .flatMap(dbStorage::applySetDriverOperations)
+                .flatMapObservable(dbStorage::applySetDriverOperations)
                 .flatMap(this::get);
     }
 
@@ -146,26 +101,21 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     public Observable<Session> setSessionCar(int sessionId, int carId) {
         return Observable.just(new SetCarOperation(sessionId, carId))
                 .toList()
-                .flatMap(dbStorage::applySetCarOperations)
+                .flatMapObservable(dbStorage::applySetCarOperations)
                 .flatMap(this::get);
     }
 
     @Override
     public Observable<Session> startSessions(long raceStartTime, long startTime, int... sessionIds) {
-        return Observable.create((Observable.OnSubscribe<OpenSessionOperation>) subscriber -> {
-            for (int sessionId : sessionIds) {
-                subscriber.onNext(new OpenSessionOperation(sessionId, raceStartTime, startTime));
-            }
-            subscriber.onCompleted();
-        })
+        return OpenSessionOperation.from(raceStartTime, startTime, sessionIds)
                 .toList()
-                .flatMap(dbStorage::applyOpenOperations)
+                .flatMapObservable(dbStorage::applyOpenOperations)
                 .flatMap(this::get);
     }
 
     @Override
     public Observable<Session> startNewSessions(long raceStartTime, long startTime, Session.Type type, int... teamIds) {
-        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+        return Observable.create((ObservableEmitter<SessionDb> subscriber) -> {
             for (int teamId : teamIds) {
                 SessionDb sessionDb = new SessionDb(teamId);
                 sessionDb.setRaceStartTime(raceStartTime);
@@ -173,51 +123,36 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                 sessionDb.setType(type.name());
                 subscriber.onNext(sessionDb);
             }
-            subscriber.onCompleted();
+            subscriber.onComplete();
         })
                 .toList()
-                .flatMap(dbStorage::add)
-                .flatMap(result ->
-                        Observable.zip(
-                                Observable.just(result.getData()),
-                                getDriverById(result.getData().getDriverId()),
-                                getCarById(result.getData().getCarId()),
-                                SessionsMapper::map)
-                );
+                .flatMapObservable(dbStorage::add)
+                .map(InsertResult::getData)
+                .flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> startNewSession(long raceStartTime, long startTime, Session.Type type, int driverId, int teamId) {
-        return Observable.create((Observable.OnSubscribe<SessionDb>) subscriber -> {
+        return Observable.create((ObservableEmitter<SessionDb> subscriber) -> {
             SessionDb sessionDb = new SessionDb(teamId);
             sessionDb.setRaceStartTime(raceStartTime);
             sessionDb.setStartDurationTime(startTime);
             sessionDb.setDriverId(driverId);
             sessionDb.setType(type.name());
             subscriber.onNext(sessionDb);
-            subscriber.onCompleted();
+            subscriber.onComplete();
         })
                 .toList()
-                .flatMap(dbStorage::add)
-                .flatMap(result ->
-                        Observable.zip(
-                                Observable.just(result.getData()),
-                                getDriverById(result.getData().getDriverId()),
-                                getCarById(result.getData().getCarId()),
-                                SessionsMapper::map)
-                );
+                .flatMapObservable(dbStorage::add)
+                .map(InsertResult::getData)
+                .flatMapSingle(this::transform);
     }
 
     @Override
     public Observable<Session> closeSessions(long stopTime, int... sessionIds) {
-        return Observable.create((Action1<Emitter<CloseSessionOperation>>) emitter -> {
-            for (int sessionId : sessionIds) {
-                emitter.onNext(new CloseSessionOperation(sessionId, stopTime));
-            }
-            emitter.onCompleted();
-        }, Emitter.BackpressureMode.NONE)
+        return CloseSessionOperation.from(stopTime, sessionIds)
                 .toList()
-                .flatMap(dbStorage::applyCloseOperations)
+                .flatMapObservable(dbStorage::applyCloseOperations)
                 .flatMap(this::get);
     }
 
@@ -225,7 +160,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     public Observable<Session> removeLastSession(int teamId) {
         return dbStorage.getByTeamId(teamId)
                 .toSortedList((sessionDb, sessionDb2) -> Long.compare(sessionDb.getStartDurationTime(), sessionDb2.getStartDurationTime()))
-                .flatMap(sessionDbs -> {
+                .flatMapObservable(sessionDbs -> {
                     int count = sessionDbs.size();
                     if (count >= 2) {
                         return Single.zip(
@@ -237,12 +172,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
                         return Observable.just(sessionDbs.get(0));
                     } else throw new RuntimeException("No sessions in the database");
                 })
-                .flatMap(session -> Observable.zip(
-                        Observable.just(session),
-                        getDriverById(session.getDriverId()),
-                        getCarById(session.getCarId()),
-                        SessionsMapper::map)
-                );
+                .flatMapSingle(this::transform);
     }
 
     private Single<SessionDb> zipOpenSession(SessionDb sessionDb) {
@@ -255,7 +185,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
     private Single<Integer> openSession(int id, long raceStartTime, long startTime) {
         return Observable.just(new OpenSessionOperation(id, raceStartTime, startTime))
-                .toList().flatMap(dbStorage::applyOpenOperations).singleOrDefault(0).toSingle();
+                .toList().flatMapObservable(dbStorage::applyOpenOperations).single(0);
     }
 
     private Single<Integer> removeSession(SessionDb sessionDb) {
@@ -269,11 +199,19 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
 
-    private Observable<Driver> getDriverById(int id) {
-        return driversRepository.get(id).singleOrDefault(null, driver -> id == driver.getId());
+    private Single<Session> transform(SessionDb sessionDb) {
+        return Single.zip(Single.just(sessionDb), getDriverById(sessionDb.getDriverId()), getCarById(sessionDb.getCarId()), SessionsMapper::map);
     }
 
-    private Observable<Car> getCarById(int id) {
-        return carsRepository.getByIds(id).singleOrDefault(null, car -> id == car.getId());
+    private Single<List<Session>> transform(List<SessionDb> sessionDbs) {
+        return Observable.fromIterable(sessionDbs).flatMapSingle(this::transform).toList();
+    }
+
+    private Single<Optional<Driver>> getDriverById(int id) {
+        return driversRepository.get(id).map(Optional::of).single(Optional.empty());
+    }
+
+    private Single<Optional<Car>> getCarById(int id) {
+        return carsRepository.get(id).map(Optional::of).single(Optional.empty());
     }
 }

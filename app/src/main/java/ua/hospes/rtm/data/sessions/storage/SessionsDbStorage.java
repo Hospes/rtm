@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ua.hospes.dbhelper.InsertResult;
 import ua.hospes.dbhelper.UpdateResult;
 import ua.hospes.dbhelper.builder.DeleteQuery;

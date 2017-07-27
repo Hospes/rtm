@@ -2,8 +2,9 @@ package ua.hospes.rtm.domain.sessions;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import ua.hospes.rtm.core.db.tables.Sessions;
 import ua.hospes.rtm.domain.sessions.models.Session;
 
 /**
