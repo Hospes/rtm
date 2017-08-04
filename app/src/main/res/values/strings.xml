@@ -76,4 +76,8 @@
     <string name="settings_assign_pitstop_manually">Manually</string>
     <string name="settings_assign_pitstop_prev">Previous session</string>
     <string name="settings_assign_pitstop_next">Next session</string>
+
+    <string name="session_button_type_pit">pit</string>
+    <string name="session_button_type_next">next</string>
+    <string name="session_button_type_undo">undo</string>
 </resources>

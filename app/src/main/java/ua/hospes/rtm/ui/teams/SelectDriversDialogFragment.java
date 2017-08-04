@@ -34,7 +34,7 @@ public class SelectDriversDialogFragment extends AppCompatDialogFragment {
 
 
     private Button btnOk, btnCancel;
-    private RecyclerView rv;
+    private RecyclerView        rv;
     private SelectDriverAdapter adapter;
     @Nullable private Driver[] drivers = null;
 
@@ -123,9 +123,9 @@ public class SelectDriversDialogFragment extends AppCompatDialogFragment {
                 .map(drivers -> drivers.toArray(new Driver[drivers.size()]))
                 .compose(RxUtils.applySchedulersSingle())
                 .subscribe(drivers -> {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent().putExtra("drivers", drivers));
+                    if (getTargetFragment() != null) getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent().putExtra("drivers", drivers));
+                    dismiss();
                 }, Throwable::printStackTrace));
-        dismiss();
     }
 
     private void dialogCancel(View view) {

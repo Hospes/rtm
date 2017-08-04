@@ -133,7 +133,7 @@ public class EditTeamDialogFragment extends AppCompatDialogFragment {
     private void showSelectDriversDialog() {
         DialogFragment dialog = SelectDriversDialogFragment.newInstance(team.getDrivers().toArray(new Driver[team.getDrivers().size()]));
         dialog.setTargetFragment(this, REQUEST_SELECT_DIRVERS);
-        dialog.show(getChildFragmentManager(), "select_drivers");
+        dialog.show(getFragmentManager(), "select_drivers");
     }
 
     private void updateDrivers(List<Driver> drivers) {

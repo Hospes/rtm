@@ -68,4 +68,8 @@
     <string name="settings_assign_pitstop_manually">Вручную</string>
     <string name="settings_assign_pitstop_prev">Из предыдущей сессии</string>
     <string name="settings_assign_pitstop_next">Из следующей сессии</string>
+
+    <string name="session_button_type_pit">pit</string>
+    <string name="session_button_type_next">next</string>
+    <string name="session_button_type_undo">undo</string>
 </resources>
