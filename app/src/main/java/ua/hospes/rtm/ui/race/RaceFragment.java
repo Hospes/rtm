@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,13 +39,13 @@ import ua.hospes.undobutton.UndoButtonController;
  */
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
     private static final int REQUEST_CODE_PERMISSION = 11;
-//    private UndoButtonController undoController;
-    private TimerListController timerListController;
-    @Inject RacePresenter presenter;
-    @Inject PreferencesManager preferencesManager;
-    private TextView tvTime;
-    private RecyclerView rv;
-    private RaceAdapter adapter;
+    private UndoButtonController undoController;
+    private TimerListController  timerListController;
+    @Inject RacePresenter        presenter;
+    @Inject PreferencesManager   preferencesManager;
+    private TextView             tvTime;
+    private RecyclerView         rv;
+    private RaceAdapter          adapter;
     private long currentNanoTime = 0L;
 
 
@@ -91,26 +90,26 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        undoController = new UndoButtonController<RaceAdapter.MyHolder>(getContext()) {
-//            @Override
-//            public UndoButton[] provideUndos(RaceAdapter.MyHolder holder) {
-//                return new UndoButton[]{holder.btnNextSession};
-//            }
-//
-//            @Override
-//            public boolean defaultTimeSHow() {
-//                return true;
-//            }
-//
-//            @Override
-//            public int defaultDelay() {
-//                return 5;
-//            }
-//        };
+        undoController = new UndoButtonController<RaceAdapter.MyHolder>(getContext()) {
+            @Override
+            public UndoButton[] provideUndos(RaceAdapter.MyHolder holder) {
+                return new UndoButton[]{holder.btnNextSession};
+            }
+
+            @Override
+            public boolean defaultTimeSHow() {
+                return true;
+            }
+
+            @Override
+            public int defaultDelay() {
+                return 5;
+            }
+        };
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(getContext(), preferencesManager, null/*undoController*/));
+        rv.setAdapter(adapter = new RaceAdapter(getContext(), preferencesManager, undoController));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
@@ -120,7 +119,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
         rv.addOnScrollListener(timerListController = new TimerListController());
-//        rv.addOnScrollListener(undoController);
+        rv.addOnScrollListener(undoController);
 
         presenter.attachView(this);
     }
@@ -144,7 +143,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         MenuItem stopWatchItem = menu.findItem(R.id.action_stopwatch);
         if (stopWatchItem != null) {
-            tvTime = (TextView) MenuItemCompat.getActionView(stopWatchItem).findViewById(R.id.text);
+            tvTime = stopWatchItem.getActionView().findViewById(R.id.text);
         }
     }
 
@@ -203,7 +202,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onDestroyView() {
         super.onDestroyView();
         timerListController.unsubscribe();
-//        undoController.release();
+        undoController.release();
         presenter.detachView();
     }
 

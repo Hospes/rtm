@@ -79,18 +79,14 @@ dependencies {
     implementation "ua.hospes.absrvadapter:absrvadapter:${rootProject.ext.absRecycler}"
     implementation "ua.hospes.undobutton:undobutton:${rootProject.ext.undoButton}"
 
-    //Rx1 [START]
     implementation "io.reactivex.rxjava2:rxandroid:${rootProject.ext.rxAndroid2}"
     implementation "io.reactivex.rxjava2:rxjava:${rootProject.ext.rxJava2}"
-    //Rx1  [END]
 
-    // Dagger [START]
     implementation "com.google.dagger:dagger:${rootProject.ext.dagger2}"
     //compile "com.google.dagger:dagger-android:${rootProject.ext.dagger2}"
     implementation "com.google.dagger:dagger-android-support:${rootProject.ext.dagger2}"
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger2}"
-    // Dagger  [END]
 
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
     implementation 'com.52inc:scoops:1.0.0'
