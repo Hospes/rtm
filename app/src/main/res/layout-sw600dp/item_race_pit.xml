@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="70dp"
+              android:layout_height="@dimen/race_item_height"
               android:background="?android:attr/selectableItemBackground"
               android:orientation="horizontal">
 
@@ -22,13 +21,13 @@
               android:layout_gravity="center_vertical"
               android:gravity="center_horizontal"
               android:maxLines="2"
-              android:minWidth="40dp"
+              android:minWidth="@dimen/race_item_pits_min_width"
               android:text="@string/race_pit"
               android:textAllCaps="true"
               android:textSize="18sp" />
 
     <Button android:id="@+id/btn_session_car"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/race_item_car_width"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:maxLines="1"
@@ -36,7 +35,7 @@
             android:textSize="18sp" />
 
     <Button android:id="@+id/btn_session_driver"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/race_item_driver_width"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:ellipsize="end"
@@ -51,21 +50,16 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:gravity="center"
+        android:minWidth="@dimen/race_item_driver_all_time_min_width"
         android:text="@string/holder_time" />
-
-    <ua.hospes.undobutton.UndoButton android:id="@+id/btn_next"
-                                     android:layout_width="80dp"
-                                     android:layout_height="wrap_content"
-                                     android:layout_gravity="center_vertical"
-                                     android:text="@string/race_btn_next_session"
-                                     android:visibility="gone"
-                                     app:delb_textUndo="@string/race_btn_undo_session" />
 
     <ua.hospes.rtm.ui.race.widgets.CustomToggleButton
         android:id="@+id/btn_pit_out"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/race_item_next_session_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/race_item_next_session_margin_right"
+        android:layout_marginStart="@dimen/race_item_next_session_margin_left"
         android:textOff="@string/race_btn_pit"
         android:textOn="@string/race_btn_out" />
 

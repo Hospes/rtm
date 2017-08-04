@@ -48,19 +48,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Preference prefAssignPitStops = findPreference("assign_pitstop_dur_to");
-        String currentValue = preferencesManager.getPitStopAssign().name().toLowerCase(Locale.getDefault());
-        prefAssignPitStops.setSummary(currentValue);
+        prefAssignPitStops.setSummary(preferencesManager.getPitStopAssign().name().toLowerCase(Locale.getDefault()));
         prefAssignPitStops.setOnPreferenceChangeListener((preference, newValue) -> {
             preference.setSummary(String.valueOf(newValue));
             return true;
         });
-        prefAssignPitStops.setEnabled(!preferencesManager.isPitStopSessionsRemoved());
 
-        Preference prefIsPitStopsRemoved = findPreference("remove_pit_stops");
-        prefIsPitStopsRemoved.setOnPreferenceChangeListener((preference, newValue) -> {
-            prefAssignPitStops.setEnabled(!((boolean) newValue));
+        Preference prefSessionButtonType = findPreference("session_button_type");
+        prefSessionButtonType.setSummary(preferencesManager.getSessionButtonType().toLowerCase(Locale.getDefault()));
+        prefSessionButtonType.setOnPreferenceChangeListener((preference, newValue) -> {
+            preference.setSummary(String.valueOf(newValue));
+            prefAssignPitStops.setEnabled("pit".equalsIgnoreCase(String.valueOf(newValue)));
             return true;
         });
+        prefAssignPitStops.setEnabled("pit".equalsIgnoreCase(preferencesManager.getSessionButtonType()));
 
         findPreference("theme").setOnPreferenceClickListener(preference -> {
             getActivity().startActivityForResult(ScoopSettingsActivity.createIntent(getContext()), 999);

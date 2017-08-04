@@ -90,9 +90,9 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        undoController = new UndoButtonController<RaceAdapter.MyHolder>(getContext()) {
+        undoController = new UndoButtonController<RaceAdapter.MyHolderUndoNext>(getContext()) {
             @Override
-            public UndoButton[] provideUndos(RaceAdapter.MyHolder holder) {
+            public UndoButton[] provideUndos(RaceAdapter.MyHolderUndoNext holder) {
                 return new UndoButton[]{holder.btnNextSession};
             }
 
@@ -109,7 +109,8 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter = new RaceAdapter(getContext(), preferencesManager, undoController));
+        String sessionButtonType = preferencesManager.getSessionButtonType();
+        rv.setAdapter(adapter = new RaceAdapter(getContext(), sessionButtonType, undoController));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
         adapter.setOnOutClickListener((item, position) -> presenter.onOut(item, currentNanoTime));
@@ -119,7 +120,8 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         adapter.setOnItemClickListener((item, position) -> presenter.showRaceItemDetail(getContext(), item));
 
         rv.addOnScrollListener(timerListController = new TimerListController());
-        rv.addOnScrollListener(undoController);
+        if ("undo".equalsIgnoreCase(sessionButtonType))
+            rv.addOnScrollListener(undoController);
 
         presenter.attachView(this);
     }

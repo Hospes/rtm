@@ -8,7 +8,7 @@ import ua.hospes.rtm.domain.race.models.PitStopAssign;
 public interface PreferencesManager {
     PitStopAssign getPitStopAssign();
 
-    boolean isPitStopSessionsRemoved();
+    String getSessionButtonType();
 
     boolean isExportXLSEnabled();
 }

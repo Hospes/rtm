@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?android:attr/selectableItemBackground"
+              android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/tv_team"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_margin="4dp"
+                  android:layout_marginEnd="0dp"
+                  android:layout_weight="1"
+                  android:ellipsize="end"
+                  android:maxLines="1"
+                  android:textSize="24sp" />
+
+        <TextView android:id="@+id/tv_pits"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_marginEnd="0dp"
+                  android:gravity="center_horizontal"
+                  android:maxLines="2"
+                  android:minWidth="40dp"
+                  android:text="@string/race_pit"
+                  android:textAllCaps="true"
+                  android:textSize="18sp" />
+
+
+        <Button android:id="@+id/btn_session_car"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:maxLines="1"
+                android:text="@string/race_btn_set_car"
+                android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+        <Button android:id="@+id/btn_session_driver"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/race_btn_set_driver" />
+
+        <ua.hospes.rtm.ui.race.widgets.DriverTimeView
+            android:id="@+id/tv_driver_all_time"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:gravity="center"
+            android:text="@string/holder_time" />
+
+        <Button android:id="@+id/btn_next"
+                android:layout_width="@dimen/race_item_next_session_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/race_item_next_session_margin_right"
+                android:layout_marginStart="@dimen/race_item_next_session_margin_left"
+                android:text="@string/race_btn_next_session" />
+
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:gravity="center"
+                      android:minWidth="100dp"
+                      android:orientation="vertical">
+
+            <TextView android:id="@+id/tv_session_type"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:maxLines="1"
+                      android:text="@string/race_on_track"
+                      android:textAllCaps="true"
+                      android:textSize="18sp" />
+
+            <ua.hospes.rtm.ui.race.widgets.SessionTimeView
+                android:id="@+id/tv_session_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/holder_time" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

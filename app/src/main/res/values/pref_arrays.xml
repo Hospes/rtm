@@ -10,4 +10,15 @@
         <item>previous</item>
         <item>next</item>
     </string-array>
+
+    <string-array name="session_button_type_titles">
+        <item>pit</item>
+        <item>next</item>
+        <item>undo</item>
+    </string-array>
+    <string-array name="session_button_type_values" translatable="false">
+        <item>pit</item>
+        <item>next</item>
+        <item>undo</item>
+    </string-array>
 </resources>

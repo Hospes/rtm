@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import ua.hospes.absrvadapter.OnItemClickListener;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;
-import ua.hospes.rtm.domain.preferences.PreferencesManager;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.ui.race.widgets.DriverTimeView;
@@ -33,9 +31,9 @@ import ua.hospes.undobutton.UndoButtonController;
  * @author Andrew Khloponin
  */
 class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
-    private final UndoButtonController undoButtonController;
-    private final boolean isPitStopsRemoved;
-    @ColorInt private final int carDefaultColor, sessionTrackColor, sessionPitColor;
+    private final           UndoButtonController undoButtonController;
+    private final           String               sessionButtonType;
+    @ColorInt private final int                  carDefaultColor, sessionTrackColor, sessionPitColor;
     private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
@@ -43,8 +41,8 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
     private OnItemClickListener<RaceItem> onUndoClickListener;
 
 
-    RaceAdapter(Context context, @NonNull PreferencesManager preferencesManager, UndoButtonController undoButtonController) {
-        this.isPitStopsRemoved = preferencesManager.isPitStopSessionsRemoved();
+    RaceAdapter(Context context, String sessionButtonType, UndoButtonController undoButtonController) {
+        this.sessionButtonType = sessionButtonType;
         this.undoButtonController = undoButtonController;
         this.carDefaultColor = getButtonTextAppearance(context);
         this.sessionTrackColor = getSessionTrackColor(context);
@@ -54,7 +52,17 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyHolder(parent, R.layout.item_race);
+        switch (sessionButtonType) {
+            case "next":
+                return new MyHolderNext(parent);
+
+            case "undo":
+                return new MyHolderUndoNext(parent);
+
+            case "pit":
+            default:
+                return new MyHolderPit(parent);
+        }
     }
 
     @Override
@@ -69,7 +77,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         holder.driverTimeView.setSession(session);
         holder.sessionTimeView.setSession(session);
 
-        undoButtonController.onBind(item.getId(), holder.btnNextSession);
+        holder.undoBind(undoButtonController, item.getId());
 
         if (session != null) {
             Car car = session.getCar();
@@ -86,25 +94,17 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             holder.sessionType.setText(session.getType().getTitle());
             holder.sessionType.setVisibility(View.VISIBLE);
 
-            holder.btnNextSession.setVisibility(isPitStopsRemoved ? View.VISIBLE : View.GONE);
-
-            holder.btnPitOut.setVisibility(isPitStopsRemoved ? View.GONE : View.VISIBLE);
             switch (session.getType()) {
                 case TRACK:
                     holder.sessionType.setTextColor(sessionTrackColor);
                     holder.sessionTimeView.setTextColor(sessionTrackColor);
-                    holder.btnPitOut.setChecked(false);
+                    holder.setPitChecked(false);
                     break;
 
                 case PIT:
                     holder.sessionType.setTextColor(sessionPitColor);
                     holder.sessionTimeView.setTextColor(sessionPitColor);
-                    holder.btnPitOut.setChecked(true);
-                    break;
-
-                default:
-                    holder.btnNextSession.setVisibility(View.GONE);
-                    holder.btnPitOut.setVisibility(View.GONE);
+                    holder.setPitChecked(true);
                     break;
             }
         }
@@ -132,19 +132,14 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
     }
 
 
-    class MyHolder extends AbsRecyclerHolder {
-        // Car
+    abstract class MyHolder extends AbsRecyclerHolder {
         Button btnSessionCar;
 
-        // Driver
         DriverTimeView driverTimeView;
-        Button btnSessionDriver;
+        Button         btnSessionDriver;
 
         TextView team, sessionType, pits;
         SessionTimeView sessionTimeView;
-        ToggleButton btnPitOut;
-
-        UndoButton btnNextSession;
 
 
         MyHolder(ViewGroup parent, int layoutId) {
@@ -154,11 +149,6 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
             btnSessionCar.setOnClickListener(this::initOnSetCarClickListener);
             btnSessionDriver.setOnClickListener(this::initOnSetDriverClickListener);
-
-            btnNextSession.setOnClickListener(this::initOnOutClickListener);
-            btnNextSession.setOnUndoClickListener(this::initOnUndoClickListener);
-            btnNextSession.setController(undoButtonController);
-            btnPitOut.setOnClickListener(this::initOnPitClickListener);
         }
 
 
@@ -174,11 +164,6 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             sessionType = UiUtils.findView(itemView, R.id.tv_session_type);
 
             pits = UiUtils.findView(itemView, R.id.tv_pits);
-
-            btnNextSession = UiUtils.findView(itemView, R.id.btn_next);
-
-
-            btnPitOut = UiUtils.findView(itemView, R.id.btn_pit_out);
         }
 
         void initOnItemClickListener(View view) {
@@ -205,6 +190,50 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             onSetDriverClickListener.onItemClick(getItem(position), position);
         }
 
+        void initOnOutClickListener(View view) {
+            final int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
+            if (onOutClickListener == null) return;
+            onOutClickListener.onItemClick(getItem(position), position);
+        }
+
+        void setPitChecked(boolean checked) {}
+
+        void undoBind(UndoButtonController controller, int id) {}
+    }
+
+    class MyHolderNext extends MyHolder {
+        Button btnNextSession;
+
+        MyHolderNext(ViewGroup parent) {
+            super(parent, R.layout.item_race_next);
+
+            btnNextSession.setOnClickListener(this::initOnOutClickListener);
+        }
+
+        @Override
+        protected void findViews(View itemView) {
+            super.findViews(itemView);
+            btnNextSession = UiUtils.findView(itemView, R.id.btn_next);
+        }
+    }
+
+    class MyHolderPit extends MyHolder {
+        ToggleButton btnPitOut;
+
+        MyHolderPit(ViewGroup parent) {
+            super(parent, R.layout.item_race_pit);
+
+            btnPitOut.setOnClickListener(this::initOnPitClickListener);
+        }
+
+        @Override
+        protected void findViews(View itemView) {
+            super.findViews(itemView);
+            btnPitOut = UiUtils.findView(itemView, R.id.btn_pit_out);
+        }
+
         void initOnPitClickListener(View view) {
             final int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION) return;
@@ -216,12 +245,27 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
             }
         }
 
-        void initOnOutClickListener(View view) {
-            final int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION) return;
+        @Override
+        void setPitChecked(boolean checked) {
+            btnPitOut.setChecked(checked);
+        }
+    }
 
-            if (onOutClickListener == null) return;
-            onOutClickListener.onItemClick(getItem(position), position);
+    class MyHolderUndoNext extends MyHolder {
+        UndoButton btnNextSession;
+
+        MyHolderUndoNext(ViewGroup parent) {
+            super(parent, R.layout.item_race_undo_next);
+
+            btnNextSession.setOnClickListener(this::initOnOutClickListener);
+            btnNextSession.setOnUndoClickListener(this::initOnUndoClickListener);
+            btnNextSession.setController(undoButtonController);
+        }
+
+        @Override
+        protected void findViews(View itemView) {
+            super.findViews(itemView);
+            btnNextSession = UiUtils.findView(itemView, R.id.btn_next);
         }
 
         void initOnUndoClickListener(View view) {
@@ -230,6 +274,11 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
             if (onUndoClickListener == null) return;
             onUndoClickListener.onItemClick(getItem(position), position);
+        }
+
+        @Override
+        void undoBind(UndoButtonController controller, int id) {
+            undoButtonController.onBind(id, btnNextSession);
         }
     }
 
