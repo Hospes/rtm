@@ -48,6 +48,8 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     private RaceAdapter          adapter;
     private long currentNanoTime = 0L;
 
+    private String sessionButtonType;
+
 
     public static Fragment newInstance() {
         return new RaceFragment();
@@ -66,6 +68,8 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+
+        sessionButtonType = preferencesManager.getSessionButtonType();
     }
 
     @Override
@@ -103,13 +107,12 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
             @Override
             public int defaultDelay() {
-                return 5;
+                return 15;
             }
         };
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        String sessionButtonType = preferencesManager.getSessionButtonType();
         rv.setAdapter(adapter = new RaceAdapter(getContext(), sessionButtonType, undoController));
 
         adapter.setOnPitClickListener((item, position) -> presenter.onPit(item, currentNanoTime));
@@ -208,11 +211,13 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
         presenter.detachView();
     }
 
-
     @Override
     public void update(List<RaceItem> items) {
         adapter.clear();
         adapter.addAll(items);
+        timerListController.forceUpdate(rv);
+        if ("undo".equalsIgnoreCase(sessionButtonType))
+            undoController.forceUpdate(rv);
     }
 
 
@@ -228,7 +233,7 @@ public class RaceFragment extends StopWatchFragment implements RaceContract.View
 
     @Override
     public void onStopWatchStateChanged(int runningState) {
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
