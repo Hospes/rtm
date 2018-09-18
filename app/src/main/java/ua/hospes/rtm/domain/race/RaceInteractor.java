@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import hugo.weaving.DebugLog;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import jxl.write.WriteException;
@@ -73,7 +72,6 @@ public class RaceInteractor {
                 .map(session -> true);
     }
 
-    @DebugLog
     public Single<Boolean> startRace(long startTime) {
         return raceRepository.get()
                 .filter(item -> item.getSession() != null)
