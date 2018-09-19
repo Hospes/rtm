@@ -5,6 +5,7 @@
                                         android:id="@+id/drawer_layout"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
+                                        android:fitsSystemWindows="true"
                                         tools:context=".ui.MainActivity">
 
     <FrameLayout android:layout_width="match_parent"
@@ -31,12 +32,12 @@
             android:layout_marginTop="?attr/actionBarSize" />
     </FrameLayout>
 
-    <!-- The drawer is given a fixed width in dp and extends the full height of
-         the container. -->
-    <fragment android:id="@+id/navigation_drawer"
-              android:name="ua.hospes.rtm.ui.NavigationDrawerFragment"
-              android:layout_width="@dimen/navigation_drawer_width"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              tools:layout="@layout/drawer_main" />
+    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/navigation" />
 </android.support.v4.widget.DrawerLayout>

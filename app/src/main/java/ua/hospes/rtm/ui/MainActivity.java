@@ -2,12 +2,17 @@ package ua.hospes.rtm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,9 +31,10 @@ import ua.hospes.rtm.ui.race.RaceFragment;
 import ua.hospes.rtm.ui.settings.SettingsFragment;
 import ua.hospes.rtm.ui.teams.TeamsFragment;
 
-public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener {
     @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
 
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +43,24 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Scoop.getInstance().apply(this);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /* Fragment managing the behaviors, interactions and presentation of the navigation drawer. */
-        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+        navigationView.setCheckedItem(R.id.nav_race);
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.container, RaceFragment.newInstance())
+                .commit();
+
 
         StopWatchService.checkDeath(this);
     }
@@ -59,37 +75,55 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        switch (position) {
-            case 0:
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // set item as selected to persist highlight
+        menuItem.setChecked(true);
+        // close drawer when item is tapped
+        mDrawerLayout.closeDrawers();
+
+        // Add code here to update the UI based on the item selected
+        // For example, swap UI fragments here
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_race:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, RaceFragment.newInstance())
                         .commit();
                 break;
 
-            case 1:
+            case R.id.nav_teams:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, TeamsFragment.newInstance())
                         .commit();
                 break;
 
-            case 2:
+            case R.id.nav_drivers:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, DriversFragment.newInstance())
                         .commit();
                 break;
 
-            case 3:
+            case R.id.nav_cars:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, CarsFragment.newInstance())
                         .commit();
                 break;
 
-            case 4:
+            case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, SettingsFragment.newInstance())
@@ -99,10 +133,21 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             default:
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .replace(R.id.container, PlaceholderFragment.newInstance())
                         .commit();
                 break;
         }
+
+        return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        else
+            super.onBackPressed();
     }
 
     @Override
@@ -112,16 +157,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
 
     public static class PlaceholderFragment extends Fragment {
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
         public PlaceholderFragment() {}
 
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        public static PlaceholderFragment newInstance() {
+            return new PlaceholderFragment();
         }
 
         @Override

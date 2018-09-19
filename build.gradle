@@ -20,28 +20,6 @@ allprojects {
     }
 }
 
-ext {
-    minSdk = 21
-    targetSdk = 28
-    compileSdk = 28
-    buildTools = '28.0.2'
-
-    supportLib = '27.1.1'
-
-    gson = '2.8.5'
-    guava = '26.0-android'
-
-    rxAndroid2 = '2.1.0'
-    rxJava2 = '2.1.16'
-
-    dbHelper = '2.0.9'
-    absRecycler = '0.2.6'
-    undoButton = '0.2.0'
-
-    dagger2 = '2.16'
-    crashlytics = '2.9.5'
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
