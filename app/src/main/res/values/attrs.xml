@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="headerBackground" format="reference" />
+    <attr name="headerTitleColor" format="color" />
+    <attr name="listItemBackground1" format="reference" />
+    <attr name="listItemBackground2" format="reference" />
+
     <declare-styleable name="CustomTheme">
         <attr name="timeView_OnTrack" format="color" />
         <attr name="timeView_OnPit" format="color" />

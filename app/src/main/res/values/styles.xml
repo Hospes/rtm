@@ -1,18 +1,24 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/default_accent</item>
+
+        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+        <item name="android:textColorTertiary">@android:color/white</item>
+
+        <item name="headerBackground">@color/bg_small_header</item>
+        <item name="headerTitleColor">@color/default_accent</item>
+        <item name="listItemBackground1">@drawable/bg_list_item_1</item>
+        <item name="listItemBackground2">@drawable/bg_list_item_2</item>
 
         <item name="timeView_OnTrack">@color/session_track</item>
         <item name="timeView_OnPit">@color/session_pit</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="delayedButtonStyle">@style/UndoButton</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
     </style>
 
     <style name="AppTheme.DialogWhenLarge" parent="Theme.AppCompat.DialogWhenLarge">
@@ -23,24 +29,38 @@
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/default_accent</item>
 
+        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+        <item name="android:textColorTertiary">@android:color/white</item>
+
+        <item name="headerBackground">@color/bg_small_header</item>
+        <item name="headerTitleColor">@color/default_accent</item>
+        <item name="listItemBackground1">@drawable/bg_list_item_1</item>
+        <item name="listItemBackground2">@drawable/bg_list_item_2</item>
+
         <item name="timeView_OnTrack">@color/session_track</item>
         <item name="timeView_OnPit">@color/session_pit</item>
     </style>
 
 
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/light_accent</item>
+
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorTertiary">@android:color/black</item>
+
+        <item name="headerBackground">@color/bg_small_header</item>
+        <item name="headerTitleColor">@color/default_accent</item>
+        <item name="listItemBackground1">@drawable/bg_list_item_1</item>
+        <item name="listItemBackground2">@drawable/bg_list_item_2</item>
 
         <item name="timeView_OnTrack">@color/session_track_light</item>
         <item name="timeView_OnPit">@color/session_pit_light</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="delayedButtonStyle">@style/UndoButton</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="AppTheme.Light.DialogWhenLarge" parent="Theme.AppCompat.Light.DialogWhenLarge">
@@ -51,12 +71,18 @@
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/light_accent</item>
 
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorTertiary">@android:color/black</item>
+
+        <item name="headerBackground">@color/bg_small_header</item>
+        <item name="headerTitleColor">@color/default_accent</item>
+        <item name="listItemBackground1">@drawable/bg_list_item_1</item>
+        <item name="listItemBackground2">@drawable/bg_list_item_2</item>
+
         <item name="timeView_OnTrack">@color/session_track_light</item>
         <item name="timeView_OnPit">@color/session_pit_light</item>
     </style>
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

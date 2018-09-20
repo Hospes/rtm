@@ -1,8 +1,10 @@
 package ua.hospes.rtm.ui.drivers;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,8 +26,15 @@ class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(MyHolder holder, Driver item, int position) {
-        Resources res = holder.itemView.getResources();
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_2 : R.drawable.bg_list_item_1);
+        Context   context = holder.itemView.getContext();
+        Resources res     = holder.itemView.getResources();
+
+        TypedValue bg1 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);
+        TypedValue bg2 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground2, bg2, false);
+
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? bg2.data : bg1.data);
 
         holder.name.setText(item.getName());
         holder.team.setText(TextUtils.isEmpty(item.getTeamName()) ? res.getString(R.string.drivers_no_team) : item.getTeamName());

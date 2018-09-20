@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme default -->
-    <color name="default_primary">#d27e00</color>
-    <color name="default_primary_dark">#d16a00</color>
+    <color name="default_primary">#ef6c00</color>
+    <color name="default_primary_dark">#e65100</color>
     <color name="default_accent">#FFC107</color>
-    <color name="light_accent">@color/default_primary_dark</color>
+    <color name="light_accent">#ef6c00</color>
 
     <color name="car_quality_low">#ff0000</color>
     <color name="car_quality_normal">#ffd000</color>
@@ -14,4 +14,8 @@
     <color name="session_track_light">#009700</color>
     <color name="session_pit">#ff0000</color>
     <color name="session_pit_light">#970000</color>
+
+
+    <color name="bg_small_header">#58000000</color>
+    <color name="bg_list_item_2">#338b8b8b</color>
 </resources>

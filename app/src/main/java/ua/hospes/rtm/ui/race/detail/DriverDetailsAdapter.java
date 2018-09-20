@@ -1,5 +1,7 @@
 package ua.hospes.rtm.ui.race.detail;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,11 +24,18 @@ class DriverDetailsAdapter extends AbsRecyclerAdapter<DriverDetails, DriverDetai
 
     @Override
     public void onBindViewHolder(MyHolder holder, DriverDetails item, int position) {
+        Context context = holder.itemView.getContext();
+
+        TypedValue bg1 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);
+        TypedValue bg2 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground2, bg2, false);
+
         int resBG;
         if ((position / 2) % 2 == 0) {
-            resBG = position % 2 == 0 ? R.drawable.bg_list_item_1 : R.drawable.bg_race_item_detail_not_trans;
+            resBG = position % 2 == 0 ? bg1.data : bg2.data;
         } else {
-            resBG = position % 2 == 0 ? R.drawable.bg_race_item_detail_not_trans : R.drawable.bg_list_item_1;
+            resBG = position % 2 == 0 ? bg2.data : bg1.data;
         }
         holder.itemView.setBackgroundResource(resBG);
 

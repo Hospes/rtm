@@ -1,5 +1,7 @@
 package ua.hospes.rtm.ui.race.detail;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,7 +25,15 @@ class SessionAdapter extends AbsRecyclerAdapter<Session, SessionAdapter.MyHolder
 
     @Override
     public void onBindViewHolder(MyHolder holder, Session item, int position) {
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_1 : R.drawable.bg_race_item_detail_not_trans);
+        Context context = holder.itemView.getContext();
+
+        TypedValue bg1 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);
+        TypedValue bg2 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground2, bg2, false);
+
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? bg1.data : bg2.data);
+
 
         Car car = item.getCar();
         holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));

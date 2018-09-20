@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         toggle.syncState();
 
 
-        navigationView.setCheckedItem(R.id.nav_race);
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.container, RaceFragment.newInstance())
-                .commit();
-
+        if (savedInstanceState == null) {
+            navigationView.setCheckedItem(R.id.nav_race);
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.container, RaceFragment.newInstance())
+                    .commit();
+        }
 
         StopWatchService.checkDeath(this);
     }

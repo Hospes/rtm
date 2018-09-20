@@ -1,7 +1,9 @@
 package ua.hospes.rtm.ui.teams;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,8 +28,14 @@ class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(MyHolder holder, Team item, int position) {
-        Resources res = holder.itemView.getResources();
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.bg_list_item_2 : R.drawable.bg_list_item_1);
+        Context   context = holder.itemView.getContext();
+
+        TypedValue bg1 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);
+        TypedValue bg2 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.listItemBackground2, bg2, false);
+
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? bg2.data : bg1.data);
 
         holder.name.setText(item.getName());
         holder.drivers.setText(Collections2.transform(item.getDrivers(), Driver::getName).toString().replaceAll("(\\[|\\])", ""));
