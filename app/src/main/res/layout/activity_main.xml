@@ -5,7 +5,7 @@
                                         android:id="@+id/drawer_layout"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:fitsSystemWindows="true"
+                                        android:fitsSystemWindows="false"
                                         tools:context=".ui.MainActivity">
 
     <FrameLayout android:layout_width="match_parent"
@@ -39,6 +39,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:headerLayout="@layout/header_navigation"
         app:itemIconTint="@color/nav_icon_tint"
         app:itemTextColor="@color/nav_icon_tint"
         app:menu="@menu/navigation" />
