@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,10 +17,7 @@ import android.view.ViewGroup;
 
 import com.ftinc.scoop.Scoop;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.HasSupportFragmentInjector;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.core.StopWatchService;
@@ -31,14 +27,11 @@ import ua.hospes.rtm.ui.race.RaceFragment;
 import ua.hospes.rtm.ui.settings.SettingsFragment;
 import ua.hospes.rtm.ui.teams.TeamsFragment;
 
-public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener {
-    @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
-
+public class MainActivity extends DaggerAppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         Scoop.getInstance().apply(this);
         setContentView(R.layout.activity_main);
@@ -70,9 +63,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 999) {
-            recreate();
-        }
+        if (resultCode == RESULT_OK && requestCode == 999) recreate();
     }
 
     @Override
@@ -81,8 +72,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -151,11 +144,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             super.onBackPressed();
     }
 
-    @Override
-    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentInjector;
-    }
-
 
     public static class PlaceholderFragment extends Fragment {
         public PlaceholderFragment() {}
@@ -165,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_main, container, false);
         }
     }
