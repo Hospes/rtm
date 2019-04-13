@@ -7,21 +7,21 @@
               android:padding="16dp">
 
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/drivers_driver_name"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="text|textCapWords"
             android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
               android:text="@string/common_select_team"
               android:textColor="?attr/colorAccent" />
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/team"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

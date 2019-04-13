@@ -2,17 +2,18 @@ package ua.hospes.rtm.ui.cars;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -29,7 +30,8 @@ import ua.hospes.rtm.utils.UiUtils;
  * @author Andrew Khloponin
  */
 public class CarsFragment extends AbsFragment implements CarsContract.View {
-    @Inject CarsPresenter presenter;
+    @Inject
+    CarsPresenter presenter;
 
     private RecyclerView rv;
     private CarsAdapter adapter;

@@ -1,11 +1,12 @@
 package ua.hospes.rtm.ui.teams;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.collect.ImmutableList;
 
@@ -69,8 +70,8 @@ class SelectDriverAdapter extends AbsRecyclerAdapter<Driver, SelectDriverAdapter
             final int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION) return;
 
-            Driver  item             = getItem(position);
-            boolean alreadyChecked   = selectedIds.contains(item.getId());
+            Driver item = getItem(position);
+            boolean alreadyChecked = selectedIds.contains(item.getId());
             boolean allowCheckChange = onAllowItemCheck(item, position, alreadyChecked);
 
             if (allowCheckChange) {

@@ -1,6 +1,6 @@
 package ua.hospes.rtm.domain.sessions.models;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;

@@ -1,6 +1,6 @@
 package ua.hospes.rtm.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Collection;
 

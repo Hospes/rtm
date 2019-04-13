@@ -6,7 +6,7 @@ import com.ftinc.scoop.Scoop
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.fabric.sdk.android.Fabric
-import ua.hospes.rtm.core.di.components.DaggerAppComponent
+import ua.hospes.rtm.core.di.DaggerAppComponent
 
 class App : DaggerApplication() {
     override fun onCreate() {

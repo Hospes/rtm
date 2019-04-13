@@ -1,7 +1,8 @@
 package ua.hospes.rtm.ui.race;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,10 +17,10 @@ import ua.hospes.rtm.utils.RxUtils;
  */
 class TimerListController extends RxScrollListener {
     private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.1f;
-    private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE   = 0.1f;
+    private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.1f;
 
-    private              Set<TimeView> playingItems                = new HashSet<>();
-    private static final long          SKIP_RECALCULATION_DURATION = 300;
+    private Set<TimeView> playingItems = new HashSet<>();
+    private static final long SKIP_RECALCULATION_DURATION = 300;
 
     private long lastRecalculationTime;
 
@@ -45,13 +46,13 @@ class TimerListController extends RxScrollListener {
         RecyclerView.LayoutManager lm = rv.getLayoutManager();
 
         int autoPlayAreaStart = (int) (rv.getTop() - rv.getHeight() * AUTO_PLAY_AREA_START_PADDING_RELATIVE);
-        int autoPlayAreaEnd   = (int) (rv.getBottom() + rv.getHeight() * AUTO_PLAY_AREA_END_PADDING_RELATIVE);
+        int autoPlayAreaEnd = (int) (rv.getBottom() + rv.getHeight() * AUTO_PLAY_AREA_END_PADDING_RELATIVE);
 
         int count = lm.getChildCount();
         for (int i = 0; i < count; i++) {
-            View child     = lm.getChildAt(i);
-            int  viewStart = lm.getDecoratedTop(child);
-            int  viewEnd   = lm.getDecoratedBottom(child);
+            View child = lm.getChildAt(i);
+            int viewStart = lm.getDecoratedTop(child);
+            int viewEnd = lm.getDecoratedBottom(child);
 
             boolean shouldPlay = false;
             shouldPlay = shouldPlay || (rv.getTop() <= viewStart && rv.getBottom() >= viewEnd); // completely visible

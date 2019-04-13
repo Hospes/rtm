@@ -4,10 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.common.collect.Collections2;
 
@@ -28,7 +29,8 @@ import ua.hospes.rtm.utils.RxUtils;
 public class SetCarDialogFragment extends AppCompatDialogFragment {
     private final static String KEY_SESSION_ID = "session_id";
     private final static String KEY_CARS = "cars";
-    @Inject RaceInteractor raceInteractor;
+    @Inject
+    RaceInteractor raceInteractor;
     private final List<Car> cars = new ArrayList<>();
     private String[] titles = new String[]{};
     private int sessionId = -1;

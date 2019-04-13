@@ -3,12 +3,13 @@ package ua.hospes.rtm.ui.settings;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.ftinc.scoop.ui.ScoopSettingsActivity;
 
@@ -24,7 +25,8 @@ import ua.hospes.rtm.domain.preferences.PreferencesManager;
  * @author Andrew Khloponin
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
-    @Inject PreferencesManager preferencesManager;
+    @Inject
+    PreferencesManager preferencesManager;
 
 
     public static Fragment newInstance() {

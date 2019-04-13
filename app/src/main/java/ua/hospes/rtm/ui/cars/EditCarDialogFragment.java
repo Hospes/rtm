@@ -4,11 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +11,12 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.DialogFragment;
 
 import javax.inject.Inject;
 
@@ -33,7 +34,8 @@ import ua.hospes.rtm.utils.UiUtils;
 public class EditCarDialogFragment extends DialogFragment {
     private static final String KEY_CAR = "car";
 
-    @Inject CarsRepository carsRepository;
+    @Inject
+    CarsRepository carsRepository;
 
     private final CarQuality[] qualities = {CarQuality.LOW, CarQuality.NORMAL, CarQuality.HIGH};
 

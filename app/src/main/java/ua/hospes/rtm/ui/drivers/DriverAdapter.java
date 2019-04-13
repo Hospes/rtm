@@ -2,12 +2,13 @@ package ua.hospes.rtm.ui.drivers;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
@@ -26,8 +27,8 @@ class DriverAdapter extends AbsRecyclerAdapter<Driver, DriverAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(MyHolder holder, Driver item, int position) {
-        Context   context = holder.itemView.getContext();
-        Resources res     = holder.itemView.getResources();
+        Context context = holder.itemView.getContext();
+        Resources res = holder.itemView.getResources();
 
         TypedValue bg1 = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);

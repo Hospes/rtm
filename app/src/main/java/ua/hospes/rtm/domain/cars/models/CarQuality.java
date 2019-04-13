@@ -1,6 +1,6 @@
 package ua.hospes.rtm.domain.cars.models;
 
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 
 import ua.hospes.rtm.R;
 

@@ -4,15 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -30,13 +31,15 @@ import ua.hospes.rtm.utils.UiUtils;
  */
 public class SelectDriversDialogFragment extends AppCompatDialogFragment {
     private static final String DRIVERS = "drivers";
-    @Inject DriversRepository driversRepository;
+    @Inject
+    DriversRepository driversRepository;
 
 
     private Button btnOk, btnCancel;
-    private RecyclerView        rv;
+    private RecyclerView rv;
     private SelectDriverAdapter adapter;
-    @Nullable private Driver[] drivers = null;
+    @Nullable
+    private Driver[] drivers = null;
 
 
     public static DialogFragment newInstance(@Nullable Driver[] driver) {

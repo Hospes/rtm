@@ -4,11 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +38,16 @@ import ua.hospes.rtm.utils.UiUtils;
 public class EditDriverDialogFragment extends AppCompatDialogFragment {
     private static final String KEY_DRIVER = "driver";
 
-    @Inject DriversRepository driversRepository;
-    @Inject TeamsRepository   teamsRepository;
+    @Inject
+    DriversRepository driversRepository;
+    @Inject
+    TeamsRepository teamsRepository;
 
     private List<Team> teams = new ArrayList<>();
     private AppCompatSpinner spinner;
-    private EditText         name;
+    private EditText name;
     private Driver driver = null;
-    private Team   team   = null;
+    private Team team = null;
 
 
     public static EditDriverDialogFragment newInstance(Driver driver) {

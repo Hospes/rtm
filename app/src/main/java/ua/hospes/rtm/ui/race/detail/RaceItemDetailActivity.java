@@ -3,13 +3,14 @@ package ua.hospes.rtm.ui.race.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ftinc.scoop.Scoop;
 
@@ -31,7 +32,8 @@ import ua.hospes.rtm.utils.UiUtils;
  */
 public class RaceItemDetailActivity extends AppCompatActivity implements RaceItemDetailContract.View {
     private final static String KEY_RACE_ITEM_ID = "race_item_id";
-    @Inject RaceItemDetailPresenter presenter;
+    @Inject
+    RaceItemDetailPresenter presenter;
     private int raceItemId = -1;
 
     private DriverDetailsAdapter driverDetailsAdapter;
@@ -53,7 +55,7 @@ public class RaceItemDetailActivity extends AppCompatActivity implements RaceIte
         Scoop.getInstance().applyDialog(this);
         setContentView(R.layout.activity_race_item_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

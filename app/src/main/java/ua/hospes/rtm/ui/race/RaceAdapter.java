@@ -1,17 +1,17 @@
 package ua.hospes.rtm.ui.race;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.annotation.ColorInt;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Locale;
 
@@ -33,9 +33,10 @@ import ua.hospes.undobutton.UndoButtonController;
  * @author Andrew Khloponin
  */
 class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
-    private final           UndoButtonController undoButtonController;
-    private final           String               sessionButtonType;
-    @ColorInt private final int                  carDefaultColor, sessionTrackColor, sessionPitColor;
+    private final UndoButtonController undoButtonController;
+    private final String sessionButtonType;
+    @ColorInt
+    private final int carDefaultColor, sessionTrackColor, sessionPitColor;
     private OnItemClickListener<RaceItem> onSetCarClickListener;
     private OnItemClickListener<RaceItem> onSetDriverClickListener;
     private OnItemClickListener<RaceItem> onPitClickListener;
@@ -69,7 +70,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(MyHolder holder, RaceItem item, int position) {
-        Context   context = holder.itemView.getContext();
+        Context context = holder.itemView.getContext();
 
         TypedValue bg1 = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);
@@ -145,7 +146,7 @@ class RaceAdapter extends AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder> {
         Button btnSessionCar;
 
         DriverTimeView driverTimeView;
-        Button         btnSessionDriver;
+        Button btnSessionDriver;
 
         TextView team, sessionType, pits;
         SessionTimeView sessionTimeView;

@@ -1,8 +1,9 @@
 package ua.hospes.rtm.ui.race;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
 
 import javax.inject.Inject;
 

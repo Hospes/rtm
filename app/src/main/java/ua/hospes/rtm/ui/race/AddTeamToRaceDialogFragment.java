@@ -4,16 +4,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,13 @@ import ua.hospes.rtm.domain.team.models.Team;
 import ua.hospes.rtm.utils.RxUtils;
 import ua.hospes.rtm.utils.UiUtils;
 
-/**
- * @author Andrew Khloponin
- */
 public class AddTeamToRaceDialogFragment extends AppCompatDialogFragment {
-    @Inject RaceRepository raceRepository;
-    @Inject SessionsRepository sessionsRepository;
-    @Inject TeamsRepository teamsRepository;
+    @Inject
+    RaceRepository raceRepository;
+    @Inject
+    SessionsRepository sessionsRepository;
+    @Inject
+    TeamsRepository teamsRepository;
     private final List<Team> teams = new ArrayList<>();
 
     private AppCompatSpinner spinner;

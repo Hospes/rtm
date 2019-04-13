@@ -4,13 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -40,12 +41,14 @@ import ua.hospes.undobutton.UndoButtonController;
 public class RaceFragment extends StopWatchFragment implements RaceContract.View {
     private static final int REQUEST_CODE_PERMISSION = 11;
     private UndoButtonController undoController;
-    private TimerListController  timerListController;
-    @Inject RacePresenter        presenter;
-    @Inject PreferencesManager   preferencesManager;
-    private TextView             tvTime;
-    private RecyclerView         rv;
-    private RaceAdapter          adapter;
+    private TimerListController timerListController;
+    @Inject
+    RacePresenter presenter;
+    @Inject
+    PreferencesManager preferencesManager;
+    private TextView tvTime;
+    private RecyclerView rv;
+    private RaceAdapter adapter;
     private long currentNanoTime = 0L;
 
     private String sessionButtonType;

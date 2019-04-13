@@ -1,7 +1,7 @@
 package ua.hospes.rtm.domain.preferences;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public abstract class AbsPreferencesManager {
     @NonNull

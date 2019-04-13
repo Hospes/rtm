@@ -1,12 +1,12 @@
 package ua.hospes.rtm.ui.teams;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.collect.Collections2;
 
@@ -28,7 +28,7 @@ class TeamAdapter extends AbsRecyclerAdapter<Team, TeamAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(MyHolder holder, Team item, int position) {
-        Context   context = holder.itemView.getContext();
+        Context context = holder.itemView.getContext();
 
         TypedValue bg1 = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.listItemBackground1, bg1, false);

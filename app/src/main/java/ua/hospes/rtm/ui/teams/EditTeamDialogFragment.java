@@ -6,16 +6,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.common.collect.Collections2;
 
@@ -39,13 +40,16 @@ public class EditTeamDialogFragment extends AppCompatDialogFragment {
     private static final int REQUEST_SELECT_DIRVERS = 1;
     private static final String KEY_TEAM = "team";
 
-    @Inject DriversRepository driversRepository;
-    @Inject TeamsRepository repository;
+    @Inject
+    DriversRepository driversRepository;
+    @Inject
+    TeamsRepository repository;
 
     private EditText name;
     private TextView drivers;
     private Button btnAssignDrivers;
-    @NonNull private Team team = new Team();
+    @NonNull
+    private Team team = new Team();
 
 
     public static EditTeamDialogFragment newInstance(@Nullable Team team) {

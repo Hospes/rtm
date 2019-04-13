@@ -1,6 +1,6 @@
 package ua.hospes.rtm.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * @author Andrew Khloponin

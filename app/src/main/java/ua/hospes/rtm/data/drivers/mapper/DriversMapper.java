@@ -1,7 +1,7 @@
 package ua.hospes.rtm.data.drivers.mapper;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import ua.hospes.rtm.core.db.tables.Drivers;
 import ua.hospes.rtm.data.drivers.models.DriverDb;
