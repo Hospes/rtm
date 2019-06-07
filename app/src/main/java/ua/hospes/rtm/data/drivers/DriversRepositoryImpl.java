@@ -22,7 +22,7 @@ import ua.hospes.rtm.utils.Optional;
 @Singleton
 public class DriversRepositoryImpl implements DriversRepository {
     private final DriversDbStorage dbStorage;
-    private final TeamsDbStorage   teamsDbStorage;
+    private final TeamsDbStorage teamsDbStorage;
 
 
     @Inject

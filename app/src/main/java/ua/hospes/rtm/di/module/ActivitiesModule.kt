@@ -1,16 +1,15 @@
-package ua.hospes.rtm.core.di.module
+package ua.hospes.rtm.di.module
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ua.hospes.rtm.ui.MainActivity
 import ua.hospes.rtm.ui.race.detail.RaceItemDetailActivity
 
-@Suppress("unused")
 @Module
 abstract class ActivitiesModule {
-    @ContributesAndroidInjector(modules = [FragmentsModule::class])
+    @ContributesAndroidInjector(modules = [MainActivityFragmentsModule::class])
     internal abstract fun bindMainActivity(): MainActivity
 
-    @ContributesAndroidInjector(modules = [DomainModule::class])
+    @ContributesAndroidInjector
     internal abstract fun bindRaceItemDetailActivity(): RaceItemDetailActivity
 }

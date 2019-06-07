@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "808619692008",
+    "firebase_url": "https://racing-time-manager.firebaseio.com",
+    "project_id": "racing-time-manager",
+    "storage_bucket": "racing-time-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808619692008:android:479183fdd5c90bfe",
+        "android_client_info": {
+          "package_name": "ua.hospes.rtm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808619692008-9vhvp6olku18sqd16bohv7pahuf6h5hb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ua.hospes.rtm",
+            "certificate_hash": "87ba81cd6bc2cf120f7d6deff99c2a60ed996937"
+          }
+        },
+        {
+          "client_id": "808619692008-jrc3f96s9irh6kp4hhm7fji1vu1tn4bg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMRa8dzcH3qh6QDPvRNtn9a0G1jS7aa1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808619692008-jrc3f96s9irh6kp4hhm7fji1vu1tn4bg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808619692008:android:7b1fe37ae0a4078b",
+        "android_client_info": {
+          "package_name": "ua.hospes.rtm.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808619692008-mbt6g2jicmi8phm2636hnv8o3r35jquv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ua.hospes.rtm.debug",
+            "certificate_hash": "d034ba9dd00daae4a466b92ef066381d69714e9e"
+          }
+        },
+        {
+          "client_id": "808619692008-jrc3f96s9irh6kp4hhm7fji1vu1tn4bg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMRa8dzcH3qh6QDPvRNtn9a0G1jS7aa1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808619692008-jrc3f96s9irh6kp4hhm7fji1vu1tn4bg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
