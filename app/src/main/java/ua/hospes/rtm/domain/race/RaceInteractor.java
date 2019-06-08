@@ -1,7 +1,8 @@
 package ua.hospes.rtm.domain.race;
 
-import androidx.annotation.NonNull;
 import android.util.Pair;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.collect.Collections2;
 import com.google.common.primitives.Ints;
@@ -17,8 +18,8 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import jxl.write.WriteException;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.cars.CarsRepository;
-import ua.hospes.rtm.domain.cars.models.Car;
 import ua.hospes.rtm.domain.drivers.DriversRepository;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.preferences.PreferencesManager;
@@ -34,10 +35,10 @@ import ua.hospes.rtm.utils.XLSTest;
  */
 public class RaceInteractor {
     private final PreferencesManager preferencesManager;
-    private final RaceRepository     raceRepository;
+    private final RaceRepository raceRepository;
     private final SessionsRepository sessionsRepository;
-    private final DriversRepository  driversRepository;
-    private final CarsRepository     carsRepository;
+    private final DriversRepository driversRepository;
+    private final CarsRepository carsRepository;
 
 
     @Inject
@@ -91,7 +92,7 @@ public class RaceInteractor {
     }
 
     public Observable<Boolean> teamPit(@NonNull RaceItem item, long time) {
-        int  driverId      = -1;
+        int driverId = -1;
         long raceStartTime = -1;
         if (item.getSession() != null) raceStartTime = item.getSession().getRaceStartTime();
         switch (preferencesManager.getPitStopAssign()) {

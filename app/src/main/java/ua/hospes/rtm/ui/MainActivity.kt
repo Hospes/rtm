@@ -6,7 +6,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.ftinc.scoop.Scoop
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,7 +21,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Scoop.getInstance().apply(this)
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
@@ -60,7 +58,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             R.id.nav_race -> navigateTo(RaceFragment.newInstance())
             R.id.nav_teams -> navigateTo(TeamsFragment.newInstance())
             R.id.nav_drivers -> navigateTo(DriversFragment.newInstance())
-            R.id.nav_cars -> navigateTo(CarsFragment.newInstance())
+            R.id.nav_cars -> navigateTo(CarsFragment())
             R.id.nav_settings -> navigateTo(SettingsFragment.newInstance())
             else -> navigateTo(PlaceHolderFragment())
         }

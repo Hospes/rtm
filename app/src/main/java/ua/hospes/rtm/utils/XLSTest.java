@@ -14,7 +14,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.domain.team.models.Team;

@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.race.RaceInteractor;
 import ua.hospes.rtm.utils.RxUtils;
 

@@ -18,4 +18,7 @@
 
     <color name="bg_small_header">#58000000</color>
     <color name="bg_list_item_2">#338b8b8b</color>
+
+
+    <color name="bg_main">#424242</color>
 </resources>

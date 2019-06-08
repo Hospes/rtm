@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.ftinc.scoop.ui.ScoopSettingsActivity;
-
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -65,10 +63,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         prefAssignPitStops.setEnabled("pit".equalsIgnoreCase(preferencesManager.getSessionButtonType()));
 
-        findPreference("theme").setOnPreferenceClickListener(preference -> {
-            getActivity().startActivityForResult(ScoopSettingsActivity.createIntent(getContext()), 999);
-            return false;
-        });
+//        findPreference("theme").setOnPreferenceClickListener(preference -> {
+//            getActivity().startActivityForResult(ScoopSettingsActivity.createIntent(getContext()), 999);
+//            return false;
+//        });
     }
 
     protected void updateABTitle(Activity activity, @StringRes int title) {

@@ -3,6 +3,7 @@ package ua.hospes.rtm.di.module
 import dagger.Module
 import dagger.Provides
 import ua.hospes.rtm.data.cars.CarsRepositoryImpl
+import ua.hospes.rtm.data.cars.CarsDbStorage
 import ua.hospes.rtm.data.drivers.DriversRepositoryImpl
 import ua.hospes.rtm.data.race.RaceRepositoryImpl
 import ua.hospes.rtm.data.sessions.SessionsRepositoryImpl
@@ -12,6 +13,7 @@ import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.sessions.SessionsRepository
 import ua.hospes.rtm.domain.team.TeamsRepository
+import javax.inject.Singleton
 
 @Module
 object RepoModule {
@@ -27,6 +29,7 @@ object RepoModule {
     @Provides @JvmStatic
     internal fun provideSessionsRepository(repository: SessionsRepositoryImpl): SessionsRepository = repository
 
+    @Singleton
     @Provides @JvmStatic
-    internal fun provideCarsRepository(repository: CarsRepositoryImpl): CarsRepository = repository
+    internal fun provideCarsRepository(db: CarsDbStorage): CarsRepository = CarsRepositoryImpl(db)
 }

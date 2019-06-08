@@ -4,7 +4,7 @@ import android.database.Cursor;
 
 import ua.hospes.rtm.core.db.tables.Sessions;
 import ua.hospes.rtm.data.sessions.models.SessionDb;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.utils.Optional;
@@ -14,7 +14,7 @@ import ua.hospes.rtm.utils.Optional;
  */
 public class SessionsMapper {
     public static SessionDb map(Cursor cursor) {
-        int       teamId = cursor.getInt(cursor.getColumnIndex(Sessions.TEAM_ID.name()));
+        int teamId = cursor.getInt(cursor.getColumnIndex(Sessions.TEAM_ID.name()));
         SessionDb result = new SessionDb(teamId);
         result.setId(cursor.getInt(cursor.getColumnIndex(Sessions.ID.name())));
         result.setDriverId(cursor.getInt(cursor.getColumnIndex(Sessions.DRIVER_ID.name())));

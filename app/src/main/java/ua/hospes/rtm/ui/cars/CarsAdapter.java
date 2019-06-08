@@ -8,10 +8,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.utils.UiUtils;
 
 class CarsAdapter extends AbsRecyclerAdapter<Car, CarsAdapter.MyHolder> {
@@ -24,8 +26,14 @@ class CarsAdapter extends AbsRecyclerAdapter<Car, CarsAdapter.MyHolder> {
     public void onBindViewHolder(MyHolder holder, Car item, int position) {
         Resources res = holder.itemView.getResources();
         holder.number.setText(String.valueOf(item.getNumber()));
-        holder.number.setTextColor(item.isBroken() ? Color.GRAY : res.getColor(item.getQuality().getColor()));
-        holder.broken.setVisibility(item.isBroken() ? View.VISIBLE : View.GONE);
+        holder.number.setTextColor(item.getBroken() ? Color.GRAY : res.getColor(item.getQuality().getColor()));
+        holder.broken.setVisibility(item.getBroken() ? View.VISIBLE : View.GONE);
+    }
+
+
+    public void submit(List<Car> cars) {
+        clear();
+        addAll(cars);
     }
 
 

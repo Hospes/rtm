@@ -2,7 +2,7 @@ package ua.hospes.rtm.domain.sessions.models;
 
 import androidx.annotation.Nullable;
 
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 
 /**
@@ -11,8 +11,10 @@ import ua.hospes.rtm.domain.drivers.models.Driver;
 public class Session {
     private final int id;
     private final int teamId;
-    @Nullable private Driver driver = null;
-    @Nullable private Car car = null;
+    @Nullable
+    private Driver driver = null;
+    @Nullable
+    private Car car = null;
     private long raceStartTime = -1;
     private long startDurationTime = -1;
     private long endDurationTime = -1;

@@ -19,7 +19,7 @@ import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.absrvadapter.OnItemClickListener;
 import ua.hospes.rtm.R;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.models.Session;

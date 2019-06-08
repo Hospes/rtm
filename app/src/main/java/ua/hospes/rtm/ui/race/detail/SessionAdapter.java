@@ -9,7 +9,7 @@ import android.widget.TextView;
 import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
-import ua.hospes.rtm.domain.cars.models.Car;
+import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.utils.TimeUtils;
 import ua.hospes.rtm.utils.UiUtils;
