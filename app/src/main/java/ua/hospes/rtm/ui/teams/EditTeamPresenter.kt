@@ -22,7 +22,11 @@ class EditTeamPresenter @Inject constructor(
 
     override fun attachView(view: EditTeamContract.View?) {
         super.attachView(view)
-        disposables += initTeamSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onInitTeam(it) }
+        disposables += initTeamSubject.compose(RxUtils.applySchedulers()).subscribe {
+            view?.onInitTeam(it)
+            onDriversSelected(it.drivers)
+        }
+        disposables += teamDriversSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onSelectedDrivers(it) }
         disposables += deleteButtonSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onDeleteButtonAvailable(it) }
     }
 

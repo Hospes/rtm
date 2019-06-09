@@ -1,5 +1,7 @@
 package ua.hospes.rtm.ui.drivers
 
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,16 +31,14 @@ class EditDriverPresenter @Inject constructor(
             deleteButtonSubject.onNext(true)
         }
 
-        disposables += teamsRepo.get()
-                .compose(RxUtils.applySchedulersSingle())
-                .subscribe({
-                    view?.onTeamsLoaded(it)
-                    //                    teams.add(team)
-                    //                    adapter.add(team.getName())
-                    //                    if (driver != null && driver.getTeamId() == team.getId()) {
-                    //                        spinner.setSelection(teams.size)
-                    //                    }
-                }, this::error)
+        disposables += teamsRepo.listen().compose(RxUtils.applySchedulers()).subscribe({ view?.onTeamsLoaded(it) }, this::error)
+
+        disposables += Observable.zip(
+                initDriverSubject, teamsRepo.get().toObservable(),
+                BiFunction { driver: Driver, all: List<Team> -> all.indexOfFirst { it.id == driver.teamId } }
+        )
+                .compose(RxUtils.applySchedulers())
+                .subscribe({ view?.onTeamSelectionIndex(it) }, this::error)
 
 
         disposables += deleteButtonSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onDeleteButtonAvailable(it) }

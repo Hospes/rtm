@@ -1,6 +1,8 @@
 package ua.hospes.rtm.ui.teams
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.utils.RxUtils
@@ -25,6 +27,10 @@ class SelectDriversPresenter @Inject constructor(
 
 
     fun save(selectedIds: List<Int>) = launch {
+        val drivers = withContext(Dispatchers.IO) { repo.get().blockingGet() }
 
+        val result = drivers.filter { selectedIds.contains(it.id) }
+
+        withContext(Dispatchers.Main) { view?.onSaveSelectedDrivers(result) }
     }
 }

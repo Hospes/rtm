@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsSpinnerAdapter
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.utils.UiUtils
 
 class TeamSpinnerAdapter(ctx: Context) : AbsSpinnerAdapter<Team, TeamSpinnerAdapter.MyHolder>(ctx) {
 
-    override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater, android.R.layout.simple_spinner_item)
+    override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater, R.layout.simple_spinner_item)
 
     override fun onBindViewHolder(holder: MyHolder, item: Team?, position: Int) {
         holder.bg.text = item?.name ?: "No team"
@@ -21,7 +21,7 @@ class TeamSpinnerAdapter(ctx: Context) : AbsSpinnerAdapter<Team, TeamSpinnerAdap
         lateinit var bg: TextView
 
         override fun findViews(itemView: View) {
-            bg = UiUtils.findView<TextView>(itemView, android.R.id.text1)
+            bg = itemView.findViewById(R.id.text)
         }
     }
 }

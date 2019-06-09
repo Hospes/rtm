@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import kotlinx.android.synthetic.main.dialog_add_team.*
+import kotlinx.android.synthetic.main.dialog_edit_team.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.ui.drivers.EditDriverDialogFragment
 import ua.hospes.rtm.utils.extentions.extra
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
 
 
     companion object {
-        @JvmStatic fun newInstance(item: Team?) = EditDriverDialogFragment()
+        @JvmStatic fun newInstance(item: Team?) = EditTeamDialogFragment()
                 .apply { arguments = Bundle().apply { putParcelable(KEY_TEAM, item) } }
     }
 
@@ -36,7 +35,7 @@ class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.dialog_add_team, container, false)
+            : View? = inflater.inflate(R.layout.dialog_edit_team, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,7 +71,7 @@ class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
     override fun onSelectedDrivers(list: List<Driver>) {
         tv_drivers.text = when (list.isEmpty()) {
             true -> "No drivers"
-            false -> list.toString()
+            false -> list.map { it.name }.toString().replace("[\\[\\]]".toRegex(), "")
         }
     }
 

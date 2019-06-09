@@ -62,9 +62,14 @@ class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract.View {
         et_name.setSelection(driver.name.length)
     }
 
+    override fun onTeamSelectionIndex(index: Int) {
+        sp_team.setSelection(index + 1)
+    }
+
     override fun onTeamsLoaded(teams: List<Team>) {
         adapter.clear()
         adapter.add(null)
+        adapter.addAll(teams)
     }
 
     override fun onDeleteButtonAvailable(available: Boolean) = with(btn_delete) { isEnabled = available }

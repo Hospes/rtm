@@ -39,7 +39,7 @@ class TeamsAdapter : ListAdapter<Team, TeamsAdapter.MyHolder>(DIFF_CALLBACK) {
             setBackgroundResource(if (position % 2 == 0) bg2.data else bg1.data)
 
             name.text = item.name
-            drivers.text = item.drivers.toString()
+            drivers.text = item.drivers.map { it.name }.toString().replace("[\\[\\]]".toRegex(), "")
         }
     }
 }

@@ -62,6 +62,7 @@ class SelectDriversDialogFragment : DiDialogFragment(), SelectDriversContract.Vi
 
     override fun onSaveSelectedDrivers(list: List<Driver>) {
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, Intent().putExtra("drivers", ArrayList(list)))
+        dismiss()
     }
 
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
