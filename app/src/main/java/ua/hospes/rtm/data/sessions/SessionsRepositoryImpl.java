@@ -9,7 +9,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
 import ua.hospes.dbhelper.InsertResult;
-import ua.hospes.rtm.data.drivers.DriversRepositoryImpl;
 import ua.hospes.rtm.data.sessions.mapper.SessionsMapper;
 import ua.hospes.rtm.data.sessions.models.SessionDb;
 import ua.hospes.rtm.data.sessions.operations.CloseSessionOperation;
@@ -19,10 +18,10 @@ import ua.hospes.rtm.data.sessions.operations.SetDriverOperation;
 import ua.hospes.rtm.data.sessions.storage.SessionsDbStorage;
 import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.cars.CarsRepository;
+import ua.hospes.rtm.domain.drivers.Driver;
 import ua.hospes.rtm.domain.drivers.DriversRepository;
-import ua.hospes.rtm.domain.drivers.models.Driver;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
-import ua.hospes.rtm.domain.sessions.models.Session;
 import ua.hospes.rtm.utils.Optional;
 
 /**
@@ -36,7 +35,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
 
 
     @Inject
-    SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepositoryImpl driversRepository, CarsRepository carsRepository) {
+    SessionsRepositoryImpl(SessionsDbStorage dbStorage, DriversRepository driversRepository, CarsRepository carsRepository) {
         this.dbStorage = dbStorage;
         this.driversRepository = driversRepository;
         this.carsRepository = carsRepository;
@@ -207,7 +206,7 @@ public class SessionsRepositoryImpl implements SessionsRepository {
     }
 
     private Single<Optional<Driver>> getDriverById(int id) {
-        return driversRepository.get(id).map(Optional::of).single(Optional.empty());
+        return driversRepository.get(id).map(drivers -> drivers.get(0)).map(Optional::of);
     }
 
     private Single<Optional<Car>> getCarById(int id) {

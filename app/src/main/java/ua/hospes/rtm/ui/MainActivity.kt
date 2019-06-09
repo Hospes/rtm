@@ -56,8 +56,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         when (menuItem.itemId) {
             R.id.nav_race -> navigateTo(RaceFragment.newInstance())
-            R.id.nav_teams -> navigateTo(TeamsFragment.newInstance())
-            R.id.nav_drivers -> navigateTo(DriversFragment.newInstance())
+            R.id.nav_teams -> navigateTo(TeamsFragment())
+            R.id.nav_drivers -> navigateTo(DriversFragment())
             R.id.nav_cars -> navigateTo(CarsFragment())
             R.id.nav_settings -> navigateTo(SettingsFragment.newInstance())
             else -> navigateTo(PlaceHolderFragment())

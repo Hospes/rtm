@@ -61,7 +61,7 @@ class CarsFragment : AbsFragment(), CarsContract.View {
     //endregion
 
 
-    override fun onData(cars: List<Car>) = adapter.submitList(cars)
+    override fun onData(list: List<Car>) = adapter.submitList(list)
 
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 

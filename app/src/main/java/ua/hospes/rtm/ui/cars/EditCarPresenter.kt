@@ -12,7 +12,7 @@ import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
 class EditCarPresenter @Inject constructor(
-        private val carsRepo: CarsRepository
+        private val repo: CarsRepository
 ) : Presenter<EditCarContract.View>() {
     private val initCarSubject = BehaviorSubject.create<Car>()
     private val deleteButtonSubject = BehaviorSubject.createDefault(false)
@@ -45,7 +45,7 @@ class EditCarPresenter @Inject constructor(
         )
 
         try {
-            withContext(Dispatchers.IO) { carsRepo.save(car).blockingAwait() }
+            withContext(Dispatchers.IO) { repo.save(car).blockingAwait() }
         } catch (t: Throwable) {
             error(t)
             return@launch
@@ -58,7 +58,7 @@ class EditCarPresenter @Inject constructor(
         val id = initCarSubject.value?.id ?: return@launch
 
         try {
-            withContext(Dispatchers.IO) { carsRepo.remove(id).blockingAwait() }
+            withContext(Dispatchers.IO) { repo.remove(id).blockingAwait() }
         } catch (t: Throwable) {
             error(t)
             return@launch

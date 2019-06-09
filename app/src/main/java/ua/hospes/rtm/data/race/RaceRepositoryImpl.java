@@ -17,14 +17,13 @@ import ua.hospes.rtm.data.race.storage.RaceDbStorage;
 import ua.hospes.rtm.data.sessions.SessionsRepositoryImpl;
 import ua.hospes.rtm.data.sessions.models.SessionDb;
 import ua.hospes.rtm.data.sessions.storage.SessionsDbStorage;
-import ua.hospes.rtm.data.team.TeamsRepositoryImpl;
 import ua.hospes.rtm.domain.race.RaceRepository;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.race.models.RaceItemDetails;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.team.Team;
 import ua.hospes.rtm.domain.team.TeamsRepository;
-import ua.hospes.rtm.domain.team.models.Team;
 import ua.hospes.rtm.utils.Optional;
 
 /**
@@ -32,14 +31,14 @@ import ua.hospes.rtm.utils.Optional;
  */
 @Singleton
 public class RaceRepositoryImpl implements RaceRepository {
-    private final RaceDbStorage      raceDbStorage;
-    private final TeamsRepository    teamsRepository;
-    private final SessionsDbStorage  sessionsDbStorage;
+    private final RaceDbStorage raceDbStorage;
+    private final TeamsRepository teamsRepository;
+    private final SessionsDbStorage sessionsDbStorage;
     private final SessionsRepository sessionsRepository;
 
 
     @Inject
-    RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepositoryImpl teamsRepository, SessionsDbStorage sessionsDbStorage, SessionsRepositoryImpl sessionsRepository) {
+    RaceRepositoryImpl(RaceDbStorage raceDbStorage, TeamsRepository teamsRepository, SessionsDbStorage sessionsDbStorage, SessionsRepositoryImpl sessionsRepository) {
         this.raceDbStorage = raceDbStorage;
         this.teamsRepository = teamsRepository;
         this.sessionsDbStorage = sessionsDbStorage;
@@ -119,7 +118,7 @@ public class RaceRepositoryImpl implements RaceRepository {
 
 
     private Single<Optional<Team>> getTeamById(int id) {
-        return teamsRepository.get(id).map(Optional::of).single(Optional.empty());
+        return teamsRepository.get(id).map(Optional::of);
     }
 
     private Single<Optional<Session>> getSessionById(int id) {
@@ -133,8 +132,8 @@ public class RaceRepositoryImpl implements RaceRepository {
     private class CalculateRaceItemDetails implements BiFunction<RaceItem, List<SessionDb>, RaceItem> {
         @Override
         public RaceItem apply(RaceItem item, List<SessionDb> sessions) throws Exception {
-            RaceItemDetails details  = new RaceItemDetails();
-            int             pitStops = -1;
+            RaceItemDetails details = new RaceItemDetails();
+            int pitStops = -1;
             for (SessionDb session : sessions) {
                 pitStops += Session.Type.TRACK.name().equals(session.getType()) ? 1 : 0;
                 if (session.getStartDurationTime() == -1 || session.getEndDurationTime() == -1) continue;

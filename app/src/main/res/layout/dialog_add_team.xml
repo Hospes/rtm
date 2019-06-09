@@ -14,7 +14,7 @@
         app:hintEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name"
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
@@ -22,13 +22,40 @@
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView android:id="@+id/drivers"
+    <TextView android:id="@+id/tv_drivers"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/teams_no_drivers" />
 
-    <Button android:id="@+id/assign_drivers"
+    <Button android:id="@+id/btn_assign_drivers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/teams_assign_drivers" />
+
+
+    <Button android:id="@+id/btn_delete"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <Button android:id="@+id/btn_cancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="@id/btn_delete"
+            app:layout_constraintEnd_toStartOf="@id/btn_save"
+            app:layout_constraintTop_toTopOf="@id/btn_delete" />
+
+    <Button android:id="@+id/btn_save"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="@id/btn_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_delete" />
 </LinearLayout>

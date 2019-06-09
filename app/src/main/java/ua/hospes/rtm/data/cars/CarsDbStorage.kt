@@ -15,8 +15,6 @@ import ua.hospes.dbhelper.builder.conditions.Condition
 import ua.hospes.rtm.core.db.DbHelper
 import ua.hospes.rtm.core.db.tables.Cars
 import ua.hospes.rtm.core.db.tables.Sessions
-import ua.hospes.rtm.data.cars.CarDb
-import ua.hospes.rtm.data.cars.CarsMapper
 import javax.inject.Inject
 
 class CarsDbStorage @Inject constructor(private val dbHelper: DbHelper) {

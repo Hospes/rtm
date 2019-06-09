@@ -6,7 +6,8 @@ import androidx.annotation.Nullable;
  * @author Andrew Khloponin
  */
 public class Optional<T> {
-    @Nullable private T t = null;
+    @Nullable
+    private T t = null;
 
 
     private Optional() {}

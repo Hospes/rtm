@@ -20,13 +20,13 @@ import io.reactivex.Single;
 import jxl.write.WriteException;
 import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.cars.CarsRepository;
+import ua.hospes.rtm.domain.drivers.Driver;
 import ua.hospes.rtm.domain.drivers.DriversRepository;
-import ua.hospes.rtm.domain.drivers.models.Driver;
 import ua.hospes.rtm.domain.preferences.PreferencesManager;
 import ua.hospes.rtm.domain.race.models.RaceItem;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
-import ua.hospes.rtm.domain.sessions.models.Session;
-import ua.hospes.rtm.domain.team.models.Team;
+import ua.hospes.rtm.domain.team.Team;
 import ua.hospes.rtm.utils.Optional;
 import ua.hospes.rtm.utils.XLSTest;
 
@@ -138,7 +138,7 @@ public class RaceInteractor {
     }
 
 
-    public Observable<Driver> getDrivers(int teamId) {
+    public Single<List<Driver>> getDrivers(int teamId) {
         return driversRepository.getByTeamId(teamId);
     }
 

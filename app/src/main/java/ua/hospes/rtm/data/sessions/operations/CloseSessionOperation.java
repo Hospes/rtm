@@ -14,7 +14,7 @@ import ua.hospes.rtm.core.db.tables.Sessions;
  * @author Andrew Khloponin
  */
 public class CloseSessionOperation implements Operation<Integer> {
-    private final int  sessionId;
+    private final int sessionId;
     private final long stopTime;
 
     private CloseSessionOperation(int sessionId, long stopTime) {

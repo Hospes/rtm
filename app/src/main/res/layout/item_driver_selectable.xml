@@ -8,11 +8,10 @@
     android:focusable="true"
     android:padding="8dp">
 
-    <android.support.v7.widget.AppCompatCheckBox
-        style="?android:attr/spinnerItemStyle"
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:focusable="false" />
+    <CheckBox android:id="@+id/cb"
+              style="?android:attr/spinnerItemStyle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:clickable="false"
+              android:focusable="false" />
 </ua.hospes.rtm.widgets.CheckableFrameLayout>

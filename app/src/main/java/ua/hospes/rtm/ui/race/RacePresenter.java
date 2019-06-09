@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import ua.hospes.rtm.core.ui.BasePresenter;
 import ua.hospes.rtm.domain.race.RaceInteractor;
 import ua.hospes.rtm.domain.race.models.RaceItem;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.ui.race.detail.RaceItemDetailActivity;
 import ua.hospes.rtm.utils.RxUtils;
 
@@ -105,7 +105,6 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
 
     void showSetDriverDialog(FragmentManager managerFragment, Session session) {
         RxUtils.manage(this, interactor.getDrivers(session.getTeamId())
-                .toList()
                 .compose(RxUtils.applySchedulersSingle())
                 .subscribe(result -> {
                     SetDriverDialogFragment.newInstance(session.getId(), session.getTeamId(), result).show(managerFragment, "set_driver");

@@ -3,7 +3,7 @@ package ua.hospes.rtm.ui.race.widgets;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.utils.TimeUtils;
 
 /**

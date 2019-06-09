@@ -13,7 +13,7 @@ import ua.hospes.rtm.core.db.tables.Sessions;
  * @author Andrew Khloponin
  */
 public class SetDriverOperation implements Operation<Integer> {
-    private final int  sessionId;
+    private final int sessionId;
     private final long driverId;
 
     public SetDriverOperation(int sessionId, int driverId) {

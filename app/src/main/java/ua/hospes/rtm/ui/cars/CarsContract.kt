@@ -4,7 +4,7 @@ import ua.hospes.rtm.domain.cars.Car
 
 interface CarsContract {
     interface View {
-        fun onData(cars: List<Car>)
+        fun onData(list: List<Car>)
 
         fun onError(throwable: Throwable)
     }

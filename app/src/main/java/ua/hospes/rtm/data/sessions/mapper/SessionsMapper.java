@@ -5,8 +5,8 @@ import android.database.Cursor;
 import ua.hospes.rtm.core.db.tables.Sessions;
 import ua.hospes.rtm.data.sessions.models.SessionDb;
 import ua.hospes.rtm.domain.cars.Car;
-import ua.hospes.rtm.domain.drivers.models.Driver;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.drivers.Driver;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.utils.Optional;
 
 /**

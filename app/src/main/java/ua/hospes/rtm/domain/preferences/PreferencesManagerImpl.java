@@ -3,6 +3,7 @@ package ua.hospes.rtm.domain.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
@@ -20,9 +21,9 @@ public class PreferencesManagerImpl extends AbsPreferencesManager implements Pre
     }
 
 
-    private static final String KEY_ASSIGN_PITSTOP      = "assign_pitstop_dur_to";
+    private static final String KEY_ASSIGN_PITSTOP = "assign_pitstop_dur_to";
     private static final String KEY_SESSION_BUTTON_TYPE = "session_button_type";
-    private static final String KEY_ENABLE_EXPORT_XLS   = "enable_export_xls";
+    private static final String KEY_ENABLE_EXPORT_XLS = "enable_export_xls";
 
     @NonNull
     @Override

@@ -1,7 +1,7 @@
 package ua.hospes.rtm.domain.race.models;
 
-import ua.hospes.rtm.domain.sessions.models.Session;
-import ua.hospes.rtm.domain.team.models.Team;
+import ua.hospes.rtm.domain.sessions.Session;
+import ua.hospes.rtm.domain.team.Team;
 
 /**
  * @author Andrew Khloponin

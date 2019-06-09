@@ -34,7 +34,7 @@ public class CustomToggleButton extends ToggleButton {
 
 //        if (currentTimestamp - previousTimestampClick > minimumInterval) {
 //            previousTimestampClick = currentTimestamp;
-            return super.performClick();
+        return super.performClick();
 //        }
 //        return false;
     }

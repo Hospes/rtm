@@ -26,10 +26,10 @@ import io.reactivex.Observable;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.race.RaceRepository;
 import ua.hospes.rtm.domain.race.models.RaceItem;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.domain.sessions.SessionsRepository;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.team.Team;
 import ua.hospes.rtm.domain.team.TeamsRepository;
-import ua.hospes.rtm.domain.team.models.Team;
 import ua.hospes.rtm.utils.RxUtils;
 import ua.hospes.rtm.utils.UiUtils;
 
@@ -103,11 +103,11 @@ public class AddTeamToRaceDialogFragment extends AppCompatDialogFragment {
         adapter.clear();
 
         teamsRepository.getNotInRace()
-                .compose(RxUtils.applySchedulers())
+                .compose(RxUtils.applySchedulersSingle())
                 .subscribe(team -> {
-                    teams.add(team);
-                    adapter.add(team.getName());
-                    if (teams.size() != 0) spinner.setSelection(0);
+                    teams.addAll(team);
+//                    adapter.add(team.getName());
+//                    if (teams.size() != 0) spinner.setSelection(0);
                 }, Throwable::printStackTrace);
     }
 

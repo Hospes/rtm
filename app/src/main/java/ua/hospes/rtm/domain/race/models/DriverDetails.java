@@ -1,6 +1,6 @@
 package ua.hospes.rtm.domain.race.models;
 
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.sessions.Session;
 
 /**
  * @author Andrew Khloponin

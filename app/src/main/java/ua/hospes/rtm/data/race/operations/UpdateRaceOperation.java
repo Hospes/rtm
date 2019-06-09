@@ -15,7 +15,7 @@ import ua.hospes.rtm.data.race.models.RaceItemDb;
  * @author Andrew Khloponin
  */
 public class UpdateRaceOperation implements Operation<Boolean> {
-    private final UpdateQuery   query;
+    private final UpdateQuery query;
     private final ContentValues cv;
 
     public UpdateRaceOperation(RaceItemDb item) {

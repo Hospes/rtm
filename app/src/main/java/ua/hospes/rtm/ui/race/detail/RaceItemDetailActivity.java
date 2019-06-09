@@ -19,10 +19,10 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import ua.hospes.rtm.R;
-import ua.hospes.rtm.domain.drivers.models.Driver;
+import ua.hospes.rtm.domain.drivers.Driver;
 import ua.hospes.rtm.domain.race.models.DriverDetails;
 import ua.hospes.rtm.domain.race.models.RaceItem;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.sessions.Session;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**

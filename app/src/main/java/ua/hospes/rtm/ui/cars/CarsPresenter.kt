@@ -8,13 +8,13 @@ import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
 class CarsPresenter @Inject constructor(
-        private val carsRepo: CarsRepository
+        private val repo: CarsRepository
 ) : Presenter<CarsContract.View>() {
 
 
     override fun attachView(view: CarsContract.View?) {
         super.attachView(view)
-        disposables += carsRepo.listen().compose(RxUtils.applySchedulers()).subscribe({ view?.onData(it) }, this::error)
+        disposables += repo.listen().compose(RxUtils.applySchedulers()).subscribe({ view?.onData(it) }, this::error)
     }
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit
@@ -23,7 +23,7 @@ class CarsPresenter @Inject constructor(
 
     fun removeAll() = launch {
         try {
-            carsRepo.removeAll().blockingAwait()
+            repo.removeAll().blockingAwait()
         } catch (t: Throwable) {
             error(t)
             return@launch

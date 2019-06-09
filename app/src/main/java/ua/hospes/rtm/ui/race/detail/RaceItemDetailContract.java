@@ -3,7 +3,7 @@ package ua.hospes.rtm.ui.race.detail;
 import java.util.List;
 
 import ua.hospes.rtm.domain.race.models.RaceItem;
-import ua.hospes.rtm.domain.sessions.models.Session;
+import ua.hospes.rtm.domain.sessions.Session;
 
 /**
  * @author Andrew Khloponin

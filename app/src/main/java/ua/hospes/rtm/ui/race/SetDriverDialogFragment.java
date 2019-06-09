@@ -19,13 +19,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import ua.hospes.rtm.domain.drivers.models.Driver;
+import ua.hospes.rtm.domain.drivers.Driver;
 import ua.hospes.rtm.domain.race.RaceInteractor;
 import ua.hospes.rtm.utils.RxUtils;
 
-/**
- * @author Andrew Khloponin
- */
 public class SetDriverDialogFragment extends AppCompatDialogFragment {
     private final static String KEY_SESSION_ID = "session_id";
     private final static String KEY_TEAM_ID = "team_id";

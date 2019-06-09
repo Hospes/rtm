@@ -5,7 +5,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import ua.hospes.rtm.core.db.tables.Sessions;
-import ua.hospes.rtm.domain.sessions.models.Session;
 
 /**
  * @author Andrew Khloponin
