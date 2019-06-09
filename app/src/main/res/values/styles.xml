@@ -1,12 +1,15 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/bg_window</item>
+
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/default_accent</item>
 
-        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-        <item name="android:textColorTertiary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorTertiary">@color/white</item>
 
         <item name="headerBackground">@color/bg_small_header</item>
         <item name="headerTitleColor">@color/default_accent</item>
@@ -22,6 +25,7 @@
     </style>
 
     <style name="AppTheme.DialogWhenLarge" parent="Theme.AppCompat.DialogWhenLarge">
+        <item name="android:windowBackground">@color/bg_window</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -29,8 +33,9 @@
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/default_accent</item>
 
-        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-        <item name="android:textColorTertiary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorTertiary">@color/white</item>
 
         <item name="headerBackground">@color/bg_small_header</item>
         <item name="headerTitleColor">@color/default_accent</item>
@@ -42,11 +47,15 @@
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.MinWidth">
-        <item name="android:windowBackground">@color/bg_main</item>
+        <item name="android:windowBackground">@color/bg_window</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
         <item name="colorAccent">@color/default_accent</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorTertiary">@color/white</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

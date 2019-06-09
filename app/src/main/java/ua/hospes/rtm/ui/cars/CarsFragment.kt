@@ -10,7 +10,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_cars.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
-import ua.hospes.rtm.core.ui.SpaceItemDecoration
 import ua.hospes.rtm.domain.cars.Car
 import javax.inject.Inject
 
@@ -40,9 +39,8 @@ class CarsFragment : AbsFragment(), CarsContract.View {
 
         list.setHasFixedSize(true)
         list.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.cars_column_count))
-        list.addItemDecoration(SpaceItemDecoration(resources, R.dimen.grid_item_margin))
         list.adapter = adapter
-        adapter.setOnItemClickListener { car, _ -> showEditCarDialog(car) }
+        adapter.itemClickListener = { showEditCarDialog(it) }
 
         presenter.attachView(this)
     }
@@ -63,7 +61,7 @@ class CarsFragment : AbsFragment(), CarsContract.View {
     //endregion
 
 
-    override fun onData(cars: List<Car>) = adapter.submit(cars)
+    override fun onData(cars: List<Car>) = adapter.submitList(cars)
 
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 
