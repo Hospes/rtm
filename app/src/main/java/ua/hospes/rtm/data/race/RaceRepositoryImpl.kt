@@ -2,14 +2,12 @@ package ua.hospes.rtm.data.race
 
 import android.content.ContentValues
 import android.util.Pair
-
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import ua.hospes.rtm.data.race.mapper.RaceMapper
+import ua.hospes.rtm.data.race.models.RaceItemDb
 import ua.hospes.rtm.data.race.operations.UpdateRaceOperation
 import ua.hospes.rtm.data.race.storage.RaceDbStorage
 import ua.hospes.rtm.data.sessions.SessionsRepositoryImpl
@@ -19,28 +17,27 @@ import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.race.models.RaceItemDetails
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.domain.sessions.SessionsRepository
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.domain.team.TeamsRepository
 import ua.hospes.rtm.utils.Optional
+import javax.inject.Inject
 
-/**
- * @author Andrew Khloponin
- */
-@Singleton
-class RaceRepositoryImpl @Inject
-internal constructor(private val raceDbStorage: RaceDbStorage, private val teamsRepository: TeamsRepository, private val sessionsDbStorage: SessionsDbStorage, sessionsRepository: SessionsRepositoryImpl) : RaceRepository {
-    private val sessionsRepository: SessionsRepository
-
-
-    init {
-        this.sessionsRepository = sessionsRepository
-    }
-
+class RaceRepositoryImpl @Inject constructor(
+        private val raceDbStorage: RaceDbStorage,
+        private val teamsRepository: TeamsRepository,
+        private val sessionsDbStorage: SessionsDbStorage,
+        private val sessionsRepository: SessionsRepositoryImpl
+) : RaceRepository {
 
     override fun get(): Observable<RaceItem> {
         return raceDbStorage.get()
-                .flatMapSingle { raceItemDb -> Single.zip<RaceItemDb, Optional<Team>, Optional<Session>, RaceItem>(Single.just<RaceItemDb>(raceItemDb), getTeamById(raceItemDb.teamId), getSessionById(raceItemDb.sessionId), Function3<RaceItemDb, Optional<Team>, Optional<Session>, RaceItem> { db, team, session -> RaceMapper.map(db, team, session) }) }
+                .flatMapSingle { raceItemDb ->
+                    Single.zip(
+                            Single.just(raceItemDb),
+                            getTeamById(raceItemDb.teamId),
+                            getSessionById(raceItemDb.sessionId),
+                            Function3 { db: RaceItemDb, team: Optional<Team>, session: Optional<Session> -> RaceMapper.map(db, team, session) })
+                }
                 .flatMapSingle { raceItem -> Single.zip(Single.just(raceItem), getRawSessionsByTeamId(raceItem.team.id!!), CalculateRaceItemDetails()) }
     }
 
@@ -67,25 +64,25 @@ internal constructor(private val raceDbStorage: RaceDbStorage, private val teams
 
     override fun addNew(vararg items: RaceItem): Observable<Boolean> {
         return Observable.fromArray(*items)
-                .map<RaceItemDb>(Function<RaceItem, RaceItemDb> { RaceMapper.map(it) })
+                .map { RaceMapper.map(it) }
                 .toList()
-                .flatMapObservable<InsertResult<RaceItemDb>>(Function<List<RaceItemDb>, ObservableSource<out InsertResult<RaceItemDb>>> { raceDbStorage.add(it) })
+                .flatMapObservable { raceDbStorage.add(it) }
                 .map { result -> result.getResult() > 0 }
     }
 
     override fun update(items: List<RaceItem>): Observable<Boolean> {
         return Observable.fromIterable(items)
-                .map<RaceItemDb>(Function<RaceItem, RaceItemDb> { RaceMapper.map(it) })
-                .map<UpdateRaceOperation>(Function<RaceItemDb, UpdateRaceOperation> { UpdateRaceOperation(it) })
+                .map { RaceMapper.map(it) }
+                .map { UpdateRaceOperation(it) }
                 .toList()
-                .flatMapObservable(Function<List<UpdateRaceOperation>, ObservableSource<out Boolean>> { raceDbStorage.updateRaces(it) })
+                .flatMapObservable { raceDbStorage.updateRaces(it) }
     }
 
     override fun updateByTeamId(items: Iterable<Pair<Int, ContentValues>>): Observable<Boolean> {
         return Observable.fromIterable(items)
-                .map<UpdateRaceOperation>(Function<Pair<Int, ContentValues>, UpdateRaceOperation> { UpdateRaceOperation(it) })
+                .map { UpdateRaceOperation(it) }
                 .toList()
-                .flatMapObservable(Function<List<UpdateRaceOperation>, ObservableSource<out Boolean>> { raceDbStorage.updateRaces(it) })
+                .flatMapObservable { raceDbStorage.updateRaces(it) }
     }
 
     override fun remove(item: RaceItem): Single<Int> {
@@ -103,11 +100,11 @@ internal constructor(private val raceDbStorage: RaceDbStorage, private val teams
 
 
     private fun getTeamById(id: Int): Single<Optional<Team>> {
-        return teamsRepository.get(id).map(Function<Team, Optional<Team>> { Optional.of(it) })
+        return teamsRepository.get(id).map { Optional.of(it) }
     }
 
     private fun getSessionById(id: Int): Single<Optional<Session>> {
-        return sessionsRepository.get(id).map<Optional<Session>>(Function<Session, Optional<Session>> { Optional.of(it) }).single(Optional.empty())
+        return sessionsRepository.get(id).map<Optional<Session>> { Optional.of(it) }.single(Optional.empty())
     }
 
     private fun getRawSessionsByTeamId(teamId: Int): Single<List<SessionDb>> {
@@ -121,7 +118,7 @@ internal constructor(private val raceDbStorage: RaceDbStorage, private val teams
             var pitStops = -1
             for (session in sessions) {
                 pitStops += if (Session.Type.TRACK.name == session.type) 1 else 0
-                if (session.startDurationTime == -1 || session.endDurationTime == -1) continue
+                if (session.startDurationTime == -1L || session.endDurationTime == -1L) continue
                 if (session.driverId == -1) continue
                 val duration = session.endDurationTime - session.startDurationTime
                 details.addDriverDuration(session.driverId, duration)

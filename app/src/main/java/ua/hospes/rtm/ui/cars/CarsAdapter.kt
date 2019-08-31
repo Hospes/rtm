@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,13 +15,13 @@ class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
     var itemClickListener: ((car: Car) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder =
-            MyHolder(parent, itemClickListener = { itemClickListener?.invoke(getItem(it)) })
+            MyHolder(parent) { itemClickListener?.invoke(getItem(it)) }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position))
 
 
-    inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int = R.layout.item_car, itemClickListener: (position: Int) -> Unit)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+    inner class MyHolder(parent: ViewGroup, itemClickListener: (position: Int) -> Unit)
+        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_car, parent, false)) {
 
         init {
             itemView.setOnClickListener {

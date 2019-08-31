@@ -2,11 +2,9 @@ package ua.hospes.rtm.data.race.storage
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-
-import javax.inject.Inject
-
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.functions.Function
 import ua.hospes.dbhelper.InsertResult
 import ua.hospes.dbhelper.UpdateResult
 import ua.hospes.dbhelper.builder.DeleteQuery
@@ -19,52 +17,35 @@ import ua.hospes.rtm.core.db.tables.Sessions
 import ua.hospes.rtm.data.race.mapper.RaceMapper
 import ua.hospes.rtm.data.race.models.RaceItemDb
 import ua.hospes.rtm.data.race.operations.UpdateRaceOperation
+import javax.inject.Inject
 
-/**
- * @author Andrew Khloponin
- */
 class RaceDbStorage @Inject
 internal constructor(private val dbHelper: DbHelper) {
 
+    fun add(items: List<RaceItemDb>): Observable<InsertResult<RaceItemDb>> = dbHelper.insert(Race.name, SQLiteDatabase.CONFLICT_ABORT, items)
 
-    fun add(items: List<RaceItemDb>): Observable<InsertResult<RaceItemDb>> {
-        return dbHelper.insert(Race.name, SQLiteDatabase.CONFLICT_ABORT, items)
-    }
+    fun update(item: RaceItemDb): Observable<UpdateResult<RaceItemDb>> =
+            dbHelper.update(UpdateQuery(Race.name).where(Condition.eq(Race.ID, item.id)), item)
 
-    fun update(item: RaceItemDb): Observable<UpdateResult<RaceItemDb>> {
-        return dbHelper.update(UpdateQuery(Race.name).where(Condition.eq(Race.ID, item.id)), item)
-    }
-
-    fun updateRaces(operations: Iterable<UpdateRaceOperation>): Observable<Boolean> {
-        return dbHelper.multiOperationTransaction(operations)
-    }
+    fun updateRaces(operations: Iterable<UpdateRaceOperation>): Observable<Boolean> = dbHelper.multiOperationTransaction(operations)
 
 
-    fun get(): Observable<RaceItemDb> {
-        return dbHelper.querySingle(Function<Cursor, RaceItemDb> { RaceMapper.map(it) }, SelectQuery(Race.name))
-    }
+    fun get(): Observable<RaceItemDb> = dbHelper.querySingle({ RaceMapper.map(it) }, SelectQuery(Race.name))
 
-    fun listen(): Observable<List<RaceItemDb>> {
-        return dbHelper.query(Function<Cursor, RaceItemDb> { RaceMapper.map(it) }, SelectQuery(Race.name), Race.name, Sessions.name)
-    }
+    fun listen(): Observable<List<RaceItemDb>> = dbHelper.query(Function { RaceMapper.map(it) }, SelectQuery(Race.name), Race.name, Sessions.name)
 
-    fun listen(id: Int): Observable<List<RaceItemDb>> {
-        return dbHelper.query(Function<Cursor, RaceItemDb> { RaceMapper.map(it) }, SelectQuery(Race.name).where(Condition.eq(Race.ID, id)), Race.name, Sessions.name)
-    }
+    fun listen(id: Int): Observable<List<RaceItemDb>> =
+            dbHelper.query(Function { RaceMapper.map(it) }, SelectQuery(Race.name).where(Condition.eq(Race.ID, id)), Race.name, Sessions.name)
 
     fun reset(): Observable<Void> {
         val cv = ContentValues()
         cv.put(Race.TEAM_NUMBER.name(), -1)
         cv.put(Race.SESSION_ID.name(), -1)
-        return dbHelper.updateCV(UpdateQuery(Race.name), cv).map { result -> null }
+        return dbHelper.updateCV(UpdateQuery(Race.name), cv).map { null }
     }
 
 
-    fun remove(session: RaceItemDb): Single<Int> {
-        return dbHelper.delete(DeleteQuery(Race.name).where(Condition.eq(Race.ID, session.id)))
-    }
+    fun remove(session: RaceItemDb): Single<Int> = dbHelper.delete(DeleteQuery(Race.name).where(Condition.eq(Race.ID, session.id)))
 
-    fun removeAll(): Single<Int> {
-        return dbHelper.delete(DeleteQuery(Race.name))
-    }
+    fun removeAll(): Single<Int> = dbHelper.delete(DeleteQuery(Race.name))
 }

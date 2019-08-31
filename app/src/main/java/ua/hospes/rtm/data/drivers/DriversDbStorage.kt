@@ -1,7 +1,6 @@
 package ua.hospes.rtm.data.drivers
 
 import android.content.ContentValues
-import com.google.common.primitives.Ints
 import io.reactivex.Completable
 import io.reactivex.Observable
 import ua.hospes.dbhelper.InsertResult
@@ -21,7 +20,7 @@ class DriversDbStorage @Inject constructor(private val dbHelper: DbHelper) {
     fun get(): Observable<DriverDb> = dbHelper.querySingle({ DriversMapper.map(it) }, SelectQuery(Drivers.name))
 
     fun get(vararg ids: Int): Observable<DriverDb> =
-            dbHelper.querySingle({ DriversMapper.map(it) }, SelectQuery(Drivers.name).where(Condition.`in`(Drivers.ID, Ints.asList(*ids))))
+            dbHelper.querySingle({ DriversMapper.map(it) }, SelectQuery(Drivers.name).where(Condition.`in`(Drivers.ID, ids.asList())))
 
     fun getTeamById(teamId: Int): Observable<DriverDb> =
             dbHelper.querySingle({ DriversMapper.map(it) }, SelectQuery(Drivers.name).where(Condition.eq(Drivers.TEAM_ID, teamId)))
@@ -45,7 +44,7 @@ class DriversDbStorage @Inject constructor(private val dbHelper: DbHelper) {
         val cv = ContentValues()
         cv.put(Drivers.TEAM_ID.name(), teamId)
 
-        return dbHelper.updateCV(UpdateQuery(Drivers.name).where(Condition.`in`(Drivers.ID, Ints.asList(*driverIds))), cv)
+        return dbHelper.updateCV(UpdateQuery(Drivers.name).where(Condition.`in`(Drivers.ID, driverIds.asList())), cv)
                 .map { tUpdateResult -> tUpdateResult.result > 0 }.toList().ignoreElement()
     }
 

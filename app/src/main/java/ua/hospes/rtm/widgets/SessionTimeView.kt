@@ -6,16 +6,13 @@ import android.util.AttributeSet
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.TimeUtils
 
-/**
- * @author Andrew Khloponin
- */
 class SessionTimeView : TimeView {
     var session: Session? = null
         set(session) {
             field = session
             if (session == null) return
-            if (session.startDurationTime == -1) text = TimeUtils.format(0)
-            if (session.startDurationTime != -1 && session.endDurationTime != -1)
+            if (session.startDurationTime == -1L) text = TimeUtils.format(0)
+            if (session.startDurationTime != -1L && session.endDurationTime != -1L)
                 text = TimeUtils.formatNano(session.endDurationTime - session.startDurationTime)
         }
 
@@ -29,9 +26,7 @@ class SessionTimeView : TimeView {
         }
 
 
-    constructor(context: Context) : super(context) {}
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }

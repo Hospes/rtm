@@ -1,101 +1,96 @@
 package ua.hospes.rtm.ui.race
 
 import android.content.Context
-import android.widget.Toast
-
 import androidx.fragment.app.FragmentManager
-
-import javax.inject.Inject
-
-import ua.hospes.rtm.core.ui.BasePresenter
+import androidx.lifecycle.Lifecycle
+import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.race.RaceInteractor
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.ui.race.detail.RaceItemDetailActivity
 import ua.hospes.rtm.utils.RxUtils
+import ua.hospes.rtm.utils.plusAssign
+import javax.inject.Inject
 
-/**
- * @author Andrew Khloponin
- */
-internal class RacePresenter @Inject
-constructor(private val interactor: RaceInteractor) : BasePresenter<RaceContract.View>() {
+class RacePresenter @Inject constructor(
+        private val interactor: RaceInteractor
+) : Presenter<RaceContract.View>() {
 
-    override fun attachView(view: RaceContract.View) {
-        super.attachView(view)
 
-        RxUtils.manage(this, interactor.listen()
+    override fun attachView(view: RaceContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
+
+        disposables += interactor.listen()
                 .compose(RxUtils.applySchedulers())
-                .subscribe({ list -> view.update(list) }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ list -> view?.onData(list) }, this::error)
     }
 
-    override fun detachView() {
-        super.detachView()
-        RxUtils.unsubscribe(this)
-    }
 
     fun startRace(startTime: Long) {
-        RxUtils.manage(this, interactor.startRace(startTime)
+        disposables += interactor.startRace(startTime)
                 .compose(RxUtils.applySchedulersSingle())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun stopRace(stopTime: Long) {
-        RxUtils.manage(this, interactor.stopRace(stopTime)
+        disposables += interactor.stopRace(stopTime)
                 .compose(RxUtils.applySchedulersSingle())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun onPit(item: RaceItem, time: Long) {
-        RxUtils.manage(this, interactor.teamPit(item, time)
+        disposables += interactor.teamPit(item, time)
                 .compose(RxUtils.applySchedulers())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun onOut(item: RaceItem, time: Long) {
-        RxUtils.manage(this, interactor.teamOut(item, time)
+        disposables += interactor.teamOut(item, time)
                 .compose(RxUtils.applySchedulers())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun undoLastSession(item: RaceItem) {
-        RxUtils.manage(this, interactor.removeLastSession(item)
+        disposables += interactor.removeLastSession(item)
                 .compose(RxUtils.applySchedulers())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun exportXLS() {
-        RxUtils.manage(this, interactor.exportXLS()
-                .compose<File>(RxUtils.applySchedulersSingle<File>())
-                .subscribe({ result -> Toast.makeText(view!!.getContext(), "File located at: " + result.getAbsolutePath(), Toast.LENGTH_LONG).show() }, Consumer<Throwable> { it.printStackTrace() }))
+        disposables += interactor.exportXLS()
+                .compose(RxUtils.applySchedulersSingle())
+                .subscribe({
+                    //result -> Toast.makeText(view!!.getContext(), "File located at: " + result.getAbsolutePath(), Toast.LENGTH_LONG).show()
+                }, this::error)
     }
 
     fun resetRace() {
-        RxUtils.manage(this, interactor.resetRace()
-                .compose<Optional>(RxUtils.applySchedulers<Optional>())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+        disposables += interactor.resetRace()
+                .compose(RxUtils.applySchedulers())
+                .subscribe({ }, this::error)
     }
 
     fun removeAll() {
-        RxUtils.manage(this, interactor.removeAll()
+        disposables += interactor.removeAll()
                 .compose(RxUtils.applySchedulersSingle())
-                .subscribe({ result -> }, Consumer<Throwable> { it.printStackTrace() }))
+                .subscribe({ }, this::error)
     }
 
     fun showRaceItemDetail(context: Context, item: RaceItem) {
-        RaceItemDetailActivity.start(context, item.id)
+        //RaceItemDetailActivity.start(context, item.id)
     }
 
     fun showSetCarDialog(managerFragment: FragmentManager, session: Session) {
-        RxUtils.manage(this, interactor.carsNotInRace
-                .toList()
-                .compose<List<Car>>(RxUtils.applySchedulersSingle<List<Car>>())
-                .subscribe({ result -> SetCarDialogFragment.newInstance(session.id, result).show(managerFragment, "set_car") }, Consumer<Throwable> { it.printStackTrace() }))
+        disposables += interactor.carsNotInRace.toList()
+                .compose(RxUtils.applySchedulersSingle())
+                .subscribe({ }, this::error)
+        //.subscribe({ result -> SetCarDialogFragment.newInstance(session.id, result).show(managerFragment, "set_car") }, Consumer<Throwable> { it.printStackTrace() }))
     }
 
     fun showSetDriverDialog(managerFragment: FragmentManager, session: Session) {
-        RxUtils.manage(this, interactor.getDrivers(session.teamId)
-                .compose<List<Driver>>(RxUtils.applySchedulersSingle<List<Driver>>())
-                .subscribe({ result -> SetDriverDialogFragment.newInstance(session.id, session.teamId, result).show(managerFragment, "set_driver") }, Consumer<Throwable> { it.printStackTrace() }))
+        disposables += interactor.getDrivers(session.teamId)
+                .compose(RxUtils.applySchedulersSingle())
+                .subscribe({ }, this::error)
+        //.subscribe({ result -> SetDriverDialogFragment.newInstance(session.id, session.teamId, result).show(managerFragment, "set_driver") }, Consumer<Throwable> { it.printStackTrace() }))
     }
 
     fun showAddTeamDialog(managerFragment: FragmentManager) {

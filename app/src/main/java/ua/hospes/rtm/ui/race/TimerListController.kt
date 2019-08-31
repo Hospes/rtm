@@ -1,15 +1,11 @@
 package ua.hospes.rtm.ui.race
 
-import android.view.View
-
 import androidx.recyclerview.widget.RecyclerView
-
-import java.util.HashSet
-import java.util.concurrent.TimeUnit
-
 import ua.hospes.rtm.core.ui.RxScrollListener
 import ua.hospes.rtm.utils.RxUtils
 import ua.hospes.rtm.widgets.TimeView
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 internal class TimerListController : RxScrollListener() {
 
@@ -20,7 +16,7 @@ internal class TimerListController : RxScrollListener() {
     init {
         RxUtils.manage(this, subject.debounce(SKIP_RECALCULATION_DURATION, TimeUnit.MILLISECONDS)
                 .compose(RxUtils.applySchedulers())
-                .subscribe(Consumer<RecyclerView> { this.onActionCall(it) }))
+                .subscribe { this.onActionCall(it) })
     }
 
     private fun onActionCall(recyclerView: RecyclerView) {

@@ -3,28 +3,18 @@ package ua.hospes.rtm.ui.settings
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-
 import androidx.annotation.StringRes
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-
-import java.util.Locale
-
-import javax.inject.Inject
-
 import dagger.android.support.AndroidSupportInjection
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.preferences.PreferencesManager
+import java.util.*
+import javax.inject.Inject
 
-/**
- * @author Andrew Khloponin
- */
 class SettingsFragment : PreferenceFragmentCompat() {
-    @Inject
-    internal var preferencesManager: PreferencesManager? = null
+    @Inject lateinit var preferencesManager: PreferencesManager
 
 
     override fun onAttach(context: Context) {

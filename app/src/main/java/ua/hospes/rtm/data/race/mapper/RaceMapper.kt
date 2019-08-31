@@ -21,7 +21,7 @@ object RaceMapper {
     }
 
     fun map(db: RaceItemDb, team: Optional<Team>, session: Optional<Session>): RaceItem {
-        val result = RaceItem(db.id, team.get())
+        val result = RaceItem(db.id, team.get()!!)
         result.teamNumber = db.teamNumber
         result.session = session.get()
         return result
@@ -33,7 +33,7 @@ object RaceMapper {
         db.id = item.id
         db.teamNumber = item.teamNumber
         if (item.session != null)
-            db.sessionId = item.session.id
+            db.sessionId = item.session?.id!!
 
         return db
     }

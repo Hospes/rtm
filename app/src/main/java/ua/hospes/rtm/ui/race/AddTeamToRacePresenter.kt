@@ -51,7 +51,7 @@ class AddTeamToRacePresenter @Inject constructor(
                     Function3 { team: Team, num: Int, session: Session ->
                         RaceItem(team).apply {
                             teamNumber = num
-                            session = session
+                            this.session = session
                         }
                     }
             )

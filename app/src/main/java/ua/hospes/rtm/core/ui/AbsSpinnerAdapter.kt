@@ -6,22 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.ThemedSpinnerAdapter
+import java.util.*
 
-import java.util.ArrayList
-import java.util.Collections
-
-/**
- * @author Andrew Khloponin
- */
 abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAdapter, ThemedSpinnerAdapter {
     private val mLock = Any()
     val resources: Resources
     private val mInflater: LayoutInflater
-    private val objects: MutableList<T>
+    private val objects: MutableList<T?>
     private var mNotifyOnChange = true
 
 
@@ -31,10 +25,10 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
         this.objects = ArrayList()
     }
 
-    constructor(mContext: Context, objects: List<T>?) {
+    constructor(mContext: Context, objects: List<T?>?) {
         this.resources = mContext.resources
         this.mInflater = LayoutInflater.from(mContext)
-        this.objects = objects ?: ArrayList()
+        this.objects = objects?.toMutableList() ?: ArrayList()
     }
 
     constructor(mContext: Context, vararg objects: T) {
@@ -46,13 +40,13 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
 
 
     /**
-     * Adds the specified object at the end of the array.
+     * Adds the specified o at the end of the array.
      *
-     * @param object The object to add at the end of the array.
+     * @param `o` The o to add at the end of the array.
      */
-    fun add(`object`: T?) {
+    fun add(o: T?) {
         synchronized(mLock) {
-            objects.add(`object`)
+            objects.add(o)
         }
         if (mNotifyOnChange) notifyDataSetChanged()
     }
@@ -91,26 +85,26 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
     }
 
     /**
-     * Inserts the specified object at the specified index in the array.
+     * Inserts the specified o at the specified index in the array.
      *
-     * @param object The object to insert into the array.
-     * @param index  The index at which the object must be inserted.
+     * @param `o` The o to insert into the array.
+     * @param index  The index at which the o must be inserted.
      */
-    fun insert(`object`: T?, index: Int) {
+    fun insert(o: T, index: Int) {
         synchronized(mLock) {
-            objects.add(index, `object`)
+            objects.add(index, o)
         }
         if (mNotifyOnChange) notifyDataSetChanged()
     }
 
     /**
-     * Removes the specified object from the array.
+     * Removes the specified o from the array.
      *
-     * @param object The object to remove.
+     * @param `o` The o to remove.
      */
-    fun remove(`object`: T?) {
+    fun remove(o: T) {
         synchronized(mLock) {
-            objects.remove(`object`)
+            objects.remove(o)
         }
         if (mNotifyOnChange) notifyDataSetChanged()
     }
@@ -139,7 +133,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
         return objects.size
     }
 
-    override fun getItem(position: Int): T {
+    override fun getItem(position: Int): T? {
         return objects[position]
     }
 
@@ -150,7 +144,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
 
     protected abstract fun onCreateViewHolder(inflater: LayoutInflater): VH
 
-    protected abstract fun onBindViewHolder(holder: VH, item: T, position: Int)
+    protected abstract fun onBindViewHolder(holder: VH, item: T?, position: Int)
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -159,7 +153,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
         if (convertView == null) {
             holder = onCreateViewHolder(mInflater)
             convertView = holder.itemView
-            convertView!!.tag = holder
+            convertView.tag = holder
         } else {
             holder = convertView.tag as VH
         }
@@ -177,7 +171,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
         return null
     }
 
-    abstract inner class ViewHolder private constructor(internal var itemView: View) {
+    abstract class ViewHolder private constructor(var itemView: View) {
 
 
         init {
@@ -189,18 +183,16 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
 
         protected abstract fun findViews(itemView: View)
 
-        fun <V> findView(root: View?, @IdRes id: Int): V? {
+        private fun <V> findView(root: View?, @IdRes id: Int): V? {
             if (root == null) return null
-            try {
-                return root.findViewById<View>(id) as V
+            return try {
+                root.findViewById<View>(id) as V
             } catch (e: ClassCastException) {
-                return null
+                null
             }
 
         }
 
-        fun <V> findView(@IdRes id: Int): V? {
-            return findView<V>(itemView, id)
-        }
+        fun <V> findView(@IdRes id: Int): V? = findView<V>(itemView, id)
     }
 }

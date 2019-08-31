@@ -6,14 +6,11 @@ import android.util.AttributeSet
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.TimeUtils
 
-/**
- * @author Andrew Khloponin
- */
 class DriverTimeView : TimeView {
     var session: Session? = null
         set(session) {
             field = session
-            if (session != null && session.startDurationTime == -1) text = TimeUtils.format(0)
+            if (session != null && session.startDurationTime == -1L) text = TimeUtils.format(0)
         }
     var prevDuration = 0L
         set(prevDuration) {
@@ -31,9 +28,7 @@ class DriverTimeView : TimeView {
         }
 
 
-    constructor(context: Context) : super(context) {}
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }

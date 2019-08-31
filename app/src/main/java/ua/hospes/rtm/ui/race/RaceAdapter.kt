@@ -4,46 +4,39 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.ToggleButton
-
 import androidx.annotation.ColorInt
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-
-import java.util.Locale
-
-import ua.hospes.absrvadapter.AbsRecyclerAdapter
-import ua.hospes.absrvadapter.AbsRecyclerHolder
-import ua.hospes.absrvadapter.OnItemClickListener
 import ua.hospes.rtm.R
-import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.utils.UiUtils
+import ua.hospes.rtm.widgets.CustomToggleButton
 import ua.hospes.rtm.widgets.DriverTimeView
 import ua.hospes.rtm.widgets.SessionTimeView
 import ua.hospes.undobutton.UndoButton
 import ua.hospes.undobutton.UndoButtonController
+import java.util.*
 
-/**
- * @author Andrew Khloponin
- */
-internal class RaceAdapter(context: Context, private val sessionButtonType: String, private val undoButtonController: UndoButtonController<*>) : AbsRecyclerAdapter<RaceItem, RaceAdapter.MyHolder>() {
-    @ColorInt
-    private val carDefaultColor: Int
-    @ColorInt
-    private val sessionTrackColor: Int
-    @ColorInt
-    private val sessionPitColor: Int
-    private var onSetCarClickListener: OnItemClickListener<RaceItem>? = null
-    private var onSetDriverClickListener: OnItemClickListener<RaceItem>? = null
-    private var onPitClickListener: OnItemClickListener<RaceItem>? = null
-    private var onOutClickListener: OnItemClickListener<RaceItem>? = null
-    private var onUndoClickListener: OnItemClickListener<RaceItem>? = null
+internal class RaceAdapter(context: Context,
+                           private val sessionButtonType: String,
+                           private val undoButtonController: UndoButtonController<*>
+) : ListAdapter<RaceItem, RaceAdapter.MyHolder>(DIFF_CALLBACK) {
+    @ColorInt private val carDefaultColor: Int
+    @ColorInt private val sessionTrackColor: Int
+    @ColorInt private val sessionPitColor: Int
+    var itemClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var setCarClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var setDriverClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var onPitClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var onOutClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var onUndoClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
 
 
     init {
@@ -53,18 +46,27 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        when (sessionButtonType) {
-            "next" -> return MyHolderNext(parent)
-
-            "undo" -> return MyHolderUndoNext(parent)
-
-            "pit" -> return MyHolderPit(parent)
-            else -> return MyHolderPit(parent)
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = when (sessionButtonType) {
+        "next" -> MyHolderNext(parent,
+                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
+                nextClickListener = { onOutClickListener?.invoke(getItem(it), it) })
+        "undo" -> MyHolderUndoNext(parent,
+                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
+                nextClickListener = { onOutClickListener?.invoke(getItem(it), it) },
+                undoClickListener = { onUndoClickListener?.invoke(getItem(it), it) })
+        else -> MyHolderPit(parent,
+                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
+                pitOutClickListener = { onPitClickListener?.invoke(getItem(it), it) })
     }
 
-    override fun onBindViewHolder(holder: MyHolder, item: RaceItem, position: Int) {
+    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+        val item = getItem(position)
         val context = holder.itemView.context
 
         val bg1 = TypedValue()
@@ -76,7 +78,7 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
 
 
         holder.team.text = String.format(Locale.getDefault(), "%1\$d - %2\$s", item.teamNumber, item.team.name)
-        holder.pits.text = context.resources.getString(R.string.race_pit, item.details.pitStops)
+        holder.pits.text = context.resources.getString(R.string.race_pit, item.details?.pitStops)
 
         val session = item.session
         holder.driverTimeView.session = session
@@ -93,7 +95,7 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
             holder.btnSessionDriver.text = if (driver == null) context.getString(R.string.race_btn_set_driver) else session.driver!!.name
             holder.driverTimeView.visibility = if (driver == null) View.INVISIBLE else View.VISIBLE
             if (driver != null) {
-                holder.driverTimeView.prevDuration = item.details.getDriverDuration(driver.id!!)
+                holder.driverTimeView.prevDuration = item.details?.getDriverDuration(driver.id!!) ?: 0L
             }
 
             holder.sessionType.text = session.type.title
@@ -116,133 +118,71 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
     }
 
 
-    fun setOnSetCarClickListener(onSetCarClickListener: OnItemClickListener<RaceItem>) {
-        this.onSetCarClickListener = onSetCarClickListener
-    }
+    internal abstract inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int,
+                                           itemClickListener: (position: Int) -> Unit,
+                                           carClickListener: (position: Int) -> Unit,
+                                           driverClickListener: (position: Int) -> Unit)
+        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+        var btnSessionCar: Button = itemView.findViewById(R.id.btn_session_car)
+        var btnSessionDriver: Button = itemView.findViewById(R.id.btn_session_driver)
 
-    fun setOnSetDriverClickListener(onSetDriverClickListener: OnItemClickListener<RaceItem>) {
-        this.onSetDriverClickListener = onSetDriverClickListener
-    }
+        var driverTimeView: DriverTimeView = itemView.findViewById(R.id.tv_driver_all_time)
 
-    fun setOnPitClickListener(onPitClickListener: OnItemClickListener<RaceItem>) {
-        this.onPitClickListener = onPitClickListener
-    }
-
-    fun setOnOutClickListener(onOutClickListener: OnItemClickListener<RaceItem>) {
-        this.onOutClickListener = onOutClickListener
-    }
-
-    fun setOnUndoClickListener(onUndoClickListener: OnItemClickListener<RaceItem>) {
-        this.onUndoClickListener = onUndoClickListener
-    }
-
-
-    internal abstract inner class MyHolder(parent: ViewGroup, layoutId: Int) : AbsRecyclerHolder(parent, layoutId) {
-        var btnSessionCar: Button
-
-        var driverTimeView: DriverTimeView
-        var btnSessionDriver: Button
-
-        var team: TextView
-        var sessionType: TextView
-        var pits: TextView
-        var sessionTimeView: SessionTimeView
+        var team: TextView = itemView.findViewById(R.id.tv_team)
+        var sessionType: TextView = itemView.findViewById(R.id.tv_session_type)
+        var pits: TextView = itemView.findViewById(R.id.tv_pits)
+        var sessionTimeView: SessionTimeView = itemView.findViewById(R.id.tv_session_duration)
 
 
         init {
+            itemView.setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                itemClickListener.invoke(adapterPosition)
+            }
 
-            itemView.setOnClickListener(OnClickListener { this.initOnItemClickListener(it) })
+            btnSessionCar.setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                carClickListener.invoke(adapterPosition)
+            }
 
-            btnSessionCar.setOnClickListener(OnClickListener { this.initOnSetCarClickListener(it) })
-            btnSessionDriver.setOnClickListener(OnClickListener { this.initOnSetDriverClickListener(it) })
+            btnSessionDriver.setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                driverClickListener.invoke(adapterPosition)
+            }
         }
 
-
-        override fun findViews(itemView: View) {
-            btnSessionCar = UiUtils.findView(itemView, R.id.btn_session_car)
-
-            btnSessionDriver = UiUtils.findView(itemView, R.id.btn_session_driver)
-            driverTimeView = UiUtils.findView(itemView, R.id.tv_driver_all_time)
-
-            team = UiUtils.findView(itemView, R.id.tv_team)
-            sessionTimeView = UiUtils.findView(itemView, R.id.tv_session_duration)
-            sessionType = UiUtils.findView(itemView, R.id.tv_session_type)
-
-            pits = UiUtils.findView(itemView, R.id.tv_pits)
-        }
-
-        fun initOnItemClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (onItemClickListener == null) return
-            onItemClick(getItem(position), position)
-        }
-
-        fun initOnSetCarClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (onSetCarClickListener == null) return
-            onSetCarClickListener!!.onItemClick(getItem(position), position)
-        }
-
-        fun initOnSetDriverClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (onSetDriverClickListener == null) return
-            onSetDriverClickListener!!.onItemClick(getItem(position), position)
-        }
-
-        fun initOnOutClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (onOutClickListener == null) return
-            onOutClickListener!!.onItemClick(getItem(position), position)
-        }
 
         internal open fun setPitChecked(checked: Boolean) {}
 
         internal open fun undoBind(controller: UndoButtonController<*>, id: Int) {}
     }
 
-    internal inner class MyHolderNext(parent: ViewGroup) : MyHolder(parent, R.layout.item_race_next) {
-        var btnNextSession: Button
-
+    internal inner class MyHolderNext(parent: ViewGroup,
+                                      itemClickListener: (position: Int) -> Unit,
+                                      carClickListener: (position: Int) -> Unit,
+                                      driverClickListener: (position: Int) -> Unit,
+                                      nextClickListener: (position: Int) -> Unit
+    ) : MyHolder(parent, R.layout.item_race_next, itemClickListener, carClickListener, driverClickListener) {
         init {
-
-            btnNextSession.setOnClickListener(OnClickListener { this.initOnOutClickListener(it) })
-        }
-
-        override fun findViews(itemView: View) {
-            super.findViews(itemView)
-            btnNextSession = UiUtils.findView(itemView, R.id.btn_next)
+            itemView.findViewById<Button>(R.id.btn_next).setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                nextClickListener.invoke(adapterPosition)
+            }
         }
     }
 
-    internal inner class MyHolderPit(parent: ViewGroup) : MyHolder(parent, R.layout.item_race_pit) {
-        var btnPitOut: ToggleButton
+    internal inner class MyHolderPit(parent: ViewGroup,
+                                     itemClickListener: (position: Int) -> Unit,
+                                     carClickListener: (position: Int) -> Unit,
+                                     driverClickListener: (position: Int) -> Unit,
+                                     pitOutClickListener: (position: Int) -> Unit
+    ) : MyHolder(parent, R.layout.item_race_pit, itemClickListener, carClickListener, driverClickListener) {
+        private var btnPitOut: CustomToggleButton = itemView.findViewById(R.id.btn_pit_out)
 
         init {
-
-            btnPitOut.setOnClickListener(OnClickListener { this.initOnPitClickListener(it) })
-        }
-
-        override fun findViews(itemView: View) {
-            super.findViews(itemView)
-            btnPitOut = UiUtils.findView(itemView, R.id.btn_pit_out)
-        }
-
-        fun initOnPitClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (btnPitOut.isChecked) {
-                if (onPitClickListener != null) onPitClickListener!!.onItemClick(getItem(position), position)
-            } else {
-                if (onOutClickListener != null) onOutClickListener!!.onItemClick(getItem(position), position)
+            btnPitOut.setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                pitOutClickListener.invoke(adapterPosition)
             }
         }
 
@@ -251,32 +191,28 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
         }
     }
 
-    internal inner class MyHolderUndoNext(parent: ViewGroup) : MyHolder(parent, R.layout.item_race_undo_next) {
-        var btnNextSession: UndoButton
+    internal inner class MyHolderUndoNext(parent: ViewGroup,
+                                          itemClickListener: (position: Int) -> Unit,
+                                          carClickListener: (position: Int) -> Unit,
+                                          driverClickListener: (position: Int) -> Unit,
+                                          nextClickListener: (position: Int) -> Unit,
+                                          undoClickListener: (position: Int) -> Unit
+    ) : MyHolder(parent, R.layout.item_race_undo_next, itemClickListener, carClickListener, driverClickListener) {
+        var btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
 
         init {
-
-            btnNextSession.setOnClickListener(OnClickListener { this.initOnOutClickListener(it) })
-            btnNextSession.setOnUndoClickListener { this.initOnUndoClickListener(it) }
+            btnNextSession.setOnClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                nextClickListener.invoke(adapterPosition)
+            }
+            btnNextSession.setOnUndoClickListener {
+                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnUndoClickListener
+                undoClickListener.invoke(adapterPosition)
+            }
             btnNextSession.setController(undoButtonController)
         }
 
-        override fun findViews(itemView: View) {
-            super.findViews(itemView)
-            btnNextSession = UiUtils.findView(itemView, R.id.btn_next)
-        }
-
-        fun initOnUndoClickListener(view: View) {
-            val position = adapterPosition
-            if (position == RecyclerView.NO_POSITION) return
-
-            if (onUndoClickListener == null) return
-            onUndoClickListener!!.onItemClick(getItem(position), position)
-        }
-
-        override fun undoBind(controller: UndoButtonController<*>, id: Int) {
-            undoButtonController.onBind(id, btnNextSession)
-        }
+        override fun undoBind(controller: UndoButtonController<*>, id: Int) = undoButtonController.onBind(id, btnNextSession)
     }
 
 
@@ -315,4 +251,10 @@ internal class RaceAdapter(context: Context, private val sessionButtonType: Stri
             ta?.recycle()
         }
     }
+}
+
+private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RaceItem>() {
+    override fun areItemsTheSame(old: RaceItem, new: RaceItem): Boolean = old.id == new.id
+
+    override fun areContentsTheSame(old: RaceItem, new: RaceItem): Boolean = old.equals(new)
 }

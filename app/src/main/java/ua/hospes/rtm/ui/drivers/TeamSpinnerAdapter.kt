@@ -10,14 +10,14 @@ import ua.hospes.rtm.domain.team.Team
 
 class TeamSpinnerAdapter(ctx: Context) : AbsSpinnerAdapter<Team, TeamSpinnerAdapter.MyHolder>(ctx) {
 
-    override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater, R.layout.simple_spinner_item)
+    override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater)
 
     override fun onBindViewHolder(holder: MyHolder, item: Team?, position: Int) {
-        holder.bg.text = item?.name ?: "No team"
+        holder.bg.text = item?.name
     }
 
 
-    inner class MyHolder(inflater: LayoutInflater, layoutId: Int) : ViewHolder(inflater, layoutId) {
+    inner class MyHolder(inflater: LayoutInflater) : ViewHolder(inflater, R.layout.simple_spinner_item) {
         lateinit var bg: TextView
 
         override fun findViews(itemView: View) {

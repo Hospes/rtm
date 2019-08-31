@@ -2,7 +2,6 @@ package ua.hospes.rtm.data.cars
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.google.common.primitives.Ints
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Function
@@ -21,7 +20,7 @@ class CarsDbStorage @Inject constructor(private val dbHelper: DbHelper) {
     fun get(): Observable<CarDb> = dbHelper.querySingle({ CarsMapper.map(it) }, SelectQuery(Cars.name))
 
     fun get(vararg ids: Int): Observable<CarDb> =
-            dbHelper.querySingle({ CarsMapper.map(it) }, SelectQuery(Cars.name).where(Condition.`in`(Cars.ID, Ints.asList(*ids))))
+            dbHelper.querySingle({ CarsMapper.map(it) }, SelectQuery(Cars.name).where(Condition.`in`(Cars.ID, ids.asList())))
 
 
     fun getNotInRace(): Observable<CarDb> =

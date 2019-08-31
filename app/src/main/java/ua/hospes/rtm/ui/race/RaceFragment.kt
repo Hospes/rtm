@@ -6,36 +6,33 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_race.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.StopWatchFragment
 import ua.hospes.rtm.core.StopWatchService
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.utils.TimeUtils
-import ua.hospes.rtm.utils.UiUtils
 import ua.hospes.undobutton.UndoButton
 import ua.hospes.undobutton.UndoButtonController
 import javax.inject.Inject
 
 class RaceFragment : StopWatchFragment(), RaceContract.View {
-    private var undoController: UndoButtonController<*>? = null
-    private var timerListController: TimerListController? = null
-    @Inject
-    internal var presenter: RacePresenter? = null
-    @Inject
-    internal var preferencesManager: PreferencesManager? = null
+    private lateinit var undoController: UndoButtonController<*>
+    private lateinit var timerListController: TimerListController
+    @Inject lateinit var presenter: RacePresenter
+    @Inject lateinit var preferencesManager: PreferencesManager
     private var tvTime: TextView? = null
-    private var rv: RecyclerView? = null
-    private var adapter: RaceAdapter? = null
+    private lateinit var adapter: RaceAdapter
     private var currentNanoTime = 0L
 
-    private var sessionButtonType: String? = null
+    private lateinit var sessionButtonType: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,22 +44,15 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
 
-        sessionButtonType = preferencesManager!!.sessionButtonType
+        sessionButtonType = preferencesManager.sessionButtonType
     }
 
     override fun setActionBarTitle(): Int {
         return R.string.race_title
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_race, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        rv = UiUtils.findView<RecyclerView>(view, R.id.list)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+            : View? = inflater.inflate(R.layout.fragment_race, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -81,22 +71,23 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
             }
         }
 
-        rv!!.setHasFixedSize(true)
-        rv!!.layoutManager = LinearLayoutManager(context)
-        rv!!.adapter = RaceAdapter(context, sessionButtonType, undoController)
+        list.setHasFixedSize(true)
+        list.layoutManager = LinearLayoutManager(context)
+        adapter = RaceAdapter(requireContext(), sessionButtonType, undoController).apply { list.adapter = this }
 
-        adapter!!.setOnPitClickListener { item, position -> presenter!!.onPit(item, currentNanoTime) }
-        adapter!!.setOnOutClickListener { item, position -> presenter!!.onOut(item, currentNanoTime) }
-        adapter!!.setOnUndoClickListener { item, position -> presenter!!.undoLastSession(item) }
-        adapter!!.setOnSetCarClickListener { item, position -> presenter!!.showSetCarDialog(childFragmentManager, item.session) }
-        adapter!!.setOnSetDriverClickListener { item, position -> presenter!!.showSetDriverDialog(childFragmentManager, item.session) }
-        adapter!!.setOnItemClickListener { item, position -> presenter!!.showRaceItemDetail(context, item) }
+        //        adapter.setOnPitClickListener { item, position -> presenter.onPit(item, currentNanoTime) }
+        //        adapter.setOnOutClickListener { item, position -> presenter.onOut(item, currentNanoTime) }
+        //        adapter.setOnUndoClickListener { item, position -> presenter.undoLastSession(item) }
+        //        adapter.setOnSetCarClickListener { item, position -> presenter.showSetCarDialog(childFragmentManager, item.session) }
+        //        adapter.setOnSetDriverClickListener { item, position -> presenter.showSetDriverDialog(childFragmentManager, item.session) }
+        //adapter.setOnItemClickListener { item, _ -> presenter.showRaceItemDetail(requireContext(), item) }
 
-        rv!!.addOnScrollListener(timerListController = TimerListController())
-        if ("undo".equals(sessionButtonType!!, ignoreCase = true))
-            rv!!.addOnScrollListener(undoController!!)
+        timerListController = TimerListController().apply { list.addOnScrollListener(this) }
 
-        presenter!!.attachView(this)
+        if ("undo".equals(sessionButtonType, ignoreCase = true))
+            list.addOnScrollListener(undoController)
+
+        presenter.attachView(this, lifecycle)
     }
 
 
@@ -124,7 +115,7 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
         when (item.itemId) {
             R.id.action_start -> {
                 StopWatchService.start(context!!)
-                timerListController!!.forceUpdate(rv)
+                timerListController.forceUpdate(list)
                 return true
             }
 
@@ -175,26 +166,26 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        timerListController!!.unsubscribe()
-        undoController!!.release()
-        presenter!!.detachView()
+        timerListController.unsubscribe()
+        undoController.release()
     }
 
-    fun update(items: List<RaceItem>) {
-        adapter!!.clear()
-        adapter!!.addAll(items)
-        timerListController!!.forceUpdate(rv)
-        if ("undo".equals(sessionButtonType!!, ignoreCase = true))
-            undoController!!.forceUpdate(rv!!)
+    override fun onData(items: List<RaceItem>) {
+        adapter.submitList(items)
+        timerListController.forceUpdate(list)
+        if ("undo".equals(sessionButtonType, ignoreCase = true))
+            undoController.forceUpdate(list)
     }
+
+    override fun onError(t: Throwable) = Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
 
 
     override fun onStopWatchStarted(startTime: Long, nanoStartTime: Long) {
-        presenter!!.startRace(nanoStartTime)
+        presenter.startRace(nanoStartTime)
     }
 
     override fun onStopWatchStopped(stopTime: Long, nanoStopTime: Long) {
-        presenter!!.stopRace(nanoStopTime)
+        presenter.stopRace(nanoStopTime)
     }
 
     override fun onStopWatchStateChanged(runningState: Int) {
@@ -206,7 +197,7 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
         // We have to check tvTime on null cause it couldn't be ready yet
         if (tvTime != null) tvTime!!.text = TimeUtils.format(time)
         // We have to check adapter on null cause it couldn't be ready yet
-        if (timerListController != null) timerListController!!.updateTime(currentNanoTime)
+        timerListController.updateTime(currentNanoTime)
     }
 
 
@@ -221,9 +212,6 @@ class RaceFragment : StopWatchFragment(), RaceContract.View {
     companion object {
         private val REQUEST_CODE_PERMISSION = 11
 
-
-        fun newInstance(): Fragment {
-            return RaceFragment()
-        }
+        fun newInstance(): Fragment = RaceFragment()
     }
 }

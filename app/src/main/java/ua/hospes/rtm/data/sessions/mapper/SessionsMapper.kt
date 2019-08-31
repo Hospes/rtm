@@ -9,9 +9,6 @@ import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.Optional
 
-/**
- * @author Andrew Khloponin
- */
 object SessionsMapper {
     fun map(cursor: Cursor): SessionDb {
         val teamId = cursor.getInt(cursor.getColumnIndex(Sessions.TEAM_ID.name()))
@@ -27,22 +24,23 @@ object SessionsMapper {
     }
 
     fun map(db: SessionDb, driver: Optional<Driver>, car: Optional<Car>): Session {
-        val session = Session(db.id, db.teamId)
-        session.driver = driver.get()
-        session.car = car.get()
-        session.raceStartTime = db.raceStartTime
-        session.startDurationTime = db.startDurationTime
-        session.endDurationTime = db.endDurationTime
-        session.setType(db.type)
-        return session
+        return Session(
+                id = db.id,
+                teamId = db.teamId,
+                driver = driver.get(),
+                car = car.get(),
+                raceStartTime = db.raceStartTime,
+                endDurationTime = db.endDurationTime,
+                type = db.type?.let { Session.Type.valueOf(it) } ?: Session.Type.TRACK
+        )
     }
 
     fun map(session: Session): SessionDb {
         val item = SessionDb(session.teamId)
         if (session.driver != null)
-            item.driverId = session.driver!!.id
+            item.driverId = session.driver!!.id!!
         if (session.car != null)
-            item.carId = session.car!!.id
+            item.carId = session.car!!.id!!
         item.raceStartTime = session.raceStartTime
         item.startDurationTime = session.startDurationTime
         item.endDurationTime = session.endDurationTime
