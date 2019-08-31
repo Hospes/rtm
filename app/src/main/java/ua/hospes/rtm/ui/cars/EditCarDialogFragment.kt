@@ -44,12 +44,7 @@ class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View {
         btn_delete.setOnClickListener { presenter.delete() }
 
         presenter.initCar(car)
-        presenter.attachView(this)
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
+        presenter.attachView(this, lifecycle)
     }
 
 

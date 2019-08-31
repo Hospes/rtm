@@ -23,7 +23,7 @@
               android:layout_marginEnd="16dp"
               android:layout_marginBottom="16dp"
               android:inputType="number"
-              app:layout_constraintBottom_toTopOf="@+id/team"
+              app:layout_constraintBottom_toTopOf="@+id/sp_team"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toEndOf="@+id/textView_team_number"
               app:layout_constraintTop_toTopOf="parent" />
@@ -36,21 +36,37 @@
               android:layout_marginBottom="0dp"
               android:text="@string/common_select_team"
               android:textColor="?attr/colorAccent"
-              app:layout_constraintBottom_toBottomOf="@+id/team"
+              app:layout_constraintBottom_toBottomOf="@+id/sp_team"
               app:layout_constraintEnd_toEndOf="@+id/textView_team_number"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/team" />
+              app:layout_constraintTop_toTopOf="@+id/sp_team" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/team"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/number"
-        app:layout_constraintTop_toBottomOf="@+id/number" />
+    <Spinner android:id="@+id/sp_team"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="0dp"
+             android:layout_marginTop="16dp"
+             android:layout_marginEnd="16dp"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="@+id/number"
+             app:layout_constraintTop_toBottomOf="@+id/number" />
+
+    <Button android:id="@+id/btn_cancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="@id/btn_save"
+            app:layout_constraintEnd_toStartOf="@id/btn_save"
+            app:layout_constraintTop_toTopOf="@id/btn_save" />
+
+    <Button android:id="@+id/btn_save"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sp_team" />
 </androidx.constraintlayout.widget.ConstraintLayout>

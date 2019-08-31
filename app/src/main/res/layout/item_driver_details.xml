@@ -16,7 +16,7 @@
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
-    <ua.hospes.rtm.ui.race.widgets.DriverTimeView
+    <ua.hospes.rtm.widgets.DriverTimeView
         android:id="@+id/driver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

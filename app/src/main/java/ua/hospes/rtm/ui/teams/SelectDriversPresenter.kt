@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui.teams
 
+import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -13,8 +14,9 @@ class SelectDriversPresenter @Inject constructor(
         private val repo: DriversRepository
 ) : Presenter<SelectDriversContract.View>() {
 
-    override fun attachView(view: SelectDriversContract.View?) {
-        super.attachView(view)
+    override fun attachView(view: SelectDriversContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
+
         disposables += repo.listen()
                 .map { list -> list.sortedBy { it.name } }
                 .map { list -> list.sortedBy { it.teamName } }

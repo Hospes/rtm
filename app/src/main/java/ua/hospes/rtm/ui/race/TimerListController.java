@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import ua.hospes.rtm.core.ui.RxScrollListener;
-import ua.hospes.rtm.ui.race.widgets.TimeView;
+import ua.hospes.rtm.widgets.TimeView;
 import ua.hospes.rtm.utils.RxUtils;
 
 /**

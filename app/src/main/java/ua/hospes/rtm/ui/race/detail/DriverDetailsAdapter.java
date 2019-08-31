@@ -10,7 +10,7 @@ import ua.hospes.absrvadapter.AbsRecyclerAdapter;
 import ua.hospes.absrvadapter.AbsRecyclerHolder;
 import ua.hospes.rtm.R;
 import ua.hospes.rtm.domain.race.models.DriverDetails;
-import ua.hospes.rtm.ui.race.widgets.DriverTimeView;
+import ua.hospes.rtm.widgets.DriverTimeView;
 import ua.hospes.rtm.utils.UiUtils;
 
 /**

@@ -1,5 +1,8 @@
 package ua.hospes.rtm.core
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.crashlytics.android.Crashlytics
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -11,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class Presenter<V>(
         private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-) : CoroutineScope {
+) : CoroutineScope, LifecycleObserver {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = job + defaultDispatcher + exceptionHandler
@@ -26,8 +29,9 @@ abstract class Presenter<V>(
     protected var view: V? = null
 
 
-    open fun attachView(view: V?) {
+    open fun attachView(view: V?, lc: Lifecycle) {
         this.view = view
+        lc.addObserver(this)
 
         disposables += errors.compose(RxUtils.applySchedulers())
                 .doOnNext {
@@ -44,13 +48,16 @@ abstract class Presenter<V>(
                 .subscribe(this::onUnexpectedError)
     }
 
-    open fun detachView() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    protected open fun detachView() {
         job.cancel()
         disposables.dispose()
         view = null
     }
 
+
     fun error(throwable: Throwable): Unit = errors.onNext(throwable)
+
 
     open fun onError(throwable: Throwable) {}
 

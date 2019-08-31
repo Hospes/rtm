@@ -30,9 +30,6 @@ import ua.hospes.rtm.domain.team.Team;
 import ua.hospes.rtm.utils.Optional;
 import ua.hospes.rtm.utils.XLSTest;
 
-/**
- * @author Andrew Khloponin
- */
 public class RaceInteractor {
     private final PreferencesManager preferencesManager;
     private final RaceRepository raceRepository;

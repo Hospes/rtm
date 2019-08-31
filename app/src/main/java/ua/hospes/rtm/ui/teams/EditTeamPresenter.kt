@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui.teams
 
+import androidx.lifecycle.Lifecycle
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,8 +21,8 @@ class EditTeamPresenter @Inject constructor(
     private val deleteButtonSubject = BehaviorSubject.createDefault(false)
 
 
-    override fun attachView(view: EditTeamContract.View?) {
-        super.attachView(view)
+    override fun attachView(view: EditTeamContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
         disposables += initTeamSubject.compose(RxUtils.applySchedulers()).subscribe {
             view?.onInitTeam(it)
             onDriversSelected(it.drivers)

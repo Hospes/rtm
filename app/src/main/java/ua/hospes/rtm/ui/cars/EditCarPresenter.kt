@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui.cars
 
+import androidx.lifecycle.Lifecycle
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +19,8 @@ class EditCarPresenter @Inject constructor(
     private val deleteButtonSubject = BehaviorSubject.createDefault(false)
 
 
-    override fun attachView(view: EditCarContract.View?) {
-        super.attachView(view)
+    override fun attachView(view: EditCarContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
 
         disposables += initCarSubject.compose(RxUtils.applySchedulers()).subscribe {
             view?.onInitCar(it)

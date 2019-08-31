@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui.drivers
 
+import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.drivers.DriversRepository
@@ -11,9 +12,9 @@ class DriversPresenter @Inject constructor(
         private val repo: DriversRepository
 ) : Presenter<DriversContract.View>() {
 
+    override fun attachView(view: DriversContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
 
-    override fun attachView(view: DriversContract.View?) {
-        super.attachView(view)
         disposables += repo.listen()
                 .map { list -> list.sortedBy { it.name } }
                 .compose(RxUtils.applySchedulers())
@@ -24,12 +25,5 @@ class DriversPresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-    fun removeAll() = launch {
-        try {
-            repo.removeAll().blockingAwait()
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
-    }
+    fun removeAll() = launch { repo.removeAll().blockingAwait() }
 }

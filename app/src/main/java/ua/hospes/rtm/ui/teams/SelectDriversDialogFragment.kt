@@ -49,12 +49,7 @@ class SelectDriversDialogFragment : DiDialogFragment(), SelectDriversContract.Vi
         btn_cancel.setOnClickListener { dismiss() }
         btn_save.setOnClickListener { presenter.save(adapter.getSelectedIds()) }
 
-        presenter.attachView(this)
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
+        presenter.attachView(this, lifecycle)
     }
 
 

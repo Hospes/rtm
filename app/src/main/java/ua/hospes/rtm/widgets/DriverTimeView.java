@@ -1,4 +1,4 @@
-package ua.hospes.rtm.ui.race.widgets;
+package ua.hospes.rtm.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;

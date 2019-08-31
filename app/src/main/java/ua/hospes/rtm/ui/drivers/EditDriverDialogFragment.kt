@@ -48,12 +48,7 @@ class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract.View {
         btn_delete.setOnClickListener { presenter.delete() }
 
         presenter.initDriver(driver)
-        presenter.attachView(this)
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
+        presenter.attachView(this, lifecycle)
     }
 
 

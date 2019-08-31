@@ -42,13 +42,9 @@ class DriversFragment : AbsFragment(), DriversContract.View {
         list.adapter = adapter
         adapter.itemClickListener = { showEditDriverDialog(it) }
 
-        presenter.attachView(this)
+        presenter.attachView(this, lifecycle)
     }
 
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
-    }
 
     //region ActionBar Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = inflater.inflate(R.menu.drivers, menu)

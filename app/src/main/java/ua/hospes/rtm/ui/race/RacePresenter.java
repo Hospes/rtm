@@ -112,6 +112,6 @@ class RacePresenter extends BasePresenter<RaceContract.View> {
     }
 
     void showAddTeamDialog(FragmentManager managerFragment) {
-        AddTeamToRaceDialogFragment.newInstance().show(managerFragment, "add_team_to_race");
+        (new AddTeamToRaceDialogFragment()).show(managerFragment, "add_team_to_race");
     }
 }

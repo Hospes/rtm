@@ -59,7 +59,9 @@ android {
         targetCompatibility 1.8
     }
 
-    kotlinOptions { jvmTarget = '1.8' }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -67,15 +69,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.2.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.2.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.2'
 
-    implementation 'androidx.activity:activity:1.0.0-beta01'
-    implementation 'androidx.fragment:fragment:1.1.0-beta01'
-    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha06'
+    implementation 'androidx.activity:activity:1.1.0-alpha02'
+    implementation 'androidx.fragment:fragment:1.2.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta03'
     implementation 'com.google.android.material:material:1.0.0'
 
     // logging
@@ -91,10 +93,10 @@ dependencies {
     implementation "ua.hospes.absrvadapter:absrvadapter:0.2.6"
     implementation "ua.hospes.undobutton:undobutton:0.2.0"
 
-    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.10"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
-    def dagger = '2.22.1'
+    def dagger = '2.24'
     implementation "com.google.dagger:dagger:$dagger"
     implementation "com.google.dagger:dagger-android:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
@@ -103,7 +105,7 @@ dependencies {
 
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
 
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 }
 

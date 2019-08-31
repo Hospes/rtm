@@ -42,7 +42,7 @@
             android:maxLines="1"
             android:text="@string/race_btn_set_driver" />
 
-    <ua.hospes.rtm.ui.race.widgets.DriverTimeView
+    <ua.hospes.rtm.widgets.DriverTimeView
         android:id="@+id/tv_driver_all_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                   android:textAllCaps="true"
                   android:textSize="18sp" />
 
-        <ua.hospes.rtm.ui.race.widgets.SessionTimeView
+        <ua.hospes.rtm.widgets.SessionTimeView
             android:id="@+id/tv_session_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

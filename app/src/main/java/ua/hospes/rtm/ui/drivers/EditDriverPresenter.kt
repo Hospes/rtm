@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui.drivers
 
+import androidx.lifecycle.Lifecycle
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
@@ -23,8 +24,8 @@ class EditDriverPresenter @Inject constructor(
     private val deleteButtonSubject = BehaviorSubject.createDefault(false)
 
 
-    override fun attachView(view: EditDriverContract.View?) {
-        super.attachView(view)
+    override fun attachView(view: EditDriverContract.View?, lc: Lifecycle) {
+        super.attachView(view, lc)
 
         disposables += initDriverSubject.compose(RxUtils.applySchedulers()).subscribe {
             view?.onInitDriver(it)

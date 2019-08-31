@@ -47,7 +47,7 @@ class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
         btn_delete.setOnClickListener { presenter.delete() }
 
         presenter.initTeam(team)
-        presenter.attachView(this)
+        presenter.attachView(this, lifecycle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when (requestCode) {
@@ -56,11 +56,6 @@ class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
             else -> Unit
         }
         else -> super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
     }
 
 
