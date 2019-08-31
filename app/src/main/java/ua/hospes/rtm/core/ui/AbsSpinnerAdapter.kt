@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.ThemedSpinnerAdapter
 import java.util.*
@@ -129,17 +128,11 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
     }
 
 
-    override fun getCount(): Int {
-        return objects.size
-    }
+    override fun getCount(): Int = objects.size
 
-    override fun getItem(position: Int): T? {
-        return objects[position]
-    }
+    override fun getItem(position: Int): T? = objects[position]
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
 
     protected abstract fun onCreateViewHolder(inflater: LayoutInflater): VH
@@ -147,7 +140,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
     protected abstract fun onBindViewHolder(holder: VH, item: T?, position: Int)
 
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var convertView = convertView
         val holder: VH
         if (convertView == null) {
@@ -161,38 +154,13 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
         return convertView
     }
 
-    override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
-        return getView(position, convertView, parent)
-    }
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View = getView(position, convertView, parent)
 
     override fun setDropDownViewTheme(theme: Resources.Theme?) {}
 
-    override fun getDropDownViewTheme(): Resources.Theme? {
-        return null
-    }
+    override fun getDropDownViewTheme(): Resources.Theme? = null
 
-    abstract class ViewHolder private constructor(var itemView: View) {
-
-
-        init {
-            findViews(itemView)
-        }
-
-        constructor(inflater: LayoutInflater, @LayoutRes layoutId: Int) : this(inflater.inflate(layoutId, null, false)) {}
-
-
-        protected abstract fun findViews(itemView: View)
-
-        private fun <V> findView(root: View?, @IdRes id: Int): V? {
-            if (root == null) return null
-            return try {
-                root.findViewById<View>(id) as V
-            } catch (e: ClassCastException) {
-                null
-            }
-
-        }
-
-        fun <V> findView(@IdRes id: Int): V? = findView<V>(itemView, id)
+    abstract class ViewHolder private constructor(val itemView: View) {
+        constructor(inflater: LayoutInflater, @LayoutRes layoutId: Int) : this(inflater.inflate(layoutId, null, false))
     }
 }

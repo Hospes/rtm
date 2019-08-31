@@ -87,8 +87,12 @@ dependencies {
     implementation "com.android.support:support-annotations:$supp"
     implementation "com.android.support:preference-v7:$supp"
 
+    def room_version = "2.2.0-beta01"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"   // Kotlin Extensions and Coroutines support for Room
+
     implementation "ua.hospes.dbhelper:dbhelper:2.0.9"
-    implementation "ua.hospes.absrvadapter:absrvadapter:0.2.6"
     implementation "ua.hospes.undobutton:undobutton:0.2.0"
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.10"

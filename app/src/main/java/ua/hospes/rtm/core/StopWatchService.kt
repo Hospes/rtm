@@ -16,6 +16,11 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.ui.MainActivity
 import ua.hospes.rtm.utils.TimeUtils
 
+private const val NOTIFICATION_ID = 1337
+private const val KEY_ACTION = "action"
+private const val KEY_START = "start"
+private const val KEY_STOP = "stop"
+
 class StopWatchService : Service(), StopWatch.OnStopWatchListener {
     private val binder = StopWatchBinder()
     private val stopWatch = StopWatch()
@@ -31,9 +36,7 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
         wakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ua.hospes.rtm:MyWakeLock")
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return binder
-    }
+    override fun onBind(intent: Intent): IBinder? = binder
 
     @SuppressLint("WakelockTimeout")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -87,10 +90,6 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
 
 
     internal inner class StopWatchBinder : Binder() {
-
-        val stopWatch: StopWatch
-            get() = stopWatch
-
         fun addStopWatchListener(listener: StopWatch.OnStopWatchListener) {
             stopWatch.addOnChronometerTickListener(listener)
         }
@@ -98,25 +97,21 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
         fun removeStopWatchListener(listener: StopWatch.OnStopWatchListener) {
             stopWatch.removeOnChronometerTickListener(listener)
         }
+
+        fun getStopWatch(): StopWatch = this@StopWatchService.stopWatch
     }
 
     companion object {
-        private val NOTIFICATION_ID = 1337
-        private val KEY_ACTION = "action"
-        private val KEY_START = "start"
-        private val KEY_STOP = "stop"
+        @JvmStatic
+        fun checkDeath(context: Context) =
+                context.startService(Intent(context, StopWatchService::class.java)).let { Unit }
 
+        @JvmStatic
+        fun start(context: Context) =
+                context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_START)).let { Unit }
 
-        fun checkDeath(context: Context) {
-            context.startService(Intent(context, StopWatchService::class.java))
-        }
-
-        fun start(context: Context) {
-            context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_START))
-        }
-
-        fun stop(context: Context) {
-            context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_STOP))
-        }
+        @JvmStatic
+        fun stop(context: Context) =
+                context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_STOP)).let { Unit }
     }
 }

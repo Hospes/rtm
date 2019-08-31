@@ -12,7 +12,7 @@ abstract class StopWatchFragment : AbsFragment(), StopWatch.OnStopWatchListener 
     private var binder: StopWatchService.StopWatchBinder? = null
 
     protected val isStopWatchStarted: Boolean
-        get() = binder != null && binder!!.stopWatch.isStarted
+        get() = binder != null && binder!!.getStopWatch().isStarted
 
 
     private val connection = object : ServiceConnection {
