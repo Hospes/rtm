@@ -9,12 +9,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import ua.hospes.rtm.core.ui.RxScrollListener;
-import ua.hospes.rtm.widgets.TimeView;
 import ua.hospes.rtm.utils.RxUtils;
+import ua.hospes.rtm.widgets.TimeView;
 
-/**
- * @author Andrew Khloponin
- */
 class TimerListController extends RxScrollListener {
     private static final float AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.1f;
     private static final float AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.1f;

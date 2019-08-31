@@ -26,8 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.race.detail.RaceItemDetailActivity"
-                  android:theme="@style/AppTheme.DialogWhenLarge" />
+
+        <activity android:name=".ui.race.detail.RaceItemDetailActivity" />
 
         <service android:name=".core.StopWatchService"
                  android:exported="false" />

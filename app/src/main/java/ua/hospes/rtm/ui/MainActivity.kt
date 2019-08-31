@@ -7,9 +7,9 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.core.DiActivity
 import ua.hospes.rtm.core.StopWatchService
 import ua.hospes.rtm.ui.cars.CarsFragment
 import ua.hospes.rtm.ui.drivers.DriversFragment
@@ -17,11 +17,10 @@ import ua.hospes.rtm.ui.race.RaceFragment
 import ua.hospes.rtm.ui.settings.SettingsFragment
 import ua.hospes.rtm.ui.teams.TeamsFragment
 
-class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
 

@@ -5,9 +5,6 @@ import androidx.annotation.Nullable;
 import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.Driver;
 
-/**
- * @author Andrew Khloponin
- */
 public class Session {
     private final int id;
     private final int teamId;

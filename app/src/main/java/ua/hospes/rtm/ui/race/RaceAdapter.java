@@ -23,9 +23,9 @@ import ua.hospes.rtm.domain.cars.Car;
 import ua.hospes.rtm.domain.drivers.Driver;
 import ua.hospes.rtm.domain.race.models.RaceItem;
 import ua.hospes.rtm.domain.sessions.Session;
+import ua.hospes.rtm.utils.UiUtils;
 import ua.hospes.rtm.widgets.DriverTimeView;
 import ua.hospes.rtm.widgets.SessionTimeView;
-import ua.hospes.rtm.utils.UiUtils;
 import ua.hospes.undobutton.UndoButton;
 import ua.hospes.undobutton.UndoButtonController;
 

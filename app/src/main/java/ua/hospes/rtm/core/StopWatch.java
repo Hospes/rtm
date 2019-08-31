@@ -6,9 +6,6 @@ import android.os.Message;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Andrew Khloponin
- */
 public class StopWatch {
     private static final String TAG = "StopWatch";
     private static final long NANO_2_MILLIS = 1000000L;
