@@ -1,12 +1,10 @@
 package ua.hospes.rtm.ui.cars
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_cars.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
@@ -21,11 +19,6 @@ class CarsFragment : AbsFragment(), CarsContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
     }
 
     override fun setActionBarTitle(): Int = R.string.cars_title
