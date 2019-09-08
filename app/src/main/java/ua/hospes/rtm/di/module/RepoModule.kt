@@ -2,16 +2,12 @@ package ua.hospes.rtm.di.module
 
 import dagger.Module
 import dagger.Provides
-import ua.hospes.rtm.data.cars.CarsDbStorage
-import ua.hospes.rtm.data.cars.CarsRepositoryImpl
-import ua.hospes.rtm.data.drivers.DriversDbStorage
-import ua.hospes.rtm.data.drivers.DriversRepositoryImpl
-import ua.hospes.rtm.data.race.RaceRepositoryImpl
-import ua.hospes.rtm.data.race.storage.RaceDbStorage
-import ua.hospes.rtm.data.sessions.SessionsRepositoryImpl
-import ua.hospes.rtm.data.sessions.storage.SessionsDbStorage
-import ua.hospes.rtm.data.team.TeamsDbStorage
-import ua.hospes.rtm.data.team.TeamsRepositoryImpl
+import ua.hospes.rtm.core.db.cars.CarDAO
+import ua.hospes.rtm.core.db.drivers.DriverDAO
+import ua.hospes.rtm.core.db.race.storage.RaceDbStorage
+import ua.hospes.rtm.core.db.sessions.storage.SessionsDbStorage
+import ua.hospes.rtm.core.db.team.TeamDAO
+import ua.hospes.rtm.data.*
 import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.domain.race.RaceRepository
@@ -21,7 +17,6 @@ import javax.inject.Singleton
 
 @Module
 object RepoModule {
-
     @Provides @JvmStatic
     internal fun provideRaceRepository(raceDb: RaceDbStorage, teamsRepo: TeamsRepository, sDb: SessionsDbStorage, sRepo: SessionsRepositoryImpl)
             : RaceRepository = RaceRepositoryImpl(raceDb, teamsRepo, sDb, sRepo)
@@ -30,18 +25,15 @@ object RepoModule {
     internal fun provideSessionsRepository(dbStorage: SessionsDbStorage, driversRepository: DriversRepository, carsRepository: CarsRepository)
             : SessionsRepository = SessionsRepositoryImpl(dbStorage, driversRepository, carsRepository)
 
-    @Singleton
-    @Provides @JvmStatic
-    internal fun provideDriversRepository(dbStorage: DriversDbStorage, teamsDbStorage: TeamsDbStorage)
-            : DriversRepository = DriversRepositoryImpl(dbStorage, teamsDbStorage)
+    @Provides @Singleton @JvmStatic
+    internal fun provideDriversRepository(dao: DriverDAO, teamDAO: TeamDAO)
+            : DriversRepository = DriversRepositoryImpl(dao, teamDAO)
 
-    @Singleton
-    @Provides @JvmStatic
-    internal fun provideTeamsRepository(db: TeamsDbStorage, driversRepo: DriversRepository)
-            : TeamsRepository = TeamsRepositoryImpl(db, driversRepo)
+    @Provides @Singleton @JvmStatic
+    internal fun provideTeamsRepository(dao: TeamDAO, driverDAO: DriverDAO)
+            : TeamsRepository = TeamsRepositoryImpl(dao, driverDAO)
 
-    @Singleton
-    @Provides @JvmStatic
-    internal fun provideCarsRepository(db: CarsDbStorage)
-            : CarsRepository = CarsRepositoryImpl(db)
+    @Provides @Singleton @JvmStatic
+    internal fun provideCarsRepository(dao: CarDAO)
+            : CarsRepository = CarsRepositoryImpl(dao)
 }

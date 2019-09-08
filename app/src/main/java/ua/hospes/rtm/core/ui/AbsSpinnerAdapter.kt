@@ -99,7 +99,7 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
     /**
      * Removes the specified o from the array.
      *
-     * @param `o` The o to remove.
+     * @param `o` The o to delete.
      */
     fun remove(o: T) {
         synchronized(mLock) {

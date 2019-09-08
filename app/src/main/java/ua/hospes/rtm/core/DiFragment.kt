@@ -8,9 +8,13 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-abstract class DiFragment : Fragment(), HasAndroidInjector {
+abstract class DiFragment : Fragment, HasAndroidInjector {
     @Inject lateinit var injector: DispatchingAndroidInjector<Any>
     override fun androidInjector(): AndroidInjector<Any> = injector
+
+    constructor() : super()
+    constructor(contentLayoutId: Int) : super(contentLayoutId)
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

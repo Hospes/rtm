@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 private const val KEY_CAR = "car"
 
-class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View {
+internal class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View {
     @Inject lateinit var presenter: EditCarPresenter
     private val car by extra<Car>(KEY_CAR)
     private val qualities = arrayOf(Car.Quality.LOW, Car.Quality.NORMAL, Car.Quality.HIGH)

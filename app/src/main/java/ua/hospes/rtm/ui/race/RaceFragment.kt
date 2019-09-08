@@ -23,7 +23,7 @@ import ua.hospes.undobutton.UndoButton
 import ua.hospes.undobutton.UndoButtonController
 import javax.inject.Inject
 
-class RaceFragment : StopWatchFragment(), RaceContract.View {
+internal class RaceFragment : StopWatchFragment(), RaceContract.View {
     private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     @Inject lateinit var presenter: RacePresenter

@@ -6,7 +6,12 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import ua.hospes.rtm.core.DiFragment
 
-abstract class AbsFragment : DiFragment() {
+abstract class AbsFragment : DiFragment {
+
+    constructor() : super()
+    constructor(contentLayoutId: Int) : super(contentLayoutId)
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         updateABTitle(activity, setActionBarTitle())

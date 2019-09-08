@@ -4,10 +4,11 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import kotlinx.android.parcel.Parcelize
 import ua.hospes.rtm.R
+import ua.hospes.rtm.core.db.cars.CarEntity
 
 @Parcelize
 data class Car(
-        val id: Int? = null,
+        val id: Int = 0,
         val number: Int,
         val quality: Quality = Quality.NORMAL,
         val broken: Boolean = false
@@ -23,3 +24,5 @@ data class Car(
         }
     }
 }
+
+fun Car.toDbEntity(): CarEntity = CarEntity(id, number, quality, broken)

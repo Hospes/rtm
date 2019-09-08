@@ -16,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RaceInteractor @Inject constructor(
+internal class RaceInteractor @Inject constructor(
         private val preferencesManager: PreferencesManager,
         private val raceRepository: RaceRepository,
         private val sessionsRepository: SessionsRepository,
@@ -24,7 +24,7 @@ class RaceInteractor @Inject constructor(
         private val carsRepository: CarsRepository) {
 
     val carsNotInRace: Observable<Car>
-        get() = carsRepository.getNotInRace()
+        get() = Observable.empty() //carsRepository.getNotInRace()
 
 
     fun listen(): Observable<List<RaceItem>> {
@@ -108,12 +108,12 @@ class RaceInteractor @Inject constructor(
 
 
     fun getDrivers(teamId: Int): Single<List<Driver>> {
-        return driversRepository.getByTeamId(teamId)
+        return Single.error(RuntimeException()) //driversRepository.getByTeamId(teamId)
     }
 
     fun resetRace(): Observable<Optional<*>> {
         return Observable.empty()
-        //        return sessionsRepository.removeAll()
+        //        return sessionsRepository.clear()
         //                .flatMap { count -> raceRepository.get().toList() }
         //                .flatMap { raceItems ->
         //                    Observable.zip<RaceItem, Session, RaceItem>(
@@ -130,7 +130,7 @@ class RaceInteractor @Inject constructor(
 
     fun removeAll(): Single<Void> {
         return Single.error(RuntimeException())
-        //        return Single.zip(raceRepository.removeAll(), sessionsRepository.removeAll(), { aVoid, aVoid2 -> null })
+        //        return Single.zip(raceRepository.clear(), sessionsRepository.clear(), { aVoid, aVoid2 -> null })
     }
 
 

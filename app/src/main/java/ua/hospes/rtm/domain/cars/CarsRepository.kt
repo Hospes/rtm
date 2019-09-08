@@ -1,20 +1,21 @@
 package ua.hospes.rtm.domain.cars
 
-import io.reactivex.Completable
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
-interface CarsRepository {
-    fun get(): Observable<Car>
+internal interface CarsRepository {
+    suspend fun get(): List<Car>
 
-    fun get(vararg ids: Int): Observable<Car>
+    suspend fun get(vararg ids: Int): List<Car>
 
-    fun getNotInRace(): Observable<Car>
+    suspend fun getNotInRace(): List<Car>
 
-    fun listen(): Observable<List<Car>>
 
-    fun save(car: Car): Completable
+    fun listen(): Flow<List<Car>>
 
-    fun remove(id: Int): Completable
 
-    fun removeAll(): Completable
+    suspend fun save(car: Car)
+
+    suspend fun delete(id: Int)
+
+    suspend fun clear()
 }

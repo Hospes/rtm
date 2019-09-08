@@ -1,33 +1,32 @@
 package ua.hospes.rtm.ui.cars
 
 import androidx.lifecycle.Lifecycle
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.cars.CarsRepository
-import ua.hospes.rtm.utils.RxUtils
-import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class EditCarPresenter @Inject constructor(
-        private val repo: CarsRepository
-) : Presenter<EditCarContract.View>() {
-    private val initCarSubject = BehaviorSubject.create<Car>()
-    private val deleteButtonSubject = BehaviorSubject.createDefault(false)
+@Suppress("EXPERIMENTAL_API_USAGE")
+internal class EditCarPresenter @Inject constructor(private val repo: CarsRepository) : Presenter<EditCarContract.View>() {
+    private val initCar = ConflatedBroadcastChannel<Car>()
+    private val deleteAvailable = ConflatedBroadcastChannel(false)
 
 
     override fun attachView(view: EditCarContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
-        disposables += initCarSubject.compose(RxUtils.applySchedulers()).subscribe {
-            view?.onInitCar(it)
-            deleteButtonSubject.onNext(true)
+        launch(Dispatchers.Main) {
+            initCar.consumeEach {
+                view?.onInitCar(it)
+                deleteAvailable.offer(true)
+            }
         }
-
-        disposables += deleteButtonSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onDeleteButtonAvailable(it) }
+        launch(Dispatchers.Main) { deleteAvailable.consumeEach { view?.onDeleteButtonAvailable(it) } }
     }
 
 
@@ -35,35 +34,23 @@ class EditCarPresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-    fun initCar(car: Car?) = car?.let { initCarSubject.onNext(it) }
+    fun initCar(car: Car?) = car?.let { initCar.offer(it) }.let { Unit }
 
     fun save(number: CharSequence?, quality: Car.Quality, broken: Boolean) = launch {
         val car = Car(
-                initCarSubject.value?.id,
+                initCar.valueOrNull?.id ?: 0,
                 number?.toString()?.toIntOrNull() ?: return@launch,
                 quality,
                 broken
         )
 
-        try {
-            withContext(Dispatchers.IO) { repo.save(car).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        repo.save(car)
 
         withContext(Dispatchers.Main) { view?.onSaved() }
     }
 
     fun delete() = launch {
-        val id = initCarSubject.value?.id ?: return@launch
-
-        try {
-            withContext(Dispatchers.IO) { repo.remove(id).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        repo.delete(initCar.valueOrNull?.id ?: return@launch)
 
         withContext(Dispatchers.Main) { view?.onDeleted() }
     }

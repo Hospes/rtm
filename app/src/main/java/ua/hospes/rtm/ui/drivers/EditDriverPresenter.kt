@@ -1,10 +1,9 @@
 package ua.hospes.rtm.ui.drivers
 
 import androidx.lifecycle.Lifecycle
-import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
@@ -16,7 +15,7 @@ import ua.hospes.rtm.utils.RxUtils
 import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class EditDriverPresenter @Inject constructor(
+internal class EditDriverPresenter @Inject constructor(
         private val driversRepo: DriversRepository,
         private val teamsRepo: TeamsRepository
 ) : Presenter<EditDriverContract.View>() {
@@ -32,15 +31,15 @@ class EditDriverPresenter @Inject constructor(
             deleteButtonSubject.onNext(true)
         }
 
-        disposables += teamsRepo.listen().compose(RxUtils.applySchedulers()).subscribe({ view?.onTeamsLoaded(it) }, this::error)
+        launch(Dispatchers.Main) { teamsRepo.listen().collect { view?.onTeamsLoaded(it) } }
 
-        disposables += Observable.zip(
-                initDriverSubject, teamsRepo.get().toObservable(),
-                BiFunction { driver: Driver, all: List<Team> -> all.indexOfFirst { it.id == driver.teamId } }
-        )
-                .compose(RxUtils.applySchedulers())
-                .subscribe({ view?.onTeamSelectionIndex(it) }, this::error)
+        launch(Dispatchers.Main) {
+            val i = withContext(Dispatchers.IO) {
+                initDriverSubject.value?.let { driver -> teamsRepo.get().indexOfFirst { it.id == driver.teamId } }
+            }
 
+            i?.let { view?.onTeamSelectionIndex(it) }
+        }
 
         disposables += deleteButtonSubject.compose(RxUtils.applySchedulers()).subscribe { view?.onDeleteButtonAvailable(it) }
     }
@@ -54,30 +53,18 @@ class EditDriverPresenter @Inject constructor(
 
     fun save(name: CharSequence?, team: Team? = null) = launch {
         val driver = Driver(
-                initDriverSubject.value?.id,
+                initDriverSubject.value?.id ?: 0,
                 name?.toString() ?: return@launch,
                 team?.id, team?.name
         )
 
-        try {
-            withContext(Dispatchers.IO) { driversRepo.save(driver).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        driversRepo.save(driver)
 
         withContext(Dispatchers.Main) { view?.onSaved() }
     }
 
     fun delete() = launch {
-        val id = initDriverSubject.value?.id ?: return@launch
-
-        try {
-            withContext(Dispatchers.IO) { driversRepo.remove(id).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        driversRepo.delete(initDriverSubject.value?.id ?: return@launch)
 
         withContext(Dispatchers.Main) { view?.onDeleted() }
     }

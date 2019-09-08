@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 private const val KEY_DRIVER = "driver"
 
-class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract.View {
+internal class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract.View {
     @Inject lateinit var presenter: EditDriverPresenter
     private val driver by extra<Driver>(KEY_DRIVER)
     private lateinit var adapter: TeamSpinnerAdapter

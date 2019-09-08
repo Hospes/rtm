@@ -1,27 +1,26 @@
 package ua.hospes.rtm.domain.drivers
 
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
-interface DriversRepository {
-    fun listen(): Observable<List<Driver>>
+internal interface DriversRepository {
+    suspend fun get(): List<Driver>
 
-    fun get(): Single<List<Driver>>
+    suspend fun get(vararg ids: Int): List<Driver>
 
-    operator fun get(vararg ids: Int): Single<List<Driver>>
-
-    fun getByTeamId(teamId: Int): Single<List<Driver>>
+    suspend fun getByTeamId(teamId: Int): List<Driver>
 
 
-    fun save(driver: Driver): Completable
-
-    fun addDriversToTeam(teamId: Int, vararg driverIds: Int): Completable
-
-    fun removeDriversFromTeam(teamId: Int): Completable
+    fun listen(): Flow<List<Driver>>
 
 
-    fun remove(id: Int): Completable
+    suspend fun addDriversToTeam(teamId: Int, vararg driverIds: Int)
 
-    fun removeAll(): Completable
+    suspend fun removeDriversFromTeam(teamId: Int)
+
+
+    suspend fun save(driver: Driver)
+
+    suspend fun delete(id: Int)
+
+    suspend fun clear()
 }

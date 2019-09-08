@@ -18,7 +18,7 @@ import javax.inject.Inject
 private const val KEY_TEAM = "team"
 private const val REQUEST_CODE_SELECT_DRIVERS = 11
 
-class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
+internal class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
     @Inject lateinit var presenter: EditTeamPresenter
     private val team by extra<Team>(KEY_TEAM)
 

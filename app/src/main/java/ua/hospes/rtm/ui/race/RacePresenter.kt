@@ -11,7 +11,7 @@ import ua.hospes.rtm.utils.RxUtils
 import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class RacePresenter @Inject constructor(
+internal class RacePresenter @Inject constructor(
         private val interactor: RaceInteractor
 ) : Presenter<RaceContract.View>() {
 

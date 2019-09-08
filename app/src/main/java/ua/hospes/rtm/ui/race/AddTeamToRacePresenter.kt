@@ -17,7 +17,7 @@ import ua.hospes.rtm.utils.RxUtils
 import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class AddTeamToRacePresenter @Inject constructor(
+internal class AddTeamToRacePresenter @Inject constructor(
         private val raceRepo: RaceRepository,
         private val sessionsRepo: SessionsRepository,
         private val teamsRepo: TeamsRepository
@@ -26,9 +26,9 @@ class AddTeamToRacePresenter @Inject constructor(
     override fun attachView(view: AddTeamToRaceContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
-        disposables += teamsRepo.getNotInRace()
-                .compose(RxUtils.applySchedulersSingle())
-                .subscribe({ view?.onTeams(it) }, this::error)
+//        disposables += teamsRepo.getNotInRace()
+//                .compose(RxUtils.applySchedulersSingle())
+//                .subscribe({ view?.onTeams(it) }, this::error)
     }
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit

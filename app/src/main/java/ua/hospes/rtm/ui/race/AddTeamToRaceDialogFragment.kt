@@ -12,7 +12,7 @@ import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.ui.drivers.TeamSpinnerAdapter
 import javax.inject.Inject
 
-class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceContract.View {
+internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceContract.View {
     @Inject lateinit var presenter: AddTeamToRacePresenter
     private lateinit var adapter: TeamSpinnerAdapter
 

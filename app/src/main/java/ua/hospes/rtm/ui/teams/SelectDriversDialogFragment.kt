@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 private const val KEY_DRIVERS = "drivers"
 
-class SelectDriversDialogFragment : DiDialogFragment(), SelectDriversContract.View {
+internal class SelectDriversDialogFragment : DiDialogFragment(), SelectDriversContract.View {
     @Inject lateinit var presenter: SelectDriversPresenter
     private val adapter = SelectDriversAdapter()
     private val selected by extraNotNull(KEY_DRIVERS, emptyList<Driver>())

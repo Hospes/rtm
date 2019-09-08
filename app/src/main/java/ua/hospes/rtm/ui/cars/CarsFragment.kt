@@ -1,7 +1,10 @@
 package ua.hospes.rtm.ui.cars
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,7 +14,7 @@ import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.cars.Car
 import javax.inject.Inject
 
-class CarsFragment : AbsFragment(), CarsContract.View {
+internal class CarsFragment : AbsFragment(R.layout.fragment_cars), CarsContract.View {
     @Inject lateinit var presenter: CarsPresenter
     private val adapter = CarsAdapter()
 
@@ -23,9 +26,6 @@ class CarsFragment : AbsFragment(), CarsContract.View {
 
     override fun setActionBarTitle(): Int = R.string.cars_title
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.fragment_cars, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,19 +1,20 @@
 package ua.hospes.rtm.ui.drivers
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_drivers.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import javax.inject.Inject
 
-class DriversFragment : AbsFragment(), DriversContract.View {
+internal class DriversFragment : AbsFragment(R.layout.fragment_drivers), DriversContract.View {
     @Inject lateinit var presenter: DriversPresenter
     private val adapter = DriversAdapter()
 
@@ -23,16 +24,7 @@ class DriversFragment : AbsFragment(), DriversContract.View {
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun setActionBarTitle(): Int = R.string.drivers_title
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.fragment_drivers, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

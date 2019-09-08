@@ -12,7 +12,7 @@ import ua.hospes.rtm.utils.RxUtils
 import java.util.*
 import javax.inject.Inject
 
-class SetCarDialogFragment : AppCompatDialogFragment() {
+internal class SetCarDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var raceInteractor: RaceInteractor
     private val cars = ArrayList<Car>()
     private var titles = arrayOf<String>()

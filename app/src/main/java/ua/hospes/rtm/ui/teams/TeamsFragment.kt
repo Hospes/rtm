@@ -1,19 +1,20 @@
 package ua.hospes.rtm.ui.teams
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_teams.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.team.Team
 import javax.inject.Inject
 
-class TeamsFragment : AbsFragment(), TeamsContract.View {
+internal class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContract.View {
     @Inject lateinit var presenter: TeamsPresenter
     private val adapter = TeamsAdapter()
 
@@ -23,16 +24,8 @@ class TeamsFragment : AbsFragment(), TeamsContract.View {
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun setActionBarTitle(): Int = R.string.teams_title
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.fragment_teams, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -13,9 +13,7 @@ import ua.hospes.rtm.utils.RxUtils
 import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class EditTeamPresenter @Inject constructor(
-        private val repo: TeamsRepository
-) : Presenter<EditTeamContract.View>() {
+internal class EditTeamPresenter @Inject constructor(private val repo: TeamsRepository) : Presenter<EditTeamContract.View>() {
     private val initTeamSubject = BehaviorSubject.create<Team>()
     private val teamDriversSubject = BehaviorSubject.createDefault(emptyList<Driver>())
     private val deleteButtonSubject = BehaviorSubject.createDefault(false)
@@ -45,30 +43,18 @@ class EditTeamPresenter @Inject constructor(
 
     fun save(name: CharSequence?) = launch {
         val team = Team(
-                initTeamSubject.value?.id,
+                initTeamSubject.value?.id ?: 0,
                 name?.toString() ?: return@launch,
                 drivers = (teamDriversSubject.value ?: emptyList()).toMutableList()
         )
 
-        try {
-            withContext(Dispatchers.IO) { repo.save(team).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        repo.save(team)
 
         withContext(Dispatchers.Main) { view?.onSaved() }
     }
 
     fun delete() = launch {
-        val id = initTeamSubject.value?.id ?: return@launch
-
-        try {
-            withContext(Dispatchers.IO) { repo.remove(id).blockingAwait() }
-        } catch (t: Throwable) {
-            error(t)
-            return@launch
-        }
+        repo.delete(initTeamSubject.value?.id ?: return@launch)
 
         withContext(Dispatchers.Main) { view?.onDeleted() }
     }

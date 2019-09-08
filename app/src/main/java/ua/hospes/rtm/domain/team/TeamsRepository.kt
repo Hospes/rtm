@@ -1,27 +1,21 @@
 package ua.hospes.rtm.domain.team
 
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
-interface TeamsRepository {
+internal interface TeamsRepository {
+    suspend fun get(): List<Team>
 
-    fun listen(): Observable<List<Team>>
+    suspend fun get(vararg ids: Int): List<Team>
 
-
-    fun get(): Single<List<Team>>
-
-    fun get(id: Int): Single<Team>
-
-    /**
-     * Get teams that not yet in Race
-     */
-    fun getNotInRace(): Single<List<Team>>
+    suspend fun getNotInRace(): List<Team>
 
 
-    fun save(team: Team): Completable
+    fun listen(): Flow<List<Team>>
 
-    fun remove(id: Int): Completable
 
-    fun removeAll(): Completable
+    suspend fun save(team: Team)
+
+    suspend fun delete(id: Int)
+
+    suspend fun clear()
 }

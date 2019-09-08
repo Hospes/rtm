@@ -1,28 +1,24 @@
 package ua.hospes.rtm.ui.teams
 
 import androidx.lifecycle.Lifecycle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.team.TeamsRepository
-import ua.hospes.rtm.utils.RxUtils
-import ua.hospes.rtm.utils.plusAssign
 import javax.inject.Inject
 
-class TeamsPresenter @Inject constructor(
-        private val repo: TeamsRepository
-) : Presenter<TeamsContract.View>() {
+internal class TeamsPresenter @Inject constructor(private val repo: TeamsRepository) : Presenter<TeamsContract.View>() {
 
     override fun attachView(view: TeamsContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
-        disposables += repo.listen()
-                .compose(RxUtils.applySchedulers())
-                .subscribe({ view?.onData(it) }, this::error)
+        launch(Dispatchers.Main) { repo.listen().collect { view?.onData(it) } }
     }
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-    fun removeAll() = launch { repo.removeAll().blockingAwait() }
+    fun removeAll() = launch { repo.clear() }
 }
