@@ -2,7 +2,7 @@ package ua.hospes.rtm.domain.drivers
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import ua.hospes.rtm.core.db.drivers.DriverEntity
+import ua.hospes.rtm.db.drivers.DriverEntity
 
 @Parcelize
 data class Driver(

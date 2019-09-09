@@ -2,11 +2,11 @@ package ua.hospes.rtm.di.module
 
 import dagger.Module
 import dagger.Provides
-import ua.hospes.rtm.core.db.cars.CarDAO
-import ua.hospes.rtm.core.db.drivers.DriverDAO
-import ua.hospes.rtm.core.db.race.storage.RaceDbStorage
-import ua.hospes.rtm.core.db.sessions.storage.SessionsDbStorage
-import ua.hospes.rtm.core.db.team.TeamDAO
+import ua.hospes.rtm.db.cars.CarDAO
+import ua.hospes.rtm.db.drivers.DriverDAO
+import ua.hospes.rtm.db.race.RaceDbStorage
+import ua.hospes.rtm.db.sessions.SessionsDbStorage
+import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.data.*
 import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.drivers.DriversRepository

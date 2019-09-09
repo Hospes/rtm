@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import kotlinx.android.parcel.Parcelize
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.db.cars.CarEntity
+import ua.hospes.rtm.db.cars.CarEntity
 
 @Parcelize
 data class Car(

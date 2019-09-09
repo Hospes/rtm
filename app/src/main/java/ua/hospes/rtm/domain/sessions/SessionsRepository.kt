@@ -2,7 +2,7 @@ package ua.hospes.rtm.domain.sessions
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import ua.hospes.rtm.core.db.tables.Sessions
+import ua.hospes.rtm.db.tables.Sessions
 
 /**
  * @author Andrew Khloponin

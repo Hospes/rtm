@@ -2,7 +2,7 @@ package ua.hospes.rtm.domain.team
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import ua.hospes.rtm.core.db.team.TeamEntity
+import ua.hospes.rtm.db.team.TeamEntity
 import ua.hospes.rtm.domain.drivers.Driver
 
 @Parcelize

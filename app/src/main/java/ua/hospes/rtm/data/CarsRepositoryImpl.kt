@@ -4,8 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import ua.hospes.rtm.core.db.cars.CarDAO
-import ua.hospes.rtm.core.db.cars.toDomain
+import ua.hospes.rtm.db.cars.CarDAO
+import ua.hospes.rtm.db.cars.toDomain
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.cars.toDbEntity
