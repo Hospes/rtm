@@ -7,6 +7,8 @@ import dagger.Provides
 import ua.hospes.rtm.db.AppDatabase
 import ua.hospes.rtm.db.cars.CarDAO
 import ua.hospes.rtm.db.drivers.DriverDAO
+import ua.hospes.rtm.db.race.RaceDAO
+import ua.hospes.rtm.db.sessions.SessionDAO
 import ua.hospes.rtm.db.team.TeamDAO
 import javax.inject.Singleton
 
@@ -23,4 +25,10 @@ internal object DbModule {
 
     @Provides @JvmStatic
     fun provideDriverDAO(db: AppDatabase): DriverDAO = db.driverDao()
+
+    @Provides @JvmStatic
+    fun provideSessionDAO(db: AppDatabase): SessionDAO = db.sessionDao()
+
+    @Provides @JvmStatic
+    fun provideRaceDAO(db: AppDatabase): RaceDAO = db.raceDao()
 }

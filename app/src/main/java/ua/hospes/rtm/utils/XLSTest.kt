@@ -2,20 +2,15 @@ package ua.hospes.rtm.utils
 
 import android.os.Environment
 import android.util.SparseIntArray
-
-import java.io.File
-import java.io.IOException
-
 import jxl.CellView
 import jxl.Workbook
 import jxl.write.Label
 import jxl.write.WritableSheet
-import jxl.write.WritableWorkbook
 import jxl.write.WriteException
-import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.domain.team.Team
+import java.io.File
+import java.io.IOException
 
 /**
  * @author Andrew Khloponin
@@ -95,7 +90,8 @@ object XLSTest {
         sheet.setColumnView(column + 1 + i * COLUMNS_PER_DRIVER, cvTimeSize)
 
         // Write duration
-        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER + 1, row, TimeUtils.formatNanoWithMills(session.endDurationTime - session.startDurationTime)))
+        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER + 1, row,
+                TimeUtils.formatNanoWithMills(session.endDurationTime ?: 0L - session.startDurationTime)))
         sheet.setColumnView(column + 1 + i * COLUMNS_PER_DRIVER + 1, cvTimeSize)
     }
 }

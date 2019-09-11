@@ -1,17 +1,16 @@
 package ua.hospes.rtm.ui.race
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_race.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.StopWatchFragment
@@ -23,7 +22,9 @@ import ua.hospes.undobutton.UndoButton
 import ua.hospes.undobutton.UndoButtonController
 import javax.inject.Inject
 
-internal class RaceFragment : StopWatchFragment(), RaceContract.View {
+private const val REQUEST_CODE_PERMISSION = 11
+
+internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.View {
     private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     @Inject lateinit var presenter: RacePresenter
@@ -32,7 +33,7 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
     private lateinit var adapter: RaceAdapter
     private var currentNanoTime = 0L
 
-    private lateinit var sessionButtonType: String
+    private val sessionButtonType: String by lazy { preferencesManager.sessionButtonType }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,19 +41,7 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-
-        sessionButtonType = preferencesManager.sessionButtonType
-    }
-
-    override fun setActionBarTitle(): Int {
-        return R.string.race_title
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.fragment_race, container, false)
+    override fun setActionBarTitle(): Int = R.string.race_title
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -100,7 +89,7 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
         val stopWatchStarted = isStopWatchStarted
         menu.findItem(R.id.action_start).isVisible = !stopWatchStarted
         menu.findItem(R.id.action_add_team).isVisible = !stopWatchStarted
-        menu.findItem(R.id.action_export).isVisible = preferencesManager!!.isExportXLSEnabled && !stopWatchStarted
+        menu.findItem(R.id.action_export).isVisible = preferencesManager.isExportXLSEnabled && !stopWatchStarted
         menu.findItem(R.id.action_reset).isVisible = !stopWatchStarted
         menu.findItem(R.id.action_clear).isVisible = !stopWatchStarted
         menu.findItem(R.id.action_stop).isVisible = stopWatchStarted
@@ -125,7 +114,7 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
             }
 
             R.id.action_add_team -> {
-                presenter!!.showAddTeamDialog(childFragmentManager)
+                presenter.showAddTeamDialog(childFragmentManager)
                 return true
             }
 
@@ -133,14 +122,14 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
                 // Assume thisActivity is the current activity
                 val permissionCheck = ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED)
-                    presenter!!.exportXLS()
+                    presenter.exportXLS()
                 else
                     requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
                 return true
             }
 
             R.id.action_reset -> {
-                presenter!!.resetRace()
+                presenter.resetRace()
                 return true
             }
 
@@ -156,8 +145,8 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_CODE_PERMISSION -> if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                presenter!!.exportXLS()
+            REQUEST_CODE_PERMISSION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.exportXLS()
             }
 
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -180,17 +169,9 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
     override fun onError(t: Throwable) = Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
 
 
-    override fun onStopWatchStarted(startTime: Long, nanoStartTime: Long) {
-        presenter.startRace(nanoStartTime)
-    }
-
-    override fun onStopWatchStopped(stopTime: Long, nanoStopTime: Long) {
-        presenter.stopRace(nanoStopTime)
-    }
-
-    override fun onStopWatchStateChanged(runningState: Int) {
-        activity!!.invalidateOptionsMenu()
-    }
+    override fun onStopWatchStarted(startTime: Long, nanoStartTime: Long) = presenter.startRace(nanoStartTime).let { Unit }
+    override fun onStopWatchStopped(stopTime: Long, nanoStopTime: Long) = presenter.stopRace(nanoStopTime).let { Unit }
+    override fun onStopWatchStateChanged(runningState: Int) = activity?.invalidateOptionsMenu() ?: Unit
 
     override fun onStopWatchTick(time: Long, nanoTime: Long, currentNanoTime: Long) {
         this.currentNanoTime = currentNanoTime
@@ -201,17 +182,9 @@ internal class RaceFragment : StopWatchFragment(), RaceContract.View {
     }
 
 
-    private fun showClearDialog() {
-        AlertDialog.Builder(context!!)
-                .setMessage(R.string.teams_remove_all)
-                .setPositiveButton(R.string.yes) { dialog, which -> presenter!!.removeAll() }
-                .setNegativeButton(R.string.no) { dialog, which -> }
-                .show()
-    }
-
-    companion object {
-        private val REQUEST_CODE_PERMISSION = 11
-
-        fun newInstance(): Fragment = RaceFragment()
-    }
+    private fun showClearDialog() = AlertDialog.Builder(requireContext())
+            .setMessage(R.string.teams_remove_all)
+            .setPositiveButton(R.string.yes) { _, _ -> presenter.removeAll() }
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .show()
 }

@@ -8,7 +8,10 @@ import android.os.IBinder
 
 import ua.hospes.rtm.core.ui.AbsFragment
 
-abstract class StopWatchFragment : AbsFragment(), StopWatch.OnStopWatchListener {
+abstract class StopWatchFragment : AbsFragment, StopWatch.OnStopWatchListener {
+    constructor() : super()
+    constructor(contentLayoutId: Int) : super(contentLayoutId)
+
     private var binder: StopWatchService.StopWatchBinder? = null
 
     protected val isStopWatchStarted: Boolean

@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import dagger.android.support.AndroidSupportInjection
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.race.RaceInteractor
-import ua.hospes.rtm.utils.RxUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -39,9 +38,9 @@ internal class SetCarDialogFragment : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(activity!!)
             .setTitle("Select car")
             .setItems(titles) { _, which ->
-                raceInteractor.setCar(sessionId, cars[which])
-                        .compose(RxUtils.applySchedulers())
-                        .subscribe({ }, Throwable::printStackTrace)
+                //                raceInteractor.setCar(sessionId, cars[which])
+                //                        .compose(RxUtils.applySchedulers())
+                //                        .subscribe({ }, Throwable::printStackTrace)
             }
             .create()
 

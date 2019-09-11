@@ -11,6 +11,9 @@ internal interface CarDAO {
     @Query("SELECT * FROM cars")
     suspend fun get(): List<CarEntity>
 
+    @Query("SELECT * FROM cars WHERE uid = :id LIMIT 1")
+    suspend fun get(id: Int): CarEntity
+
     @Query("SELECT * FROM cars WHERE uid IN (:ids)")
     suspend fun getByIds(ids: IntArray): List<CarEntity>
 
@@ -19,7 +22,7 @@ internal interface CarDAO {
     //suspend fun getNotInRace(): List<CarEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(entity: CarEntity)
+    suspend fun save(entity: CarEntity)
 
     @Query("DELETE FROM cars WHERE uid IN (:ids)")
     suspend fun delete(ids: IntArray)

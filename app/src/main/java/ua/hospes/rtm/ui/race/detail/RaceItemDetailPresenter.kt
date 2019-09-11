@@ -7,7 +7,7 @@ import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.sessions.SessionsRepository
 import javax.inject.Inject
 
-class RaceItemDetailPresenter @Inject constructor(
+internal class RaceItemDetailPresenter @Inject constructor(
         private val raceRepo: RaceRepository,
         private val sessionRepo: SessionsRepository
 ) : Presenter<RaceItemDetailContract.View>(Dispatchers.Main) {

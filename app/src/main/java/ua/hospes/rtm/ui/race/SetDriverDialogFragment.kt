@@ -42,9 +42,9 @@ internal class SetDriverDialogFragment : AppCompatDialogFragment() {
             .setTitle("Select driver")
             .setItems(titles) { _, which ->
                 val (id) = drivers[which]
-                raceInteractor.setDriver(sessionId, teamId, id!!)
-                        .compose(RxUtils.applySchedulers())
-                        .subscribe({ }, Throwable::printStackTrace)
+//                raceInteractor.setDriver(sessionId, teamId, id!!)
+//                        .compose(RxUtils.applySchedulers())
+//                        .subscribe({ }, Throwable::printStackTrace)
             }
             .create()
 

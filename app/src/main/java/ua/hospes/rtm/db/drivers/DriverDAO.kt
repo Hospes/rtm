@@ -9,8 +9,11 @@ internal interface DriverDAO {
     @Query("SELECT * FROM drivers")
     suspend fun get(): List<DriverEntity>
 
+    @Query("SELECT * FROM drivers WHERE id = :id LIMIT 1")
+    suspend fun get(id: Int): DriverEntity
+
     @Query("SELECT * FROM drivers WHERE id IN (:ids)")
-    suspend fun getByIds(ids: IntArray): List<DriverEntity>
+    suspend fun getByIds(vararg ids: Int): List<DriverEntity>
 
     @Query("SELECT * FROM drivers WHERE team_id = :id")
     suspend fun getByTeamId(id: Int): List<DriverEntity>
@@ -28,7 +31,7 @@ internal interface DriverDAO {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(entity: DriverEntity)
+    suspend fun save(entity: DriverEntity)
 
     @Query("DELETE FROM drivers WHERE id IN (:ids)")
     suspend fun delete(ids: IntArray)

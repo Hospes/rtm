@@ -1,31 +1,19 @@
 package ua.hospes.rtm.domain.race
 
-import android.content.ContentValues
-import android.util.Pair
-
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import ua.hospes.rtm.domain.race.models.RaceItem
 
-/**
- * @author Andrew Khloponin
- */
-interface RaceRepository {
-    fun get(): Observable<RaceItem>
+internal interface RaceRepository {
+    suspend fun get(): List<RaceItem>
 
-    fun listen(): Observable<List<RaceItem>>
+    fun listen(): Flow<List<RaceItem>>
+    fun listen(id: Int): Flow<RaceItem>
 
-    fun listen(id: Int): Observable<RaceItem>
+    suspend fun save(race: RaceItem)
+    suspend fun save(vararg races: RaceItem)
 
-    fun addNew(vararg items: RaceItem): Observable<Boolean>
+    suspend fun reset()
 
-    fun update(items: List<RaceItem>): Observable<Boolean>
-
-    fun updateByTeamId(items: Iterable<Pair<Int, ContentValues>>): Observable<Boolean>
-
-    fun remove(item: RaceItem): Single<Int>
-
-    fun reset(): Observable<Void>
-
-    fun removeAll(): Single<Int>
+    suspend fun delete(item: RaceItem)
+    suspend fun clear()
 }

@@ -1,166 +1,185 @@
 package ua.hospes.rtm.data
 
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function3
-import ua.hospes.rtm.db.sessions.SessionsMapper
-import ua.hospes.rtm.db.sessions.SessionDb
-import ua.hospes.rtm.db.sessions.operations.CloseSessionOperation
-import ua.hospes.rtm.db.sessions.operations.OpenSessionOperation
-import ua.hospes.rtm.db.sessions.operations.SetCarOperation
-import ua.hospes.rtm.db.sessions.operations.SetDriverOperation
-import ua.hospes.rtm.db.sessions.SessionsDbStorage
-import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.domain.cars.CarsRepository
-import ua.hospes.rtm.domain.drivers.Driver
-import ua.hospes.rtm.domain.drivers.DriversRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import ua.hospes.rtm.db.cars.CarDAO
+import ua.hospes.rtm.db.drivers.DriverDAO
+import ua.hospes.rtm.db.sessions.SessionDAO
+import ua.hospes.rtm.db.sessions.toDomain
+import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.domain.sessions.SessionsRepository
-import ua.hospes.rtm.utils.Optional
-import javax.inject.Inject
 
-internal class SessionsRepositoryImpl @Inject constructor(
-        private val dbStorage: SessionsDbStorage,
-        private val driversRepository: DriversRepository,
-        private val carsRepository: CarsRepository
+internal class SessionsRepositoryImpl(
+        private val dao: SessionDAO,
+        private val teamDAO: TeamDAO,
+        private val driverDAO: DriverDAO,
+        private val carDAO: CarDAO
 ) : SessionsRepository {
 
+    override suspend fun get(): List<Session> = withContext(Dispatchers.IO) {
+        dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) }
+    }
 
-    override fun get(): Observable<Session> = dbStorage.get().flatMapSingle { transform(it) }
+    override suspend fun get(vararg ids: Int): List<Session> = withContext(Dispatchers.IO) {
+        dao.getByIds(*ids).map { it.toDomain(teamDAO, driverDAO, carDAO) }
+    }
 
-    override fun get(vararg ids: Int): Observable<Session> = dbStorage.get(*ids).flatMapSingle { transform(it) }
+    override suspend fun getByTeam(teamId: Int): List<Session> = withContext(Dispatchers.IO) {
+        dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) }
+    }
 
-    override fun getByTeamId(teamId: Int): Observable<Session> = dbStorage.getByTeamId(teamId).flatMapSingle { transform(it) }
-
-    override fun getByTeamIdAndDriverId(teamId: Int, driverId: Int): Observable<Session> =
-            dbStorage.getByTeamIdAndDriverId(teamId, driverId).flatMapSingle { transform(it) }
-
-    override fun listen(): Observable<List<Session>> = dbStorage.listen().flatMapSingle { transform(it) }
-
-    override fun listenByTeamId(teamId: Int): Observable<List<Session>> = dbStorage.listenByTeamId(teamId).flatMapSingle { transform(it) }
-
-    override fun newSessions(type: Session.Type, vararg teamIds: Int): Observable<Session> =
-            Observable.create { subscriber: ObservableEmitter<SessionDb> ->
-                for (teamId in teamIds) {
-                    val sessionDb = SessionDb(teamId)
-                    sessionDb.type = type.name
-                    subscriber.onNext(sessionDb)
-                }
-                subscriber.onComplete()
-            }
-                    .toList()
-                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
-                    .flatMapSingle { transform(it) }
-
-    override fun setSessionDriver(sessionId: Int, driverId: Int): Observable<Session> =
-            Observable.just(SetDriverOperation(sessionId, driverId))
-                    .toList()
-                    .flatMapObservable { dbStorage.applySetDriverOperations(it) }
-                    .flatMap { get(it) }
-
-    override fun setSessionCar(sessionId: Int, carId: Int): Observable<Session> =
-            Observable.just(SetCarOperation(sessionId, carId))
-                    .toList()
-                    .flatMapObservable { dbStorage.applySetCarOperations(it) }
-                    .flatMap { get(it) }
-
-    override fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int): Observable<Session> =
-            OpenSessionOperation.from(raceStartTime, startTime, *sessionIds)
-                    .toList()
-                    .flatMapObservable { dbStorage.applyOpenOperations(it) }
-                    .flatMap { get(it) }
-
-    override fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int): Observable<Session> =
-            Observable.create { subscriber: ObservableEmitter<SessionDb> ->
-                for (teamId in teamIds) {
-                    val sessionDb = SessionDb(teamId)
-                    sessionDb.raceStartTime = raceStartTime
-                    sessionDb.startDurationTime = startTime
-                    sessionDb.type = type.name
-                    subscriber.onNext(sessionDb)
-                }
-                subscriber.onComplete()
-            }
-                    .toList()
-                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
-                    .flatMapSingle { transform(it) }
-
-    override fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int): Observable<Session> =
-            Observable.create { subscriber: ObservableEmitter<SessionDb> ->
-                val sessionDb = SessionDb(teamId)
-                sessionDb.raceStartTime = raceStartTime
-                sessionDb.startDurationTime = startTime
-                sessionDb.driverId = driverId
-                sessionDb.type = type.name
-                subscriber.onNext(sessionDb)
-                subscriber.onComplete()
-            }
-                    .toList()
-                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
-                    .flatMapSingle { transform(it) }
-
-    override fun closeSessions(stopTime: Long, vararg sessionIds: Int): Observable<Session> =
-            CloseSessionOperation.from(stopTime, *sessionIds)
-                    .toList()
-                    .flatMapObservable { dbStorage.applyCloseOperations(it) }
-                    .flatMap { get(it) }
-
-    override fun removeLastSession(teamId: Int): Observable<Session> =
-            dbStorage.getByTeamId(teamId)
-                    .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
-                    .flatMapObservable { list ->
-                        val count = list.size
-                        when {
-                            count >= 2 -> dbStorage.getByTeamId(teamId)
-                                    .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
-                                    .flatMapObservable {
-                                        Single.zip(
-                                                zipOpenSession(it[count - 2]),
-                                                removeSession(it[count - 1]),
-                                                BiFunction { t1: SessionDb, _: Int -> t1 }
-                                        ).toObservable()
-                                    }
-
-                            count == 1 ->
-                                dbStorage.getByTeamId(teamId)
-                                        .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
-                                        .flatMapObservable { Observable.just(it.first()) }
-                            else -> throw RuntimeException("No sessions in the database")
-                        }
-                    }
-                    .flatMapSingle { transform(it) }
-
-    private fun zipOpenSession(sessionDb: SessionDb): Single<SessionDb> = Single.zip(
-            Single.just(sessionDb),
-            openSession(sessionDb.id, sessionDb.raceStartTime, sessionDb.startDurationTime),
-            BiFunction { sessionDb1, _ -> sessionDb1 }
-    )
-
-    private fun openSession(id: Int, raceStartTime: Long, startTime: Long): Single<Int> =
-            Observable.just(OpenSessionOperation(id, raceStartTime, startTime))
-                    .toList()
-                    .flatMapObservable { dbStorage.applyOpenOperations(it) }
-                    .single(0)
-
-    private fun removeSession(sessionDb: SessionDb): Single<Int> = dbStorage.remove(sessionDb)
+    override suspend fun getByTeamAndDriver(teamId: Int, driverId: Int): List<Session> = withContext(Dispatchers.IO) {
+        dao.getByTeamAndDriver(teamId, driverId).map { it.toDomain(teamDAO, driverDAO, carDAO) }
+    }
 
 
-    override fun removeAll(): Single<Int> = dbStorage.removeAll()
+    override fun listen(): Flow<List<Session>> =
+            dao.observe().map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+
+    override fun listenByTeamId(teamId: Int): Flow<List<Session>> =
+            dao.observeByTeam(teamId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
-    private fun transform(sessionDb: SessionDb): Single<Session> = Single.zip(
-            Single.just(sessionDb), getDriverById(sessionDb.driverId), getCarById(sessionDb.carId),
-            Function3 { db, driver, car -> SessionsMapper.map(db, driver, car) }
-    )
+    override suspend fun setSessionDriver(sessionId: Int, driverId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    private fun transform(sessionDbs: List<SessionDb>): Single<List<Session>> =
-            Observable.fromIterable(sessionDbs).flatMapSingle { transform(it) }.toList()
+    override suspend fun setSessionCar(sessionId: Int, carId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    private fun getDriverById(id: Int): Single<Optional<Driver>> = Single.error(RuntimeException())
-    //driversRepository[id].map { drivers -> Optional.of(drivers.first()) }
+    override suspend fun newSessions(type: Session.Type, vararg teamIds: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    private fun getCarById(id: Int): Single<Optional<Car>> = Single.error { RuntimeException("Under development") }
-    //carsRepository.get(id).map { Optional.of(it) }.single(Optional.empty())
+    override suspend fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun closeSessions(stopTime: Long, vararg sessionIds: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun removeLastSession(teamId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
+
+
+    //    override fun newSessions(type: Session.Type, vararg teamIds: Int): Observable<Session> =
+    //            Observable.create { subscriber: ObservableEmitter<SessionEntity> ->
+    //                for (teamId in teamIds) {
+    //                    val sessionDb = SessionEntity(teamId)
+    //                    sessionDb.type = type.name
+    //                    subscriber.onNext(sessionDb)
+    //                }
+    //                subscriber.onComplete()
+    //            }
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
+    //                    .flatMapSingle { transform(it) }
+    //
+    //    override fun setSessionDriver(sessionId: Int, driverId: Int): Observable<Session> =
+    //            Observable.just(SetDriverOperation(sessionId, driverId))
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.applySetDriverOperations(it) }
+    //                    .flatMap { get(it) }
+    //
+    //    override fun setSessionCar(sessionId: Int, carId: Int): Observable<Session> =
+    //            Observable.just(SetCarOperation(sessionId, carId))
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.applySetCarOperations(it) }
+    //                    .flatMap { get(it) }
+    //
+    //    override fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int): Observable<Session> =
+    //            OpenSessionOperation.from(raceStartTime, startTime, *sessionIds)
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.applyOpenOperations(it) }
+    //                    .flatMap { get(it) }
+    //
+    //    override fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int): Observable<Session> =
+    //            Observable.create { subscriber: ObservableEmitter<SessionEntity> ->
+    //                for (teamId in teamIds) {
+    //                    val sessionDb = SessionEntity(teamId)
+    //                    sessionDb.raceStartTime = raceStartTime
+    //                    sessionDb.startDurationTime = startTime
+    //                    sessionDb.type = type.name
+    //                    subscriber.onNext(sessionDb)
+    //                }
+    //                subscriber.onComplete()
+    //            }
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
+    //                    .flatMapSingle { transform(it) }
+    //
+    //    override fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int): Observable<Session> =
+    //            Observable.create { subscriber: ObservableEmitter<SessionEntity> ->
+    //                val sessionDb = SessionEntity(teamId)
+    //                sessionDb.raceStartTime = raceStartTime
+    //                sessionDb.startDurationTime = startTime
+    //                sessionDb.driverId = driverId
+    //                sessionDb.type = type.name
+    //                subscriber.onNext(sessionDb)
+    //                subscriber.onComplete()
+    //            }
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
+    //                    .flatMapSingle { transform(it) }
+    //
+    //    override fun closeSessions(stopTime: Long, vararg sessionIds: Int): Observable<Session> =
+    //            CloseSessionOperation.from(stopTime, *sessionIds)
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.applyCloseOperations(it) }
+    //                    .flatMap { get(it) }
+    //
+    //    override fun removeLastSession(teamId: Int): Observable<Session> =
+    //            dbStorage.getByTeamId(teamId)
+    //                    .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
+    //                    .flatMapObservable { list ->
+    //                        val count = list.size
+    //                        when {
+    //                            count >= 2 -> dbStorage.getByTeamId(teamId)
+    //                                    .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
+    //                                    .flatMapObservable {
+    //                                        Single.zip(
+    //                                                zipOpenSession(it[count - 2]),
+    //                                                removeSession(it[count - 1]),
+    //                                                BiFunction { t1: SessionEntity, _: Int -> t1 }
+    //                                        ).toObservable()
+    //                                    }
+    //
+    //                            count == 1 ->
+    //                                dbStorage.getByTeamId(teamId)
+    //                                        .toSortedList { o1, o2 -> o1.startDurationTime.compareTo(o2.startDurationTime) }
+    //                                        .flatMapObservable { Observable.just(it.first()) }
+    //                            else -> throw RuntimeException("No sessions in the database")
+    //                        }
+    //                    }
+    //                    .flatMapSingle { transform(it) }
+    //
+    //    private fun zipOpenSession(sessionDb: SessionEntity): Single<SessionEntity> = Single.zip(
+    //            Single.just(sessionDb),
+    //            openSession(sessionDb.id, sessionDb.raceStartTime, sessionDb.startDurationTime),
+    //            BiFunction { sessionDb1, _ -> sessionDb1 }
+    //    )
+    //
+    //    private fun openSession(id: Int, raceStartTime: Long, startTime: Long): Single<Int> =
+    //            Observable.just(OpenSessionOperation(id, raceStartTime, startTime))
+    //                    .toList()
+    //                    .flatMapObservable { dbStorage.applyOpenOperations(it) }
+    //                    .single(0)
+    //
+    //    private fun removeSession(sessionDb: SessionEntity): Single<Int> = dbStorage.remove(sessionDb)
 }

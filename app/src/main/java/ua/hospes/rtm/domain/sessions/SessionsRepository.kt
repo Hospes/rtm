@@ -1,34 +1,32 @@
 package ua.hospes.rtm.domain.sessions
 
-import io.reactivex.Observable
-import io.reactivex.Single
-import ua.hospes.rtm.db.tables.Sessions
+import kotlinx.coroutines.flow.Flow
 
-/**
- * @author Andrew Khloponin
- */
-interface SessionsRepository {
-    fun get(): Observable<Session>
+internal interface SessionsRepository {
+    suspend fun get(): List<Session>
 
-    operator fun get(vararg ids: Int): Observable<Session>
+    suspend fun get(vararg ids: Int): List<Session>
 
-    fun getByTeamId(teamId: Int): Observable<Session>
+    suspend fun getByTeam(teamId: Int): List<Session>
 
-    fun getByTeamIdAndDriverId(teamId: Int, driverId: Int): Observable<Session>
+    suspend fun getByTeamAndDriver(teamId: Int, driverId: Int): List<Session>
 
-    fun listen(): Observable<List<Session>>
 
-    fun listenByTeamId(teamId: Int): Observable<List<Session>>
+    fun listen(): Flow<List<Session>>
 
-    fun newSessions(type: Session.Type, vararg teamIds: Int): Observable<Session>
+    fun listenByTeamId(teamId: Int): Flow<List<Session>>
 
-    fun setSessionDriver(sessionId: Int, driverId: Int): Observable<Session>
 
-    fun setSessionCar(sessionId: Int, carId: Int): Observable<Session>
+    suspend fun setSessionDriver(sessionId: Int, driverId: Int)
 
-    fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int): Observable<Session>
+    suspend fun setSessionCar(sessionId: Int, carId: Int)
 
-    fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int): Observable<Session>
+
+    suspend fun newSessions(type: Session.Type, vararg teamIds: Int)
+
+    suspend fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int)
+
+    suspend fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int)
 
     /**
      * Create new session in [Sessions] table with
@@ -38,7 +36,7 @@ interface SessionsRepository {
      * @param driverId  predefined session driver or -1 if no driver
      * @param teamId    team id
      */
-    fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int): Observable<Session>
+    suspend fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int)
 
     /**
      * Close list of sessions by ids
@@ -46,9 +44,10 @@ interface SessionsRepository {
      * @param stopTime   Stop time in nanoseconds
      * @param sessionIds Array of sessions that should be closed
      */
-    fun closeSessions(stopTime: Long, vararg sessionIds: Int): Observable<Session>
+    suspend fun closeSessions(stopTime: Long, vararg sessionIds: Int)
 
-    fun removeLastSession(teamId: Int): Observable<Session>
+    suspend fun removeLastSession(teamId: Int)
 
-    fun removeAll(): Single<Int>
+
+    suspend fun clear()
 }

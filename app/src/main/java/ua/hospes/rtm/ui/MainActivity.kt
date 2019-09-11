@@ -33,7 +33,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
 
         if (savedInstanceState == null) {
             nav_view.setCheckedItem(R.id.nav_race)
-            navigateTo(RaceFragment.newInstance())
+            navigateTo(RaceFragment())
         }
 
         StopWatchService.checkDeath(this)
@@ -54,7 +54,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
         // For example, swap UI fragments here
 
         when (menuItem.itemId) {
-            R.id.nav_race -> navigateTo(RaceFragment.newInstance())
+            R.id.nav_race -> navigateTo(RaceFragment())
             R.id.nav_teams -> navigateTo(TeamsFragment())
             R.id.nav_drivers -> navigateTo(DriversFragment())
             R.id.nav_cars -> navigateTo(CarsFragment())

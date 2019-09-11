@@ -13,7 +13,7 @@ class SessionTimeView : TimeView {
             if (session == null) return
             if (session.startDurationTime == -1L) text = TimeUtils.format(0)
             if (session.startDurationTime != -1L && session.endDurationTime != -1L)
-                text = TimeUtils.formatNano(session.endDurationTime - session.startDurationTime)
+                text = TimeUtils.formatNano(session.endDurationTime ?: 0L - session.startDurationTime)
         }
 
 

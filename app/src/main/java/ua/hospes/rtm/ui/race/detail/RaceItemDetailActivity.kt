@@ -16,7 +16,7 @@ fun Context.intentRaceItemDetails(id: Int) = Intent(this, RaceItemDetailActivity
 
 private const val KEY_ID = "key_id"
 
-class RaceItemDetailActivity : DiActivity(R.layout.activity_race_item_detail), RaceItemDetailContract.View {
+internal class RaceItemDetailActivity : DiActivity(R.layout.activity_race_item_detail), RaceItemDetailContract.View {
     @Inject lateinit var presenter: RaceItemDetailPresenter
     private val raceItemId by extraNotNull<Int>(KEY_ID)
 

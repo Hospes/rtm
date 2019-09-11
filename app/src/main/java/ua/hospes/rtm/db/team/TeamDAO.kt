@@ -27,7 +27,7 @@ internal interface TeamDAO {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(entity: TeamEntity)
+    suspend fun save(entity: TeamEntity)
 
     @Query("DELETE FROM teams WHERE id IN (:ids)")
     suspend fun delete(ids: IntArray)
