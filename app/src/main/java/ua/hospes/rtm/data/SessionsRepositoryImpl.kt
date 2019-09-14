@@ -51,6 +51,9 @@ internal class SessionsRepositoryImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
+    override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
+
     override suspend fun newSessions(type: Session.Type, vararg teamIds: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

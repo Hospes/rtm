@@ -10,17 +10,6 @@ data class Team(
         val id: Int = 0,
         val name: String,
         val drivers: MutableList<Driver> = mutableListOf()
-) : Parcelable {
-
-    fun setDrivers(vararg drivers: Driver) {
-        this.drivers.clear()
-        this.drivers.addAll(drivers)
-    }
-
-    fun setDrivers(drivers: Iterable<Driver>) {
-        this.drivers.clear()
-        this.drivers.addAll(drivers)
-    }
-}
+) : Parcelable
 
 fun Team.toDbEntity(): TeamEntity = TeamEntity(id, name)

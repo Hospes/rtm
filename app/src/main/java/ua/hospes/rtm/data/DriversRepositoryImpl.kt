@@ -29,7 +29,7 @@ internal class DriversRepositoryImpl(private val dao: DriverDAO, private val tea
             withContext(Dispatchers.IO) { dao.addDriversToTeam(teamId, driverIds) }
 
     override suspend fun removeDriversFromTeam(teamId: Int) =
-            withContext(Dispatchers.IO) { dao.removeDrviersFromTeam(teamId) }
+            withContext(Dispatchers.IO) { dao.removeDriversFromTeam(teamId) }
 
 
     override suspend fun save(driver: Driver) =

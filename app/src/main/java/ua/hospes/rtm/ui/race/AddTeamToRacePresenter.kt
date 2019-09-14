@@ -20,9 +20,7 @@ internal class AddTeamToRacePresenter @Inject constructor(
     override fun attachView(view: AddTeamToRaceContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
-        //        disposables += teamsRepo.getNotInRace()
-        //                .compose(RxUtils.applySchedulersSingle())
-        //                .subscribe({ view?.onTeams(it) }, this::error)
+        launch(Dispatchers.IO) { view?.onTeams(teamsRepo.getNotInRace()) }
     }
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit

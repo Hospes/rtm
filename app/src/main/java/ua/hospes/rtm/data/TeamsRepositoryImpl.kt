@@ -27,7 +27,11 @@ internal class TeamsRepositoryImpl(private val dao: TeamDAO, private val driverD
 
 
     override suspend fun save(team: Team) =
-            withContext(Dispatchers.IO) { dao.save(team.toDbEntity()) }
+            withContext(Dispatchers.IO) {
+                dao.save(team.toDbEntity())
+                driverDAO.removeDriversFromTeam(team.id)
+                driverDAO.addDriversToTeam(team.id, team.drivers.map { it.id }.toIntArray())
+            }
 
     override suspend fun delete(id: Int) =
             withContext(Dispatchers.IO) { dao.delete(intArrayOf(id)) }

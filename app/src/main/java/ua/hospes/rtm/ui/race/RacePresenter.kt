@@ -18,7 +18,6 @@ internal class RacePresenter @Inject constructor(
         private val sessionRepo: SessionsRepository
 ) : Presenter<RaceContract.View>() {
 
-
     override fun attachView(view: RaceContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
@@ -29,15 +28,23 @@ internal class RacePresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
+
     fun startRace(startTime: Long) = launch {
-        val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
-        sessionRepo.startSessions(startTime, startTime, *sessionIds.toIntArray())
+        // Legacy way
+        //val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
+        //sessionRepo.startSessions(startTime, startTime, *sessionIds.toIntArray())
+
+        // New way
+        sessionRepo.startRace(startTime)
     }
 
     fun stopRace(stopTime: Long) = launch {
-        //        disposables += interactor.stopRace(stopTime)
-        //                .compose(RxUtils.applySchedulersSingle())
-        //                .subscribe({ }, this::error)
+        // Legacy way
+        //val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
+        //sessionRepo.closeSessions(stopTime, *sessionIds.toIntArray())
+
+        // New way
+        sessionRepo.stopRace(stopTime)
     }
 
     fun onPit(item: RaceItem, time: Long) {
@@ -94,9 +101,5 @@ internal class RacePresenter @Inject constructor(
         //                .compose(RxUtils.applySchedulersSingle())
         //                .subscribe({ }, this::error)
         //.subscribe({ result -> SetDriverDialogFragment.newInstance(session.id, session.teamId, result).show(managerFragment, "set_driver") }, Consumer<Throwable> { it.printStackTrace() }))
-    }
-
-    fun showAddTeamDialog(managerFragment: FragmentManager) {
-        AddTeamToRaceDialogFragment().show(managerFragment, "add_team_to_race")
     }
 }

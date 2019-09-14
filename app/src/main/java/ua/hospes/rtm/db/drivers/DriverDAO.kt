@@ -23,11 +23,11 @@ internal interface DriverDAO {
     fun observe(): Flow<List<DriverEntity>>
 
 
-    @Query("UPDATE drivers SET team_id = :teamId WHERE team_id IN (:driverIds)")
+    @Query("UPDATE drivers SET team_id = :teamId WHERE id IN (:driverIds)")
     suspend fun addDriversToTeam(teamId: Int, driverIds: IntArray)
 
     @Query("UPDATE drivers SET team_id = null WHERE team_id = :teamId")
-    suspend fun removeDrviersFromTeam(teamId: Int)
+    suspend fun removeDriversFromTeam(teamId: Int)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -18,7 +18,6 @@ import ua.hospes.rtm.core.StopWatchService
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.utils.TimeUtils
-import ua.hospes.undobutton.UndoButton
 import ua.hospes.undobutton.UndoButtonController
 import javax.inject.Inject
 
@@ -46,18 +45,12 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(context!!) {
-            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext): Array<UndoButton> {
-                return arrayOf(holder.btnNextSession)
-            }
+        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
+            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
 
-            override fun defaultTimeSHow(): Boolean {
-                return true
-            }
+            override fun defaultTimeSHow(): Boolean = true
 
-            override fun defaultDelay(): Int {
-                return 15
-            }
+            override fun defaultDelay(): Int = 15
         }
 
         list.setHasFixedSize(true)
@@ -100,57 +93,38 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_start -> {
-                StopWatchService.start(context!!)
-                timerListController.forceUpdate(list)
-                return true
-            }
-
-            R.id.action_stop -> {
-                StopWatchService.stop(context!!)
-                return true
-            }
-
-            R.id.action_add_team -> {
-                presenter.showAddTeamDialog(childFragmentManager)
-                return true
-            }
-
-            R.id.action_export -> {
-                // Assume thisActivity is the current activity
-                val permissionCheck = ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED)
-                    presenter.exportXLS()
-                else
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
-                return true
-            }
-
-            R.id.action_reset -> {
-                presenter.resetRace()
-                return true
-            }
-
-            R.id.action_clear -> {
-                showClearDialog()
-                return true
-            }
-
-            else -> return super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_start -> {
+            StopWatchService.start(context!!)
+            timerListController.forceUpdate(list)
+            true
         }
+
+        R.id.action_stop -> StopWatchService.stop(requireContext()).let { true }
+        R.id.action_add_team -> AddTeamToRaceDialogFragment().show(childFragmentManager, "add_team_to_race").let { true }
+
+        R.id.action_export -> {
+            // Assume thisActivity is the current activity
+            val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED)
+                presenter.exportXLS()
+            else
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
+            true
+        }
+
+        R.id.action_reset -> presenter.resetRace().let { true }
+        R.id.action_clear -> showClearDialog().let { true }
+        else -> super.onOptionsItemSelected(item)
     }
     //endregion
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_CODE_PERMISSION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                presenter.exportXLS()
-            }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) = when (requestCode) {
+        REQUEST_CODE_PERMISSION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            presenter.exportXLS()
+        } else Unit
 
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
+        else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onDestroyView() {

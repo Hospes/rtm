@@ -49,6 +49,16 @@ internal interface SessionDAO {
     suspend fun setRaceStartTime(sessionId: Int, startTime: Long)
 
 
+    /**
+     * Request should place start time for all sessions that currently exists in 'race' table
+     */
+    @Query("UPDATE sessions SET race_start_time = :time, start_duration_time = :time WHERE id IN (SELECT session_id FROM race)")
+    suspend fun startRace(time: Long)
+
+    @Query("UPDATE sessions SET end_duration_time = :time WHERE id IN (SELECT session_id FROM race)")
+    suspend fun stopRace(time: Long)
+
+
     @Query("DELETE FROM sessions WHERE id IN (:ids)")
     suspend fun delete(vararg ids: Int)
 

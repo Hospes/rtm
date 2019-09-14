@@ -35,20 +35,6 @@ internal class RaceInteractor @Inject constructor(
     //
     //    fun setCar(sessionId: Int, car: Car): Observable<Boolean> = sessionsRepository.setSessionCar(sessionId, car.id!!).map { true }
 
-    //    fun startRace(startTime: Long): Single<Boolean> = raceRepository.get()
-    //            .filter { item -> item.session != null }
-    //            .map { item -> item.session!!.id }.toList()
-    //            .map { it.toIntArray() }
-    //            .flatMap { sessionIds -> sessionsRepository.startSessions(startTime, startTime, *sessionIds).toList() }
-    //            .map { true }
-
-    //    fun stopRace(stopTime: Long): Single<Boolean> = raceRepository.get()
-    //            .filter { item -> item.session != null }
-    //            .map { item -> item.session!!.id }.toList()
-    //            .map { it.toIntArray() }
-    //            .flatMap { teamIds -> sessionsRepository.closeSessions(stopTime, *teamIds).toList() }
-    //            .map { true }
-
     //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
     //        return Observable.empty()
     //        //        var driverId = -1
