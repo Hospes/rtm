@@ -26,6 +26,7 @@ internal interface SessionsRepository {
     suspend fun stopRace(time: Long)
 
 
+    suspend fun newSession(type: Session.Type, teamId: Int): Session
     suspend fun newSessions(type: Session.Type, vararg teamIds: Int)
 
     suspend fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int)

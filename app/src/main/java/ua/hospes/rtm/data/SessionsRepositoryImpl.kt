@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import ua.hospes.rtm.db.cars.CarDAO
 import ua.hospes.rtm.db.drivers.DriverDAO
 import ua.hospes.rtm.db.sessions.SessionDAO
+import ua.hospes.rtm.db.sessions.SessionEntity
 import ua.hospes.rtm.db.sessions.toDomain
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.domain.sessions.Session
@@ -53,6 +54,12 @@ internal class SessionsRepositoryImpl(
 
     override suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
     override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
+
+
+    override suspend fun newSession(type: Session.Type, teamId: Int): Session {
+        val id = dao.save(SessionEntity(teamId = teamId, type = type.name)).toInt()
+        return Session(id = id, teamId = teamId, type = type)
+    }
 
     override suspend fun newSessions(type: Session.Type, vararg teamIds: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

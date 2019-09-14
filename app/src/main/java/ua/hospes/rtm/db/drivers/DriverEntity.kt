@@ -23,7 +23,7 @@ fun DriverEntity.toDomain(team: TeamEntity? = null): Driver = team?.let {
 
 internal suspend fun DriverEntity.toDomain(dao: TeamDAO): Driver = withContext(Dispatchers.IO) {
     teamId?.let {
-        val team = dao.getByIds(intArrayOf(it)).firstOrNull() ?: throw IllegalStateException("Didn't found team with given id[$it]")
+        val team = dao.get(intArrayOf(it)).firstOrNull() ?: throw IllegalStateException("Didn't found team with given id[$it]")
         Driver(id, name, team.id, team.name)
     } ?: Driver(id, name)
 }

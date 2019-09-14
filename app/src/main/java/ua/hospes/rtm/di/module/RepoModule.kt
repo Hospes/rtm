@@ -6,8 +6,6 @@ import ua.hospes.rtm.data.*
 import ua.hospes.rtm.db.AppDatabase
 import ua.hospes.rtm.db.cars.CarDAO
 import ua.hospes.rtm.db.drivers.DriverDAO
-import ua.hospes.rtm.db.race.RaceDAO
-import ua.hospes.rtm.db.sessions.SessionDAO
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.drivers.DriversRepository
@@ -19,8 +17,8 @@ import javax.inject.Singleton
 @Module
 object RepoModule {
     @Provides @Singleton @JvmStatic
-    internal fun provideRaceRepository(raceDAO: RaceDAO, sessionDAO: SessionDAO)
-            : RaceRepository = RaceRepositoryImpl(raceDAO, sessionDAO)
+    internal fun provideRaceRepository(db: AppDatabase)
+            : RaceRepository = RaceRepositoryImpl(db)
 
     @Provides @Singleton @JvmStatic
     internal fun provideSessionsRepository(db: AppDatabase)

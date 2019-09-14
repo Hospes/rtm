@@ -9,12 +9,14 @@ internal interface TeamDAO {
     @Query("SELECT * FROM teams")
     suspend fun get(): List<TeamEntity>
 
-    @Query("SELECT * FROM teams WHERE id IN (:ids)")
-    suspend fun getByIds(ids: IntArray): List<TeamEntity>
+    @Query("SELECT * FROM teams WHERE id = :id LIMIT 1")
+    suspend fun get(id: Int): TeamEntity
 
-    //@Query("SELECT * FROM cars WHERE uid NOT IN (SELECT car_id FROM sessions WHERE end_time = -1)")
-    //SELECT c.* FROM Cars AS c WHERE c._id NOT IN ( SELECT s.car_id FROM Sessions AS s WHERE s.end_time = -1 )
-    //suspend fun getNotInRace(): List<CarEntity>
+    @Query("SELECT * FROM teams WHERE id IN (:ids)")
+    suspend fun get(ids: IntArray): List<TeamEntity>
+
+    @Query("SELECT t1.* FROM teams t1 LEFT JOIN race t2 ON t2.team_id = t1.id WHERE t2.team_id IS NULL")
+    suspend fun getNotInRace(): List<TeamEntity>
 
     //    fun getNotInRace(): Observable<TeamEntity> =
     //            dbHelper.querySingle(Function { TeamsMapper.map(it) }, "SELECT t1.rowid, t1.* FROM " + Teams.name +

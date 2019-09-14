@@ -13,8 +13,8 @@ data class Session(
         val endDurationTime: Long? = null,
         val type: Type = Type.TRACK
 ) {
-    enum class Type(val title: String) {
-        TRACK("ON TRACK"),
-        PIT("PIT-STOP")
+    enum class Type {
+        TRACK,
+        PIT
     }
 }

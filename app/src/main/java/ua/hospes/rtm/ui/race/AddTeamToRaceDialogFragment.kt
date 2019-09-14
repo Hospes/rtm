@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_add_race_item.*
 import ua.hospes.rtm.R
@@ -18,6 +17,11 @@ internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceCo
     private lateinit var adapter: TeamSpinnerAdapter
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.AppTheme_Dialog)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             : View? = inflater.inflate(R.layout.dialog_add_race_item, container, false)
 
@@ -26,12 +30,12 @@ internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceCo
 
         adapter = TeamSpinnerAdapter(requireContext())
         sp_team.adapter = adapter
-        sp_team.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = Unit
-            //presenter.teamSelect((parent?.adapter as? TeamSpinnerAdapter)?.getItem(position))
+        //        sp_team.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        //            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = Unit
+        //presenter.teamSelect((parent?.adapter as? TeamSpinnerAdapter)?.getItem(position))
 
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit //presenter.teamSelect()
-        }
+        //            override fun onNothingSelected(parent: AdapterView<*>?) = Unit //presenter.teamSelect()
+        //        }
 
         btn_save.setOnClickListener { presenter.save(number.text.toString(), sp_team.selectedItem as? Team) }
         btn_cancel.setOnClickListener { dismiss() }

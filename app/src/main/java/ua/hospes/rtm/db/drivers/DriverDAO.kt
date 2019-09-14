@@ -13,7 +13,7 @@ internal interface DriverDAO {
     suspend fun get(id: Int): DriverEntity
 
     @Query("SELECT * FROM drivers WHERE id IN (:ids)")
-    suspend fun getByIds(vararg ids: Int): List<DriverEntity>
+    suspend fun get(vararg ids: Int): List<DriverEntity>
 
     @Query("SELECT * FROM drivers WHERE team_id = :id")
     suspend fun getByTeamId(id: Int): List<DriverEntity>

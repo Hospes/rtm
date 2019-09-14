@@ -98,7 +98,10 @@ internal class RaceAdapter(context: Context,
                 holder.driverTimeView.prevDuration = item.details?.getDriverDuration(driver.id!!) ?: 0L
             }
 
-            holder.sessionType.text = session.type.title
+            holder.sessionType.text = when (session.type) {
+                Session.Type.TRACK -> "ON TRACK"
+                Session.Type.PIT -> "PIT-STOP"
+            }
             holder.sessionType.visibility = View.VISIBLE
 
             when (session.type) {

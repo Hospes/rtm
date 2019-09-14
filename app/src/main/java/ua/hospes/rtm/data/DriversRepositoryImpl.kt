@@ -16,7 +16,7 @@ internal class DriversRepositoryImpl(private val dao: DriverDAO, private val tea
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO) } }
 
     override suspend fun get(vararg ids: Int): List<Driver> =
-            withContext(Dispatchers.IO) { dao.getByIds(*ids).map { it.toDomain(teamDAO) } }
+            withContext(Dispatchers.IO) { dao.get(*ids).map { it.toDomain(teamDAO) } }
 
     override suspend fun getByTeamId(teamId: Int): List<Driver> =
             withContext(Dispatchers.IO) { dao.getByTeamId(teamId).map { it.toDomain(teamDAO) } }

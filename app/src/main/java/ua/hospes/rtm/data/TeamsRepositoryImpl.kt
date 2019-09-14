@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.db.drivers.DriverDAO
 import ua.hospes.rtm.db.team.TeamDAO
-import ua.hospes.rtm.db.team.toDomain
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.domain.team.TeamsRepository
 import ua.hospes.rtm.domain.team.toDbEntity
@@ -16,11 +15,10 @@ internal class TeamsRepositoryImpl(private val dao: TeamDAO, private val driverD
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain(driverDAO) } }
 
     override suspend fun get(vararg ids: Int): List<Team> =
-            withContext(Dispatchers.IO) { dao.getByIds(ids).map { it.toDomain(driverDAO) } }
+            withContext(Dispatchers.IO) { dao.get(ids).map { it.toDomain(driverDAO) } }
 
-    override suspend fun getNotInRace(): List<Team> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override suspend fun getNotInRace(): List<Team> =
+            withContext(Dispatchers.IO) { dao.getNotInRace().map { it.toDomain(driverDAO) } }
 
 
     override fun listen(): Flow<List<Team>> = dao.observe().map { list -> list.map { it.toDomain(driverDAO) } }
