@@ -14,7 +14,8 @@ import ua.hospes.rtm.db.sessions.SessionEntity
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.db.team.TeamEntity
 
-@Database(entities = [CarEntity::class, TeamEntity::class, DriverEntity::class, SessionEntity::class, RaceEntity::class], version = 1, exportSchema = false)
+@Database(version = 1, exportSchema = true,
+        entities = [CarEntity::class, TeamEntity::class, DriverEntity::class, SessionEntity::class, RaceEntity::class])
 @TypeConverters(Converters::class)
 internal abstract class AppDatabase : RoomDatabase() {
     abstract fun carDao(): CarDAO
