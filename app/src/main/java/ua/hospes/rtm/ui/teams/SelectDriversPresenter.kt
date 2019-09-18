@@ -31,8 +31,8 @@ internal class SelectDriversPresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-    fun save(selectedIds: List<Int>) = launch(Dispatchers.Main) {
-        val drivers = withContext(Dispatchers.IO) { repo.get(*selectedIds.toIntArray()) }
+    fun save(selectedIds: List<Long>) = launch(Dispatchers.Main) {
+        val drivers = withContext(Dispatchers.IO) { repo.get(*selectedIds.toLongArray()) }
 
         view?.onSaveSelectedDrivers(drivers)
     }

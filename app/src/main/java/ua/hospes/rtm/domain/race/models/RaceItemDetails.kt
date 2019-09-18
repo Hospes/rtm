@@ -1,6 +1,6 @@
 package ua.hospes.rtm.domain.race.models
 
-import android.util.SparseArray
+import android.util.SparseLongArray
 
 
 /**
@@ -8,16 +8,16 @@ import android.util.SparseArray
  */
 class RaceItemDetails {
     var pitStops = 0
-    private val completedDriversDuration = SparseArray<Long>()
+    private val completedDriversDuration = SparseLongArray()
 
 
-    fun addDriverDuration(driverId: Int, duration: Long) {
+    fun addDriverDuration(driverId: Long, duration: Long) {
         val oldDuration = getDriverDuration(driverId)
-        completedDriversDuration.put(driverId, oldDuration + duration)
+        completedDriversDuration.put(driverId.toInt(), oldDuration + duration)
     }
 
-    fun getDriverDuration(driverId: Int): Long {
-        val l = completedDriversDuration.get(driverId)
+    fun getDriverDuration(driverId: Long): Long {
+        val l = completedDriversDuration.get(driverId.toInt())
         return l ?: 0L
     }
 

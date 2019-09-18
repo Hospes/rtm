@@ -6,9 +6,9 @@ import ua.hospes.rtm.db.drivers.DriverEntity
 
 @Parcelize
 data class Driver(
-        val id: Int = 0,
+        val id: Long = 0,
         val name: String,
-        val teamId: Int? = null,
+        val teamId: Long? = null,
         val teamName: String? = null
 ) : Parcelable
 

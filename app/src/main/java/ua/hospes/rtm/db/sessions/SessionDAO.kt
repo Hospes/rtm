@@ -5,25 +5,24 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface SessionDAO {
-
     @Query("SELECT * FROM sessions")
     suspend fun get(): List<SessionEntity>
 
     @Query("SELECT * FROM sessions WHERE id IN (:ids)")
-    suspend fun getByIds(vararg ids: Int): List<SessionEntity>
+    suspend fun getByIds(vararg ids: Long): List<SessionEntity>
 
     @Query("SELECT * FROM sessions WHERE team_id = :id")
-    suspend fun getByTeam(id: Int): List<SessionEntity>
+    suspend fun getByTeam(id: Long): List<SessionEntity>
 
     @Query("SELECT * FROM sessions WHERE team_id = :teamId AND driver_id = :driverId")
-    suspend fun getByTeamAndDriver(teamId: Int, driverId: Int): List<SessionEntity>
+    suspend fun getByTeamAndDriver(teamId: Long, driverId: Long): List<SessionEntity>
 
 
     @Query("SELECT * FROM sessions")
     fun observe(): Flow<List<SessionEntity>>
 
     @Query("SELECT * FROM sessions WHERE team_id = :teamId")
-    fun observeByTeam(teamId: Int): Flow<List<SessionEntity>>
+    fun observeByTeam(teamId: Long): Flow<List<SessionEntity>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -34,19 +33,19 @@ internal interface SessionDAO {
 
 
     @Query("UPDATE sessions SET driver_id = :driverId WHERE id = :sessionId")
-    suspend fun setDriver(sessionId: Int, driverId: Int)
+    suspend fun setDriver(sessionId: Long, driverId: Long)
 
     @Query("UPDATE sessions SET car_id = :carId WHERE id = :sessionId")
-    suspend fun setCar(sessionId: Int, carId: Int)
+    suspend fun setCar(sessionId: Long, carId: Long)
 
     @Query("UPDATE sessions SET race_start_time = :raceStartTime AND start_duration_time = :startTime AND end_duration_time = NULL WHERE id = :sessionId")
-    suspend fun openSession(sessionId: Int, raceStartTime: Long, startTime: Long)
+    suspend fun openSession(sessionId: Long, raceStartTime: Long, startTime: Long)
 
     @Query("UPDATE sessions SET end_duration_time = :stopTime WHERE id = :sessionId")
-    suspend fun closeSession(sessionId: Int, stopTime: Long)
+    suspend fun closeSession(sessionId: Long, stopTime: Long)
 
     @Query("UPDATE sessions SET race_start_time = :startTime WHERE id = :sessionId")
-    suspend fun setRaceStartTime(sessionId: Int, startTime: Long)
+    suspend fun setRaceStartTime(sessionId: Long, startTime: Long)
 
 
     /**
@@ -60,11 +59,11 @@ internal interface SessionDAO {
 
 
     @Query("DELETE FROM sessions WHERE id IN (:ids)")
-    suspend fun delete(vararg ids: Int)
+    suspend fun delete(vararg ids: Long)
 
     @Delete
     suspend fun delete(vararg entities: SessionEntity)
 
-    @Query("DELETE FROM teams")
+    @Query("DELETE FROM sessions")
     suspend fun clear()
 }

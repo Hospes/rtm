@@ -4,12 +4,12 @@ import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.drivers.Driver
 
 data class Session(
-        val id: Int = 0,
-        val teamId: Int,
+        val id: Long = 0,
+        val teamId: Long,
         val driver: Driver? = null,
         val car: Car? = null,
-        val raceStartTime: Long = -1L,
-        val startDurationTime: Long = -1L,
+        val raceStartTime: Long? = null,
+        val startDurationTime: Long? = null,
         val endDurationTime: Long? = null,
         val type: Type = Type.TRACK
 ) {

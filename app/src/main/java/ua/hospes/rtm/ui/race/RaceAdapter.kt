@@ -31,12 +31,12 @@ internal class RaceAdapter(context: Context,
     @ColorInt private val carDefaultColor: Int
     @ColorInt private val sessionTrackColor: Int
     @ColorInt private val sessionPitColor: Int
-    var itemClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
-    var setCarClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
-    var setDriverClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
-    var onPitClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
-    var onOutClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
-    var onUndoClickListener: ((item: RaceItem, position: Int) -> Unit)? = null
+    var itemClickListener: ((item: RaceItem) -> Unit)? = null
+    var setCarClickListener: ((item: RaceItem) -> Unit)? = null
+    var setDriverClickListener: ((item: RaceItem) -> Unit)? = null
+    var onPitClickListener: ((item: RaceItem) -> Unit)? = null
+    var onOutClickListener: ((item: RaceItem) -> Unit)? = null
+    var onUndoClickListener: ((item: RaceItem) -> Unit)? = null
 
 
     init {
@@ -48,21 +48,21 @@ internal class RaceAdapter(context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = when (sessionButtonType) {
         "next" -> MyHolderNext(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
-                nextClickListener = { onOutClickListener?.invoke(getItem(it), it) })
+                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+                nextClickListener = { onOutClickListener?.invoke(getItem(it)) })
         "undo" -> MyHolderUndoNext(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
-                nextClickListener = { onOutClickListener?.invoke(getItem(it), it) },
-                undoClickListener = { onUndoClickListener?.invoke(getItem(it), it) })
+                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+                nextClickListener = { onOutClickListener?.invoke(getItem(it)) },
+                undoClickListener = { onUndoClickListener?.invoke(getItem(it)) })
         else -> MyHolderPit(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it), it) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it), it) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it), it) },
-                pitOutClickListener = { onPitClickListener?.invoke(getItem(it), it) })
+                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+                pitOutClickListener = { onPitClickListener?.invoke(getItem(it)) })
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -92,10 +92,10 @@ internal class RaceAdapter(context: Context,
             holder.btnSessionCar.setTextColor(if (car == null) carDefaultColor else context.resources.getColor(car.quality.color))
 
             val driver = session.driver
-            holder.btnSessionDriver.text = if (driver == null) context.getString(R.string.race_btn_set_driver) else session.driver!!.name
+            holder.btnSessionDriver.text = if (driver == null) context.getString(R.string.race_btn_set_driver) else session.driver.name
             holder.driverTimeView.visibility = if (driver == null) View.INVISIBLE else View.VISIBLE
             if (driver != null) {
-                holder.driverTimeView.prevDuration = item.details?.getDriverDuration(driver.id!!) ?: 0L
+                holder.driverTimeView.prevDuration = item.details?.getDriverDuration(driver.id) ?: 0L
             }
 
             holder.sessionType.text = when (session.type) {
@@ -157,7 +157,7 @@ internal class RaceAdapter(context: Context,
 
         internal open fun setPitChecked(checked: Boolean) {}
 
-        internal open fun undoBind(controller: UndoButtonController<*>, id: Int) {}
+        internal open fun undoBind(controller: UndoButtonController<*>, id: Long) {}
     }
 
     internal inner class MyHolderNext(parent: ViewGroup,
@@ -215,7 +215,7 @@ internal class RaceAdapter(context: Context,
             btnNextSession.setController(undoButtonController)
         }
 
-        override fun undoBind(controller: UndoButtonController<*>, id: Int) = undoButtonController.onBind(id, btnNextSession)
+        override fun undoBind(controller: UndoButtonController<*>, id: Long) = undoButtonController.onBind(id.toInt(), btnNextSession)
     }
 
 

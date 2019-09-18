@@ -13,7 +13,7 @@ class SessionTimeView : TimeView {
             if (session == null) return
             if (session.startDurationTime == -1L) text = TimeUtils.format(0)
             if (session.startDurationTime != -1L && session.endDurationTime != -1L)
-                text = TimeUtils.formatNano(session.endDurationTime ?: 0L - session.startDurationTime)
+                text = TimeUtils.formatNano(session.endDurationTime ?: 0L - (session.startDurationTime ?: 0L))
         }
 
 
@@ -22,7 +22,7 @@ class SessionTimeView : TimeView {
         set(currentNanoTime) {
             super.currentNanoTime = currentNanoTime
             if (this.session == null) return
-            text = TimeUtils.formatNano(currentNanoTime - this.session!!.startDurationTime)
+            text = TimeUtils.formatNano(currentNanoTime - (this.session!!.startDurationTime ?: 0L))
         }
 
 

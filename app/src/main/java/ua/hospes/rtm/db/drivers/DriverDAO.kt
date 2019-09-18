@@ -5,18 +5,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface DriverDAO {
-
     @Query("SELECT * FROM drivers")
     suspend fun get(): List<DriverEntity>
 
     @Query("SELECT * FROM drivers WHERE id = :id LIMIT 1")
-    suspend fun get(id: Int): DriverEntity
+    suspend fun get(id: Long): DriverEntity
 
     @Query("SELECT * FROM drivers WHERE id IN (:ids)")
-    suspend fun get(vararg ids: Int): List<DriverEntity>
+    suspend fun get(vararg ids: Long): List<DriverEntity>
 
     @Query("SELECT * FROM drivers WHERE team_id = :id")
-    suspend fun getByTeamId(id: Int): List<DriverEntity>
+    suspend fun getByTeamId(id: Long): List<DriverEntity>
 
 
     @Query("SELECT * FROM drivers")
@@ -24,17 +23,17 @@ internal interface DriverDAO {
 
 
     @Query("UPDATE drivers SET team_id = :teamId WHERE id IN (:driverIds)")
-    suspend fun addDriversToTeam(teamId: Int, driverIds: IntArray)
+    suspend fun addDriversToTeam(teamId: Long, driverIds: LongArray)
 
     @Query("UPDATE drivers SET team_id = null WHERE team_id = :teamId")
-    suspend fun removeDriversFromTeam(teamId: Int)
+    suspend fun removeDriversFromTeam(teamId: Long)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(entity: DriverEntity)
+    suspend fun save(entity: DriverEntity): Long
 
     @Query("DELETE FROM drivers WHERE id IN (:ids)")
-    suspend fun delete(ids: IntArray)
+    suspend fun delete(vararg ids: Long)
 
     @Delete
     suspend fun delete(vararg entities: DriverEntity)

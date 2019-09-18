@@ -57,12 +57,12 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         list.layoutManager = LinearLayoutManager(context)
         adapter = RaceAdapter(requireContext(), sessionButtonType, undoController).apply { list.adapter = this }
 
-        //        adapter.setOnPitClickListener { item, position -> presenter.onPit(item, currentNanoTime) }
-        //        adapter.setOnOutClickListener { item, position -> presenter.onOut(item, currentNanoTime) }
-        //        adapter.setOnUndoClickListener { item, position -> presenter.undoLastSession(item) }
-        //        adapter.setOnSetCarClickListener { item, position -> presenter.showSetCarDialog(childFragmentManager, item.session) }
-        //        adapter.setOnSetDriverClickListener { item, position -> presenter.showSetDriverDialog(childFragmentManager, item.session) }
-        //adapter.setOnItemClickListener { item, _ -> presenter.showRaceItemDetail(requireContext(), item) }
+        adapter.onPitClickListener = { presenter.onPit(it, currentNanoTime) }
+        adapter.onOutClickListener = { presenter.onOut(it, currentNanoTime) }
+        adapter.onUndoClickListener = { presenter.undoLastSession(it) }
+        adapter.setCarClickListener = { presenter.clickSetCar(it) }
+        adapter.setDriverClickListener = { presenter.clickSetDriver(it) }
+        adapter.itemClickListener = { /*RaceItemDetailActivity.start(context, item.id)*/ }
 
         timerListController = TimerListController().apply { list.addOnScrollListener(this) }
 
@@ -87,10 +87,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         menu.findItem(R.id.action_clear).isVisible = !stopWatchStarted
         menu.findItem(R.id.action_stop).isVisible = stopWatchStarted
 
-        val stopWatchItem = menu.findItem(R.id.action_stopwatch)
-        if (stopWatchItem != null) {
-            tvTime = stopWatchItem.actionView.findViewById(R.id.text)
-        }
+        tvTime = menu.findItem(R.id.action_stopwatch)?.actionView?.findViewById(R.id.text)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -150,7 +147,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     override fun onStopWatchTick(time: Long, nanoTime: Long, currentNanoTime: Long) {
         this.currentNanoTime = currentNanoTime
         // We have to check tvTime on null cause it couldn't be ready yet
-        if (tvTime != null) tvTime!!.text = TimeUtils.format(time)
+        tvTime?.text = TimeUtils.format(time)
         // We have to check adapter on null cause it couldn't be ready yet
         timerListController.updateTime(currentNanoTime)
     }

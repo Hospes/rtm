@@ -7,7 +7,7 @@ import ua.hospes.rtm.domain.drivers.Driver
 
 @Parcelize
 data class Team(
-        val id: Int = 0,
+        val id: Long = 0,
         val name: String,
         val drivers: MutableList<Driver> = mutableListOf()
 ) : Parcelable

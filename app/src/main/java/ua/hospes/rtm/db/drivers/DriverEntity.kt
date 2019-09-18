@@ -11,9 +11,9 @@ import ua.hospes.rtm.domain.drivers.Driver
 
 @Entity(tableName = "drivers")
 data class DriverEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int = 0,
+        @PrimaryKey(autoGenerate = true) val id: Long = 0,
         @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "team_id") val teamId: Int? = null
+        @ColumnInfo(name = "team_id") val teamId: Long? = null
 )
 
 fun DriverEntity.toDomain(team: TeamEntity? = null): Driver = team?.let {
@@ -23,7 +23,7 @@ fun DriverEntity.toDomain(team: TeamEntity? = null): Driver = team?.let {
 
 internal suspend fun DriverEntity.toDomain(dao: TeamDAO): Driver = withContext(Dispatchers.IO) {
     teamId?.let {
-        val team = dao.get(intArrayOf(it)).firstOrNull() ?: throw IllegalStateException("Didn't found team with given id[$it]")
+        val team = dao.get(*longArrayOf(it)).firstOrNull() ?: throw IllegalStateException("Didn't found team with given id[$it]")
         Driver(id, name, team.id, team.name)
     } ?: Driver(id, name)
 }

@@ -1,7 +1,5 @@
 package ua.hospes.rtm.ui.race
 
-import android.content.Context
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -28,7 +26,6 @@ internal class RacePresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-
     fun startRace(startTime: Long) = launch {
         // Legacy way
         //val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
@@ -47,11 +44,34 @@ internal class RacePresenter @Inject constructor(
         sessionRepo.stopRace(stopTime)
     }
 
-    fun onPit(item: RaceItem, time: Long) {
-        //        disposables += interactor.teamPit(item, time)
-        //                .compose(RxUtils.applySchedulers())
-        //                .subscribe({ }, this::error)
+    fun onPit(item: RaceItem, time: Long) = launch {
+        val oldSessionId = item.session?.id ?: throw IllegalStateException("Race team doesn't have session to close")
+        val raceStartTime = item.session.raceStartTime ?: throw IllegalStateException("Session doesn't have race start time")
+        // Close old session
+        sessionRepo.closeSessions(time, oldSessionId)
+        // Open new session
+        sessionRepo.startNewSession(item.team.id, raceStartTime, time, Session.Type.PIT)
     }
+
+    //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
+    //        var driverId = -1
+    //        var raceStartTime: Long = -1
+    //        if (item.session != null) raceStartTime = item.session!!.raceStartTime
+    //        when (preferencesManager.pitStopAssign) {
+    //            PitStopAssign.PREVIOUS -> if (item.session != null && item.session!!.driver != null)
+    //                driverId = item.session!!.driver!!.id!!
+    //        }
+    //        return Observable.zip<Session, Session, RaceItem>(
+    //                closeSession(time, item.session),
+    //                sessionsRepository.startNewSession(raceStartTime, time, Session.Type.PIT, driverId, item.team.id!!),
+    //                { closedSession, openedSession ->
+    //                    item.session = openedSession
+    //                    item
+    //                })
+    //                .toList()
+    //                .flatMapObservable(Function<List<RaceItem>, ObservableSource<out Boolean>> { raceRepository.update(it) })
+    //    }
+
 
     fun onOut(item: RaceItem, time: Long) {
         //        disposables += interactor.teamOut(item, time)
@@ -85,18 +105,16 @@ internal class RacePresenter @Inject constructor(
         //                .subscribe({ }, this::error)
     }
 
-    fun showRaceItemDetail(context: Context, item: RaceItem) {
-        //RaceItemDetailActivity.start(context, item.id)
-    }
-
-    fun showSetCarDialog(managerFragment: FragmentManager, session: Session) {
+    fun clickSetCar(item: RaceItem) = launch {
+        val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
         //        disposables += interactor.carsNotInRace.toList()
         //                .compose(RxUtils.applySchedulersSingle())
         //                .subscribe({ }, this::error)
         //.subscribe({ result -> SetCarDialogFragment.newInstance(session.id, result).show(managerFragment, "set_car") }, Consumer<Throwable> { it.printStackTrace() }))
     }
 
-    fun showSetDriverDialog(managerFragment: FragmentManager, session: Session) {
+    fun clickSetDriver(item: RaceItem) = launch {
+        val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
         //        disposables += interactor.getDrivers(session.teamId)
         //                .compose(RxUtils.applySchedulersSingle())
         //                .subscribe({ }, this::error)

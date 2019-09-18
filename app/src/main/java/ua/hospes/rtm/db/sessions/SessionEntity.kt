@@ -14,10 +14,10 @@ import ua.hospes.rtm.domain.sessions.Session
 
 @Entity(tableName = "sessions")
 data class SessionEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int = 0,
-        @ColumnInfo(name = "team_id") val teamId: Int,
-        @ColumnInfo(name = "driver_id") val driverId: Int? = null,
-        @ColumnInfo(name = "car_id") val carId: Int? = null,
+        @PrimaryKey(autoGenerate = true) val id: Long = 0,
+        @ColumnInfo(name = "team_id") val teamId: Long,
+        @ColumnInfo(name = "driver_id") val driverId: Long? = null,
+        @ColumnInfo(name = "car_id") val carId: Long? = null,
         @ColumnInfo(name = "race_start_time") val raceStartTime: Long = -1,
         @ColumnInfo(name = "start_duration_time") val startDurationTime: Long = -1,
         @ColumnInfo(name = "end_duration_time") val endDurationTime: Long? = null,
@@ -28,8 +28,8 @@ internal suspend fun SessionEntity.toDomain(teamDAO: TeamDAO, driverDAO: DriverD
     Session(
             id = id,
             teamId = teamId,
-            driver = driverDAO.get(id).toDomain(teamDAO),
-            car = carDAO.get(id).toDomain(),
+            driver = driverId?.let { driverDAO.get(it).toDomain(teamDAO) },
+            car = carId?.let { carDAO.get(it).toDomain() },
             raceStartTime = raceStartTime,
             startDurationTime = startDurationTime,
             endDurationTime = endDurationTime,

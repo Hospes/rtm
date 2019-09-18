@@ -5,7 +5,7 @@ import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.domain.team.Team
 
 data class RaceItem(
-        val id: Int = 0,
+        val id: Long = 0,
         val teamNumber: Int,
         val team: Team,
         val session: Session? = null,

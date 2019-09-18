@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface RaceDAO {
-
     @Query("SELECT * FROM race")
     suspend fun get(): List<RaceEntity>
 
@@ -14,7 +13,7 @@ internal interface RaceDAO {
     fun observe(): Flow<List<RaceEntity>>
 
     @Query("SELECT * FROM race WHERE id = :id LIMIT 1")
-    fun observe(id: Int): Flow<RaceEntity>
+    fun observe(id: Long): Flow<RaceEntity>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,7 +25,7 @@ internal interface RaceDAO {
 
 
     @Query("DELETE FROM race WHERE id IN (:ids)")
-    suspend fun delete(vararg ids: Int)
+    suspend fun delete(vararg ids: Long)
 
     @Delete
     suspend fun delete(vararg entities: RaceEntity)

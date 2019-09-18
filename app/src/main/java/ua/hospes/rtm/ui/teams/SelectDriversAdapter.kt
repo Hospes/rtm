@@ -12,7 +12,7 @@ import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.widgets.CheckableFrameLayout
 
 class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(DIFF_CALLBACK) {
-    private val selectedIds = hashSetOf<Int>()
+    private val selectedIds = hashSetOf<Long>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = MyHolder(parent)
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position))
@@ -20,7 +20,7 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
     fun getSelectedIds() = selectedIds.toList()
 
     fun setSelected(list: List<Driver>) {
-        list.forEach { driver -> driver.id?.let { selectedIds.add(it) } }
+        list.forEach { driver -> driver.id.let { selectedIds.add(it) } }
         notifyDataSetChanged()
     }
 
@@ -35,7 +35,7 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
                 val item = getItem(adapterPosition)
                 when (selectedIds.contains(item.id)) {
                     true -> selectedIds.remove(item.id)
-                    else -> item.id?.let { selectedIds.add(it) }
+                    else -> item.id.let { selectedIds.add(it) }
                 }
                 notifyItemChanged(adapterPosition)
             }

@@ -1,7 +1,7 @@
 package ua.hospes.rtm.utils
 
 import android.os.Environment
-import android.util.SparseIntArray
+import android.util.SparseLongArray
 import jxl.CellView
 import jxl.Workbook
 import jxl.write.Label
@@ -39,8 +39,8 @@ object XLSTest {
             var teamColumn = 0
             for (team in data.keys) {
                 fillTeamHeader(sheet, teamColumn, team)
-                val driverIds = SparseIntArray()
-                for (i in 0 until team.drivers.size) driverIds.put(i, team.drivers[i].id!!)
+                val driverIds = SparseLongArray()
+                for (i in 0 until team.drivers.size) driverIds.put(i, team.drivers[i].id)
                 fillTeamSessions(sheet, teamColumn, driverIds, data[team]!!)
                 teamColumn += team.drivers.size * COLUMNS_PER_DRIVER + 1
             }
@@ -67,7 +67,7 @@ object XLSTest {
     }
 
     @Throws(WriteException::class)
-    private fun fillTeamSessions(sheet: WritableSheet, column: Int, driverIds: SparseIntArray, sessions: Iterable<Session>) {
+    private fun fillTeamSessions(sheet: WritableSheet, column: Int, driverIds: SparseLongArray, sessions: Iterable<Session>) {
         var row = 3
         for (session in sessions) {
             fillTeamSession(sheet, column, row, driverIds, session)
@@ -76,9 +76,9 @@ object XLSTest {
     }
 
     @Throws(WriteException::class)
-    private fun fillTeamSession(sheet: WritableSheet, column: Int, row: Int, driverIds: SparseIntArray, session: Session) {
+    private fun fillTeamSession(sheet: WritableSheet, column: Int, row: Int, driverIds: SparseLongArray, session: Session) {
         val driver = session.driver
-        val i = if (driver == null) 0 else driverIds.indexOfValue(driver.id!!)
+        val i = if (driver == null) 0 else driverIds.indexOfValue(driver.id)
 
         // Write Car
         val car = session.car
@@ -86,7 +86,7 @@ object XLSTest {
         sheet.setColumnView(column, cvCarSize)
 
         // Write start time
-        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER, row, TimeUtils.formatNanoWithMills(session.startDurationTime - session.raceStartTime)))
+        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER, row, TimeUtils.formatNanoWithMills(session.startDurationTime!! - session.raceStartTime!!)))
         sheet.setColumnView(column + 1 + i * COLUMNS_PER_DRIVER, cvTimeSize)
 
         // Write duration

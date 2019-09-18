@@ -9,10 +9,10 @@ import ua.hospes.rtm.domain.race.models.RaceItem
 
 @Entity(tableName = "race")
 data class RaceEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int = 0,
-        @ColumnInfo(name = "team_id") val teamId: Int,
+        @PrimaryKey(autoGenerate = true) val id: Long = 0,
+        @ColumnInfo(name = "team_id") val teamId: Long,
         @ColumnInfo(name = "team_number") val teamNumber: Int,
-        @ColumnInfo(name = "session_id") val sessionId: Int? = null,
+        @ColumnInfo(name = "session_id") val sessionId: Long? = null,
         @ColumnInfo(name = "order") val order: Int = 0
 ) {
     internal suspend fun toDomain(teamDAO: TeamDAO, driverDAO: DriverDAO): RaceItem =

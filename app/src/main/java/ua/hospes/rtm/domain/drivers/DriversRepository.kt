@@ -5,22 +5,22 @@ import kotlinx.coroutines.flow.Flow
 internal interface DriversRepository {
     suspend fun get(): List<Driver>
 
-    suspend fun get(vararg ids: Int): List<Driver>
+    suspend fun get(vararg ids: Long): List<Driver>
 
-    suspend fun getByTeamId(teamId: Int): List<Driver>
+    suspend fun getByTeamId(teamId: Long): List<Driver>
 
 
     fun listen(): Flow<List<Driver>>
 
 
-    suspend fun addDriversToTeam(teamId: Int, vararg driverIds: Int)
+    suspend fun addDriversToTeam(teamId: Long, vararg driverIds: Long)
 
-    suspend fun removeDriversFromTeam(teamId: Int)
+    suspend fun removeDriversFromTeam(teamId: Long)
 
 
-    suspend fun save(driver: Driver)
+    suspend fun save(driver: Driver): Driver
 
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 
     suspend fun clear()
 }

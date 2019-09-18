@@ -24,7 +24,7 @@ class DriverTimeView : TimeView {
         set(currentNanoTime) {
             super.currentNanoTime = currentNanoTime
             if (this.session == null) return
-            text = TimeUtils.formatNano(currentNanoTime - this.session!!.startDurationTime + this.prevDuration)
+            text = TimeUtils.formatNano(currentNanoTime - (this.session?.startDurationTime ?: 0L) + this.prevDuration)
         }
 
 

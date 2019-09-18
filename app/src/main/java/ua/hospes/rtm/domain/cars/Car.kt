@@ -8,7 +8,7 @@ import ua.hospes.rtm.db.cars.CarEntity
 
 @Parcelize
 data class Car(
-        val id: Int = 0,
+        val id: Long = 0,
         val number: Int,
         val quality: Quality = Quality.NORMAL,
         val broken: Boolean = false

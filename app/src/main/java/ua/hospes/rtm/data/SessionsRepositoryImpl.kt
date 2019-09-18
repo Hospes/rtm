@@ -24,15 +24,15 @@ internal class SessionsRepositoryImpl(
         dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) }
     }
 
-    override suspend fun get(vararg ids: Int): List<Session> = withContext(Dispatchers.IO) {
+    override suspend fun get(vararg ids: Long): List<Session> = withContext(Dispatchers.IO) {
         dao.getByIds(*ids).map { it.toDomain(teamDAO, driverDAO, carDAO) }
     }
 
-    override suspend fun getByTeam(teamId: Int): List<Session> = withContext(Dispatchers.IO) {
+    override suspend fun getByTeam(teamId: Long): List<Session> = withContext(Dispatchers.IO) {
         dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) }
     }
 
-    override suspend fun getByTeamAndDriver(teamId: Int, driverId: Int): List<Session> = withContext(Dispatchers.IO) {
+    override suspend fun getByTeamAndDriver(teamId: Long, driverId: Long): List<Session> = withContext(Dispatchers.IO) {
         dao.getByTeamAndDriver(teamId, driverId).map { it.toDomain(teamDAO, driverDAO, carDAO) }
     }
 
@@ -40,15 +40,15 @@ internal class SessionsRepositoryImpl(
     override fun listen(): Flow<List<Session>> =
             dao.observe().map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
-    override fun listenByTeamId(teamId: Int): Flow<List<Session>> =
+    override fun listenByTeamId(teamId: Long): Flow<List<Session>> =
             dao.observeByTeam(teamId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
-    override suspend fun setSessionDriver(sessionId: Int, driverId: Int) {
+    override suspend fun setSessionDriver(sessionId: Long, driverId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun setSessionCar(sessionId: Int, carId: Int) {
+    override suspend fun setSessionCar(sessionId: Long, carId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -56,32 +56,37 @@ internal class SessionsRepositoryImpl(
     override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
 
 
-    override suspend fun newSession(type: Session.Type, teamId: Int): Session {
-        val id = dao.save(SessionEntity(teamId = teamId, type = type.name)).toInt()
+    override suspend fun newSession(type: Session.Type, teamId: Long): Session {
+        val id = dao.save(SessionEntity(teamId = teamId, type = type.name))
         return Session(id = id, teamId = teamId, type = type)
     }
 
-    override suspend fun newSessions(type: Session.Type, vararg teamIds: Int) {
+    override suspend fun newSessions(type: Session.Type, vararg teamIds: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int) {
+    override suspend fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Int) {
+    override suspend fun startNewSessions(raceStartTime: Long, startTime: Long, type: Session.Type, vararg teamIds: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun startNewSession(raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Int, teamId: Int) {
+    override suspend fun startNewSession(teamId: Long, raceStartTime: Long, startTime: Long, type: Session.Type, driverId: Long?): Session {
+        val entity = SessionEntity(teamId = teamId,
+                raceStartTime = raceStartTime,
+                startDurationTime = startTime,
+                type = type.name)
+        val id = dao.save(entity)
+        return entity.copy(id = id).toDomain(teamDAO, driverDAO, carDAO)
+    }
+
+    override suspend fun closeSessions(stopTime: Long, vararg sessionIds: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun closeSessions(stopTime: Long, vararg sessionIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun removeLastSession(teamId: Int) {
+    override suspend fun removeLastSession(teamId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
