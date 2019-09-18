@@ -28,6 +28,8 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
+        buildConfigField 'String', 'NOTIFICATION_CHANNEL_RACE', "\"Race progress\""
     }
 
     signingConfigs {

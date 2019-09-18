@@ -36,8 +36,7 @@ internal class AddTeamToRacePresenter @Inject constructor(
         team?.let {
             val session = sessionsRepo.newSession(Session.Type.TRACK, it.id)
 
-            val race = RaceItem(teamNumber = intNumber, team = it, session = session)
-            raceRepo.save(race)
+            raceRepo.save(RaceItem(teamNumber = intNumber, team = it, session = session))
         } ?: throw IllegalArgumentException("Team not selected")
 
         withContext(Dispatchers.Main) { view?.onSuccess() }

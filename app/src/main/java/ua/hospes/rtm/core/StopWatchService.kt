@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
+import ua.hospes.rtm.BuildConfig
 
 import ua.hospes.rtm.R
 import ua.hospes.rtm.ui.MainActivity
@@ -24,55 +25,53 @@ private const val KEY_STOP = "stop"
 class StopWatchService : Service(), StopWatch.OnStopWatchListener {
     private val binder = StopWatchBinder()
     private val stopWatch = StopWatch()
-    private var mNotificationManager: NotificationManager? = null
-    private var wakeLock: PowerManager.WakeLock? = null
-
-
-    override fun onCreate() {
-        super.onCreate()
-        mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+    private val mNotificationManager: NotificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val wakeLock: PowerManager.WakeLock by lazy {
         val mgr = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ua.hospes.rtm:MyWakeLock")
+        mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ua.hospes.rtm:MyWakeLock")
     }
+
 
     override fun onBind(intent: Intent): IBinder? = binder
 
     @SuppressLint("WakelockTimeout")
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null && intent.hasExtra(KEY_ACTION)) {
-            val action = intent.getStringExtra(KEY_ACTION)
-            if (KEY_START == action && !stopWatch.isStarted) {
-                wakeLock!!.acquire()
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = when (intent?.getStringExtra(KEY_ACTION)) {
+        KEY_START -> {
+            if (!stopWatch.isStarted) {
+                wakeLock.acquire()
                 stopWatch.reset()
                 stopWatch.start()
                 startForeground(NOTIFICATION_ID, buildNotification(TimeUtils.format(stopWatch.time)))
                 stopWatch.addOnChronometerTickListener(this)
-                return START_STICKY
-            } else if (KEY_STOP == action) {
-                stopWatch.stop()
-                stopWatch.removeOnChronometerTickListener(this)
-                stopForeground(true)
-                if (wakeLock!!.isHeld) wakeLock!!.release()
-                return START_NOT_STICKY
             }
+            START_STICKY
         }
-        return START_STICKY
+
+        KEY_STOP -> {
+            stopWatch.stop()
+            stopWatch.removeOnChronometerTickListener(this)
+            stopForeground(true)
+            if (wakeLock.isHeld) wakeLock.release()
+            START_NOT_STICKY
+        }
+
+        else -> START_NOT_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (wakeLock!!.isHeld) wakeLock!!.release()
+        if (wakeLock.isHeld) wakeLock.release()
     }
 
     private fun buildNotification(time: String): Notification {
         val startMainActivity = Intent(this, MainActivity::class.java)
-        startMainActivity.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }
         val pi = PendingIntent.getActivity(this, 0, startMainActivity, 0)
-        return NotificationCompat.Builder(this)
+        return NotificationCompat.Builder(this, BuildConfig.NOTIFICATION_CHANNEL_RACE)
                 .setContentTitle("Marathon is running: $time")
                 .setContentIntent(pi)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setOnlyAlertOnce(true)
                 .setOngoing(true)
                 .build()
     }
@@ -85,7 +84,7 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
     override fun onStopWatchStateChanged(runningState: Int) {}
 
     override fun onStopWatchTick(time: Long, nanoTime: Long, currentNanoTime: Long) {
-        mNotificationManager!!.notify(1337, buildNotification(TimeUtils.format(stopWatch.time)))
+        mNotificationManager.notify(NOTIFICATION_ID, buildNotification(TimeUtils.format(stopWatch.time)))
     }
 
 

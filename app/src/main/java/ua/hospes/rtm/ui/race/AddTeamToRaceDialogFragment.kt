@@ -30,12 +30,6 @@ internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceCo
 
         adapter = TeamSpinnerAdapter(requireContext())
         sp_team.adapter = adapter
-        //        sp_team.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        //            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = Unit
-        //presenter.teamSelect((parent?.adapter as? TeamSpinnerAdapter)?.getItem(position))
-
-        //            override fun onNothingSelected(parent: AdapterView<*>?) = Unit //presenter.teamSelect()
-        //        }
 
         btn_save.setOnClickListener { presenter.save(number.text.toString(), sp_team.selectedItem as? Team) }
         btn_cancel.setOnClickListener { dismiss() }
@@ -43,9 +37,9 @@ internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceCo
         presenter.attachView(this, lifecycle)
     }
 
-    override fun onTeams(list: List<Team>) {
-        adapter.clear()
-        adapter.addAll(list)
+    override fun onTeams(list: List<Team>) = with(adapter) {
+        clear()
+        addAll(list)
     }
 
     override fun onSuccess() {

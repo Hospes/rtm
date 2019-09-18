@@ -92,7 +92,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_start -> {
-            StopWatchService.start(context!!)
+            StopWatchService.start(requireContext())
             timerListController.forceUpdate(list)
             true
         }
