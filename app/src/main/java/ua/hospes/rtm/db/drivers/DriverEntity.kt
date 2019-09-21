@@ -1,15 +1,22 @@
 package ua.hospes.rtm.db.drivers
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.db.team.TeamEntity
 import ua.hospes.rtm.domain.drivers.Driver
 
-@Entity(tableName = "drivers")
+@Entity(tableName = "drivers",
+        indices = [Index(value = ["team_id"])],
+        foreignKeys = [
+            ForeignKey(entity = TeamEntity::class,
+                    parentColumns = ["id"],
+                    childColumns = ["team_id"],
+                    onUpdate = ForeignKey.CASCADE,
+                    onDelete = ForeignKey.SET_NULL)
+        ]
+)
 data class DriverEntity(
         @PrimaryKey(autoGenerate = true) val id: Long = 0,
         @ColumnInfo(name = "name") val name: String,

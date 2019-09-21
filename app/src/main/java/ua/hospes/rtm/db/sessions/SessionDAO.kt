@@ -8,8 +8,11 @@ internal interface SessionDAO {
     @Query("SELECT * FROM sessions")
     suspend fun get(): List<SessionEntity>
 
+    @Query("SELECT * FROM sessions WHERE id = :id LIMIT 1")
+    suspend fun get(id: Long): SessionEntity
+
     @Query("SELECT * FROM sessions WHERE id IN (:ids)")
-    suspend fun getByIds(vararg ids: Long): List<SessionEntity>
+    suspend fun get(vararg ids: Long): List<SessionEntity>
 
     @Query("SELECT * FROM sessions WHERE team_id = :id")
     suspend fun getByTeam(id: Long): List<SessionEntity>

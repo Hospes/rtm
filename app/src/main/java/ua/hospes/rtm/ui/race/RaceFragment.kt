@@ -12,9 +12,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_race.*
+import timber.log.Timber
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.StopWatchFragment
 import ua.hospes.rtm.core.StopWatchService
+import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.utils.TimeUtils
@@ -131,6 +133,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     }
 
     override fun onData(items: List<RaceItem>) {
+        Timber.d(items.toString())
         adapter.submitList(items)
         timerListController.forceUpdate(list)
         if ("undo".equals(sessionButtonType, ignoreCase = true))
@@ -152,6 +155,9 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         timerListController.updateTime(currentNanoTime)
     }
 
+
+    override fun onOpenSetCarDialog(sessionId: Long, cars: List<Car>) =
+            SetCarDialogFragment.newInstance(sessionId, cars).show(childFragmentManager, "set_car")
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.teams_remove_all)

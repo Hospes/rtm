@@ -8,11 +8,14 @@ internal interface CarDAO {
     @Query("SELECT * FROM cars")
     suspend fun get(): List<CarEntity>
 
-    @Query("SELECT * FROM cars WHERE uid = :id LIMIT 1")
+    @Query("SELECT * FROM cars WHERE id = :id LIMIT 1")
     suspend fun get(id: Long): CarEntity
 
-    @Query("SELECT * FROM cars WHERE uid IN (:ids)")
+    @Query("SELECT * FROM cars WHERE id IN (:ids)")
     suspend fun getByIds(vararg ids: Long): List<CarEntity>
+
+    @Query("SELECT c.* FROM Cars c LEFT JOIN sessions s ON s.car_id = c.id WHERE s.car_id IS NULL AND s.end_duration_time IS NULL")
+    suspend fun getNotSelected(): List<CarEntity>
 
 
     @Query("SELECT * FROM cars")
@@ -22,7 +25,7 @@ internal interface CarDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(entity: CarEntity): Long
 
-    @Query("DELETE FROM cars WHERE uid IN (:ids)")
+    @Query("DELETE FROM cars WHERE id IN (:ids)")
     suspend fun delete(vararg ids: Long)
 
     @Delete

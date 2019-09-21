@@ -30,6 +30,6 @@ internal interface RaceDAO {
     @Delete
     suspend fun delete(vararg entities: RaceEntity)
 
-    @Query("DELETE FROM teams")
+    @Query("DELETE FROM race")
     suspend fun clear()
 }

@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
+import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 internal class RacePresenter @Inject constructor(
         private val raceRepo: RaceRepository,
-        private val sessionRepo: SessionsRepository
+        private val sessionRepo: SessionsRepository,
+        private val carsRepo: CarsRepository
 ) : Presenter<RaceContract.View>() {
 
     override fun attachView(view: RaceContract.View?, lc: Lifecycle) {
@@ -99,18 +101,13 @@ internal class RacePresenter @Inject constructor(
         //                .subscribe({ }, this::error)
     }
 
-    fun removeAll() {
-        //        disposables += interactor.removeAll()
-        //                .compose(RxUtils.applySchedulersSingle())
-        //                .subscribe({ }, this::error)
-    }
+    fun removeAll() = launch { raceRepo.clear() }
 
-    fun clickSetCar(item: RaceItem) = launch {
+    fun clickSetCar(item: RaceItem) = launch(Dispatchers.Main) {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
-        //        disposables += interactor.carsNotInRace.toList()
-        //                .compose(RxUtils.applySchedulersSingle())
-        //                .subscribe({ }, this::error)
-        //.subscribe({ result -> SetCarDialogFragment.newInstance(session.id, result).show(managerFragment, "set_car") }, Consumer<Throwable> { it.printStackTrace() }))
+        val cars = carsRepo.getNotInRace()
+
+        view?.onOpenSetCarDialog(id, cars)
     }
 
     fun clickSetDriver(item: RaceItem) = launch {

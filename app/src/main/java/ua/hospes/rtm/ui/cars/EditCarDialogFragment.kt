@@ -38,6 +38,7 @@ internal class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View 
         super.onViewCreated(view, savedInstanceState)
 
         sp_quality.adapter = CarQualityAdapter(context!!, *qualities)
+        if (car == null) sp_quality.setSelection(1)
 
         btn_save.setOnClickListener { presenter.save(et_number.text, sp_quality.selectedItem as Car.Quality, cb_broken.isChecked) }
         btn_cancel.setOnClickListener { dismiss() }

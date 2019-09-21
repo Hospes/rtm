@@ -25,7 +25,7 @@ internal class SessionsRepositoryImpl(
     }
 
     override suspend fun get(vararg ids: Long): List<Session> = withContext(Dispatchers.IO) {
-        dao.getByIds(*ids).map { it.toDomain(teamDAO, driverDAO, carDAO) }
+        dao.get(*ids).map { it.toDomain(teamDAO, driverDAO, carDAO) }
     }
 
     override suspend fun getByTeam(teamId: Long): List<Session> = withContext(Dispatchers.IO) {
@@ -48,17 +48,16 @@ internal class SessionsRepositoryImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun setSessionCar(sessionId: Long, carId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override suspend fun setSessionCar(sessionId: Long, carId: Long) =
+            withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
 
     override suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
     override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
 
 
-    override suspend fun newSession(type: Session.Type, teamId: Long): Session {
+    override suspend fun newSession(type: Session.Type, teamId: Long): Session = withContext(Dispatchers.IO) {
         val id = dao.save(SessionEntity(teamId = teamId, type = type.name))
-        return Session(id = id, teamId = teamId, type = type)
+        Session(id = id, teamId = teamId, type = type)
     }
 
     override suspend fun newSessions(type: Session.Type, vararg teamIds: Long) {

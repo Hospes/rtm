@@ -5,7 +5,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ua.hospes.rtm.R
@@ -73,7 +72,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
 
 
     private fun navigateTo(fragment: Fragment) = supportFragmentManager.beginTransaction()
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.container, fragment)
             .commit()
 

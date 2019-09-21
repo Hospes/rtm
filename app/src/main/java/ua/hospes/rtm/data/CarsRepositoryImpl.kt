@@ -17,9 +17,8 @@ internal class CarsRepositoryImpl(private val dao: CarDAO) : CarsRepository {
     override suspend fun get(vararg ids: Long): List<Car> =
             withContext(Dispatchers.IO) { dao.getByIds(*ids).map { it.toDomain() } }
 
-    override suspend fun getNotInRace(): List<Car> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override suspend fun getNotInRace(): List<Car> =
+            withContext(Dispatchers.IO) { dao.getNotSelected().map { it.toDomain() } }
 
     override fun listen(): Flow<List<Car>> = dao.observe().map { list -> list.map { it.toDomain() } }
 

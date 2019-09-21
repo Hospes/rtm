@@ -12,4 +12,9 @@ data class RaceItem(
         val details: RaceItemDetails? = null
 )
 
-fun RaceItem.toEntity(): RaceEntity = RaceEntity(id, team.id, teamNumber, session?.id)
+fun RaceItem.toEntity(): RaceEntity = RaceEntity(
+        id = id,
+        teamId = team.id,
+        teamNumber = teamNumber,
+        sessionId = session?.id
+)

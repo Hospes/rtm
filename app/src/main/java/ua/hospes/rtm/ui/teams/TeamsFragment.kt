@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_teams.*
+import timber.log.Timber
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.team.Team
@@ -50,7 +51,7 @@ internal class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContra
     //endregion
 
 
-    override fun onData(list: List<Team>) = adapter.submitList(list)
+    override fun onData(list: List<Team>) = adapter.submitList(list).also { Timber.d("Teams update: $list") }
 
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 

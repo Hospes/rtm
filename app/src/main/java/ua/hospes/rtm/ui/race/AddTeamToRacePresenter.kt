@@ -3,7 +3,6 @@ package ua.hospes.rtm.ui.race
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
@@ -22,7 +21,7 @@ internal class AddTeamToRacePresenter @Inject constructor(
     override fun attachView(view: AddTeamToRaceContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)
 
-        launch(Dispatchers.IO) { view?.onTeams(teamsRepo.getNotInRace()) }
+        launch(Dispatchers.Main) { view?.onTeams(teamsRepo.getNotInRace()) }
     }
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit
@@ -30,7 +29,7 @@ internal class AddTeamToRacePresenter @Inject constructor(
 
 
     @Suppress("ThrowableNotThrown")
-    fun save(number: String, team: Team? = null) = launch(Dispatchers.IO) {
+    fun save(number: String, team: Team? = null) = launch(Dispatchers.Main) {
         val intNumber = number.toInt()
 
         team?.let {
@@ -39,6 +38,6 @@ internal class AddTeamToRacePresenter @Inject constructor(
             raceRepo.save(RaceItem(teamNumber = intNumber, team = it, session = session))
         } ?: throw IllegalArgumentException("Team not selected")
 
-        withContext(Dispatchers.Main) { view?.onSuccess() }
+        view?.onSuccess()
     }
 }
