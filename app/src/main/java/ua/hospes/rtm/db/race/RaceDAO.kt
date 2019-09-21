@@ -9,7 +9,8 @@ internal interface RaceDAO {
     suspend fun get(): List<RaceEntity>
 
 
-    @Query("SELECT * FROM race")
+    //@Query("SELECT * FROM race")
+    @Query("SELECT race.* FROM race, sessions GROUP BY race.id")
     fun observe(): Flow<List<RaceEntity>>
 
     @Query("SELECT * FROM race WHERE id = :id LIMIT 1")

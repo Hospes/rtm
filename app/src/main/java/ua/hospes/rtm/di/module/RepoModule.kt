@@ -22,7 +22,7 @@ object RepoModule {
 
     @Provides @Singleton @JvmStatic
     internal fun provideSessionsRepository(db: AppDatabase)
-            : SessionsRepository = SessionsRepositoryImpl(db.sessionDao(), db.teamDao(), db.driverDao(), db.carDao())
+            : SessionsRepository = SessionsRepositoryImpl(db)
 
     @Provides @Singleton @JvmStatic
     internal fun provideDriversRepository(dao: DriverDAO, teamDAO: TeamDAO)

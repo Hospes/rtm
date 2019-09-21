@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import ua.hospes.rtm.db.AppDatabase
 import ua.hospes.rtm.db.cars.CarDAO
 import ua.hospes.rtm.db.drivers.DriverDAO
 import ua.hospes.rtm.db.sessions.SessionDAO
@@ -13,12 +14,12 @@ import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.domain.sessions.SessionsRepository
 
-internal class SessionsRepositoryImpl(
-        private val dao: SessionDAO,
-        private val teamDAO: TeamDAO,
-        private val driverDAO: DriverDAO,
-        private val carDAO: CarDAO
-) : SessionsRepository {
+internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
+    private val dao: SessionDAO = db.sessionDao()
+    private val teamDAO: TeamDAO = db.teamDao()
+    private val driverDAO: DriverDAO = db.driverDao()
+    private val carDAO: CarDAO = db.carDao()
+    private val raceDAO = db.raceDao()
 
     override suspend fun get(): List<Session> = withContext(Dispatchers.IO) {
         dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) }
