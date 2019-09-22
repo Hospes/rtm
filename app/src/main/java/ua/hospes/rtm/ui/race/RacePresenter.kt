@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.cars.CarsRepository
+import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
@@ -15,7 +16,8 @@ import javax.inject.Inject
 internal class RacePresenter @Inject constructor(
         private val raceRepo: RaceRepository,
         private val sessionRepo: SessionsRepository,
-        private val carsRepo: CarsRepository
+        private val carsRepo: CarsRepository,
+        private val driversRepo: DriversRepository
 ) : Presenter<RaceContract.View>() {
 
     override fun attachView(view: RaceContract.View?, lc: Lifecycle) {
@@ -95,26 +97,20 @@ internal class RacePresenter @Inject constructor(
         //                }, this::error)
     }
 
-    fun resetRace() {
-        //        disposables += interactor.resetRace()
-        //                .compose(RxUtils.applySchedulers())
-        //                .subscribe({ }, this::error)
-    }
-
+    fun resetRace() = launch { sessionRepo.resetRace() }
     fun removeAll() = launch { raceRepo.clear() }
 
     fun clickSetCar(item: RaceItem) = launch(Dispatchers.Main) {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
-        val cars = carsRepo.getNotInRace()
+        val items = carsRepo.getNotInRace()
 
-        view?.onOpenSetCarDialog(id, cars)
+        view?.onOpenSetCarDialog(id, items)
     }
 
-    fun clickSetDriver(item: RaceItem) = launch {
+    fun clickSetDriver(item: RaceItem) = launch(Dispatchers.Main) {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
-        //        disposables += interactor.getDrivers(session.teamId)
-        //                .compose(RxUtils.applySchedulersSingle())
-        //                .subscribe({ }, this::error)
-        //.subscribe({ result -> SetDriverDialogFragment.newInstance(session.id, session.teamId, result).show(managerFragment, "set_driver") }, Consumer<Throwable> { it.printStackTrace() }))
+        val items = driversRepo.getNotInRace(item.team.id)
+
+        view?.onOpenSetDriverDialog(id, items)
     }
 }

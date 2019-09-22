@@ -45,16 +45,15 @@ internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
             dao.observeByTeam(teamId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
-    override suspend fun setSessionDriver(sessionId: Long, driverId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
+            withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }
 
     override suspend fun setSessionCar(sessionId: Long, carId: Long) =
             withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
 
     override suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
     override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
-
+    override suspend fun resetRace() = withContext(Dispatchers.IO) { dao.resetRace() }
 
     override suspend fun newSession(type: Session.Type, teamId: Long): Session = withContext(Dispatchers.IO) {
         val id = dao.save(SessionEntity(teamId = teamId, type = type.name))
@@ -105,18 +104,6 @@ internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
     //                    .toList()
     //                    .flatMapObservable { dbStorage.add(it) }.map { it.data }
     //                    .flatMapSingle { transform(it) }
-    //
-    //    override fun setSessionDriver(sessionId: Int, driverId: Int): Observable<Session> =
-    //            Observable.just(SetDriverOperation(sessionId, driverId))
-    //                    .toList()
-    //                    .flatMapObservable { dbStorage.applySetDriverOperations(it) }
-    //                    .flatMap { get(it) }
-    //
-    //    override fun setSessionCar(sessionId: Int, carId: Int): Observable<Session> =
-    //            Observable.just(SetCarOperation(sessionId, carId))
-    //                    .toList()
-    //                    .flatMapObservable { dbStorage.applySetCarOperations(it) }
-    //                    .flatMap { get(it) }
     //
     //    override fun startSessions(raceStartTime: Long, startTime: Long, vararg sessionIds: Int): Observable<Session> =
     //            OpenSessionOperation.from(raceStartTime, startTime, *sessionIds)

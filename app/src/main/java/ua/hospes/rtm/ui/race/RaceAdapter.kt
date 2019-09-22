@@ -78,7 +78,7 @@ internal class RaceAdapter(context: Context,
 
 
         holder.team.text = String.format(Locale.getDefault(), "%1\$d - %2\$s", item.teamNumber, item.team.name)
-        holder.pits.text = context.resources.getString(R.string.race_pit, item.details?.pitStops)
+        holder.pits.text = context.resources.getString(R.string.race_pit, item.details?.pitStops ?: 0)
 
         val session = item.session
         holder.driverTimeView.session = session
@@ -126,15 +126,15 @@ internal class RaceAdapter(context: Context,
                                            carClickListener: (position: Int) -> Unit,
                                            driverClickListener: (position: Int) -> Unit)
         : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
-        var btnSessionCar: Button = itemView.findViewById(R.id.btn_session_car)
-        var btnSessionDriver: Button = itemView.findViewById(R.id.btn_session_driver)
+        val btnSessionCar: Button = itemView.findViewById(R.id.btn_session_car)
+        val btnSessionDriver: Button = itemView.findViewById(R.id.btn_session_driver)
 
-        var driverTimeView: DriverTimeView = itemView.findViewById(R.id.tv_driver_all_time)
+        val driverTimeView: DriverTimeView = itemView.findViewById(R.id.tv_driver_all_time)
 
-        var team: TextView = itemView.findViewById(R.id.tv_team)
-        var sessionType: TextView = itemView.findViewById(R.id.tv_session_type)
-        var pits: TextView = itemView.findViewById(R.id.tv_pits)
-        var sessionTimeView: SessionTimeView = itemView.findViewById(R.id.tv_session_duration)
+        val team: TextView = itemView.findViewById(R.id.tv_team)
+        val sessionType: TextView = itemView.findViewById(R.id.tv_session_type)
+        val pits: TextView = itemView.findViewById(R.id.tv_pits)
+        val sessionTimeView: SessionTimeView = itemView.findViewById(R.id.tv_session_duration)
 
 
         init {
@@ -180,7 +180,7 @@ internal class RaceAdapter(context: Context,
                                      driverClickListener: (position: Int) -> Unit,
                                      pitOutClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_pit, itemClickListener, carClickListener, driverClickListener) {
-        private var btnPitOut: CustomToggleButton = itemView.findViewById(R.id.btn_pit_out)
+        private val btnPitOut: CustomToggleButton = itemView.findViewById(R.id.btn_pit_out)
 
         init {
             btnPitOut.setOnClickListener {
@@ -201,7 +201,7 @@ internal class RaceAdapter(context: Context,
                                           nextClickListener: (position: Int) -> Unit,
                                           undoClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_undo_next, itemClickListener, carClickListener, driverClickListener) {
-        var btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
+        val btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
 
         init {
             btnNextSession.setOnClickListener {
@@ -223,8 +223,7 @@ internal class RaceAdapter(context: Context,
     private fun getButtonTextAppearance(context: Context): Int {
         var ta: TypedArray? = null
         try {
-            val attrs = intArrayOf(android.R.attr.textColorPrimary)
-            ta = context.obtainStyledAttributes(attrs)
+            ta = context.obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary))
             return ta!!.getColor(0, Color.WHITE)
         } finally {
             ta?.recycle()
@@ -235,8 +234,7 @@ internal class RaceAdapter(context: Context,
     private fun getSessionTrackColor(context: Context): Int {
         var ta: TypedArray? = null
         try {
-            val attrs = intArrayOf(R.attr.timeView_OnTrack)
-            ta = context.obtainStyledAttributes(attrs)
+            ta = context.obtainStyledAttributes(intArrayOf(R.attr.timeView_OnTrack))
             return ta!!.getColor(0, Color.GREEN)
         } finally {
             ta?.recycle()
@@ -247,8 +245,7 @@ internal class RaceAdapter(context: Context,
     private fun getSessionPitColor(context: Context): Int {
         var ta: TypedArray? = null
         try {
-            val attrs = intArrayOf(R.attr.timeView_OnPit)
-            ta = context.obtainStyledAttributes(attrs)
+            ta = context.obtainStyledAttributes(intArrayOf(R.attr.timeView_OnPit))
             return ta!!.getColor(0, Color.RED)
         } finally {
             ta?.recycle()
@@ -259,5 +256,5 @@ internal class RaceAdapter(context: Context,
 private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RaceItem>() {
     override fun areItemsTheSame(old: RaceItem, new: RaceItem): Boolean = old.id == new.id
 
-    override fun areContentsTheSame(old: RaceItem, new: RaceItem): Boolean = old.equals(new)
+    override fun areContentsTheSame(old: RaceItem, new: RaceItem): Boolean = old == new
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f3e8d6dfcba4eff31aae9a50b83b5348",
+    "identityHash": "40aa6c01ae103376ef7b4f9bef016c99",
     "entities": [
       {
         "tableName": "cars",
@@ -123,7 +123,7 @@
       },
       {
         "tableName": "sessions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `team_id` INTEGER NOT NULL, `driver_id` INTEGER, `car_id` INTEGER, `race_start_time` INTEGER NOT NULL, `start_duration_time` INTEGER NOT NULL, `end_duration_time` INTEGER, `type` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `team_id` INTEGER NOT NULL, `driver_id` INTEGER, `car_id` INTEGER, `race_start_time` INTEGER, `start_duration_time` INTEGER, `end_duration_time` INTEGER, `type` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -153,13 +153,13 @@
             "fieldPath": "raceStartTime",
             "columnName": "race_start_time",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "startDurationTime",
             "columnName": "start_duration_time",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "endDurationTime",
@@ -264,7 +264,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3e8d6dfcba4eff31aae9a50b83b5348')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '40aa6c01ae103376ef7b4f9bef016c99')"
     ]
   }
 }

@@ -17,6 +17,7 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.core.StopWatchFragment
 import ua.hospes.rtm.core.StopWatchService
 import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.utils.TimeUtils
@@ -31,10 +32,10 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     @Inject lateinit var presenter: RacePresenter
     @Inject lateinit var preferencesManager: PreferencesManager
     private var tvTime: TextView? = null
-    private lateinit var adapter: RaceAdapter
     private var currentNanoTime = 0L
 
     private val sessionButtonType: String by lazy { preferencesManager.sessionButtonType }
+    private val adapter: RaceAdapter by lazy { RaceAdapter(requireContext(), sessionButtonType, undoController) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +58,8 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
         list.setHasFixedSize(true)
         list.layoutManager = LinearLayoutManager(context)
-        adapter = RaceAdapter(requireContext(), sessionButtonType, undoController).apply { list.adapter = this }
+        list.adapter = adapter
+        list.itemAnimator = null
 
         adapter.onPitClickListener = { presenter.onPit(it, currentNanoTime) }
         adapter.onOutClickListener = { presenter.onOut(it, currentNanoTime) }
@@ -158,6 +160,10 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
     override fun onOpenSetCarDialog(sessionId: Long, cars: List<Car>) =
             SetCarDialogFragment.newInstance(sessionId, cars).show(childFragmentManager, "set_car")
+
+    override fun onOpenSetDriverDialog(sessionId: Long, drivers: List<Driver>) =
+            SetDriverDialogFragment.newInstance(sessionId, drivers).show(childFragmentManager, "set_driver")
+
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.teams_remove_all)

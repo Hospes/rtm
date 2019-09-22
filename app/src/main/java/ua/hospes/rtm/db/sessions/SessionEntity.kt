@@ -18,8 +18,8 @@ data class SessionEntity(
         @ColumnInfo(name = "team_id") val teamId: Long,
         @ColumnInfo(name = "driver_id") val driverId: Long? = null,
         @ColumnInfo(name = "car_id") val carId: Long? = null,
-        @ColumnInfo(name = "race_start_time") val raceStartTime: Long = -1,
-        @ColumnInfo(name = "start_duration_time") val startDurationTime: Long = -1,
+        @ColumnInfo(name = "race_start_time") val raceStartTime: Long? = null,
+        @ColumnInfo(name = "start_duration_time") val startDurationTime: Long? = null,
         @ColumnInfo(name = "end_duration_time") val endDurationTime: Long? = null,
         @ColumnInfo(name = "type") val type: String
 )

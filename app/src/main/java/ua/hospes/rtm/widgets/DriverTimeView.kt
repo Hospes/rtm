@@ -10,12 +10,28 @@ class DriverTimeView : TimeView {
     var session: Session? = null
         set(session) {
             field = session
-            if (session != null && session.startDurationTime == -1L) text = TimeUtils.format(0)
+            val sessionDuration = with(session ?: return) {
+                when {
+                    startDurationTime == null -> 0L
+                    endDurationTime != null -> endDurationTime - startDurationTime
+                    else -> 0L
+                }
+            }
+
+            text = TimeUtils.formatNano(sessionDuration + prevDuration)
         }
     var prevDuration = 0L
         set(prevDuration) {
             field = prevDuration
-            text = TimeUtils.formatNano(prevDuration)
+            val sessionDuration = with(session ?: return) {
+                when {
+                    startDurationTime == null -> 0L
+                    endDurationTime != null -> endDurationTime - startDurationTime
+                    else -> 0L
+                }
+            }
+
+            text = TimeUtils.formatNano(sessionDuration + prevDuration)
         }
 
 
@@ -23,8 +39,9 @@ class DriverTimeView : TimeView {
         get() = super.currentNanoTime
         set(currentNanoTime) {
             super.currentNanoTime = currentNanoTime
-            if (this.session == null) return
-            text = TimeUtils.formatNano(currentNanoTime - (this.session?.startDurationTime ?: 0L) + this.prevDuration)
+            with(session ?: return) {
+                text = TimeUtils.formatNano(currentNanoTime - (startDurationTime ?: 0L) + prevDuration)
+            }
         }
 
 

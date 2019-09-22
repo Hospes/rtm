@@ -5,12 +5,12 @@ import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.domain.sessions.SessionsRepository
 import javax.inject.Inject
 
-internal class SetCarPresenter @Inject constructor(
+internal class SetDriverPresenter @Inject constructor(
         private val sesRepo: SessionsRepository
-) : Presenter<SetCarContract.View>() {
+) : Presenter<SetDriverContract.View>() {
 
     override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
-    fun setCar(sessionId: Long, carId: Long) = launch { sesRepo.setSessionCar(sessionId, carId) }
+    fun setDriver(sessionId: Long, driverId: Long) = launch { sesRepo.setSessionDriver(sessionId, driverId) }
 }

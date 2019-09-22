@@ -2,6 +2,8 @@ package ua.hospes.rtm.db.sessions
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import ua.hospes.rtm.db.race.RaceEntity
+import ua.hospes.rtm.domain.sessions.Session
 
 @Dao
 internal interface SessionDAO {
@@ -51,6 +53,16 @@ internal interface SessionDAO {
     suspend fun setRaceStartTime(sessionId: Long, startTime: Long)
 
 
+    @Transaction
+    suspend fun resetRace() {
+        clear()
+        getRaceItems().forEach {
+            val id = save(SessionEntity(teamId = it.teamId, type = Session.Type.TRACK.name))
+            saveRace(it.copy(sessionId = id))
+        }
+    }
+
+
     /**
      * Request should place start time for all sessions that currently exists in 'race' table
      */
@@ -69,4 +81,11 @@ internal interface SessionDAO {
 
     @Query("DELETE FROM sessions")
     suspend fun clear()
+
+    // Additional methods
+    @Query("SELECT * FROM race")
+    suspend fun getRaceItems(): List<RaceEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveRace(entity: RaceEntity): Long
 }

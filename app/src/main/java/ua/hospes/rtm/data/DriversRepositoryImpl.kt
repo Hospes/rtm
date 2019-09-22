@@ -21,6 +21,8 @@ internal class DriversRepositoryImpl(private val dao: DriverDAO, private val tea
     override suspend fun getByTeamId(teamId: Long): List<Driver> =
             withContext(Dispatchers.IO) { dao.getByTeamId(teamId).map { it.toDomain(teamDAO) } }
 
+    override suspend fun getNotInRace(teamId: Long): List<Driver> =
+            withContext(Dispatchers.IO) { dao.getNotSelected(teamId).map { it.toDomain(teamDAO) } }
 
     override fun listen(): Flow<List<Driver>> = dao.observe().map { list -> list.map { it.toDomain(teamDAO) } }
 

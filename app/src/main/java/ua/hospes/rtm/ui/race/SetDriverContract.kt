@@ -1,6 +1,6 @@
 package ua.hospes.rtm.ui.race
 
-interface SetCarContract {
+interface SetDriverContract {
     interface View {
         fun onError(throwable: Throwable)
     }

@@ -9,6 +9,8 @@ internal interface DriversRepository {
 
     suspend fun getByTeamId(teamId: Long): List<Driver>
 
+    suspend fun getNotInRace(teamId: Long): List<Driver>
+
 
     fun listen(): Flow<List<Driver>>
 

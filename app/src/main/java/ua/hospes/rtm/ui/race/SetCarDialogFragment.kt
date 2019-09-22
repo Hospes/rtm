@@ -39,8 +39,5 @@ internal class SetCarDialogFragment : DiDialogFragment(), SetCarContract.View {
             }
             .create()
 
-
-    override fun onCarSet() = Toast.makeText(context, "Car setted!", Toast.LENGTH_SHORT).show()
-
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 }

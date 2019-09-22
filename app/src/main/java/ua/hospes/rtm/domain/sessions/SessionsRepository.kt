@@ -24,6 +24,7 @@ internal interface SessionsRepository {
 
     suspend fun startRace(time: Long)
     suspend fun stopRace(time: Long)
+    suspend fun resetRace()
 
 
     suspend fun newSession(type: Session.Type, teamId: Long): Session

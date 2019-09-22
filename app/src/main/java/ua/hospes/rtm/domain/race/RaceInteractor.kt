@@ -32,8 +32,6 @@ internal class RaceInteractor @Inject constructor(
     //        //            else -> return sessionsRepository.setSessionDriver(sessionId, driverId).map { session -> true }
     //        //        }
     //    }
-    //
-    //    fun setCar(sessionId: Int, car: Car): Observable<Boolean> = sessionsRepository.setSessionCar(sessionId, car.id!!).map { true }
 
     //
     //    fun teamOut(item: RaceItem, time: Long): Observable<Boolean> {
@@ -56,33 +54,6 @@ internal class RaceInteractor @Inject constructor(
     //        //        return Observable.zip<Session, RaceItem, RaceItem>(sessionsRepository.removeLastSession(raceItem.team.id!!), Observable.just(raceItem), BiFunction<Session, RaceItem, RaceItem> { session, item -> this.updateRaceItemSession(session, item) })
     //        //                .toList()
     //        //                .flatMapObservable(Function<List<RaceItem>, ObservableSource<out Boolean>> { raceRepository.update(it) })
-    //    }
-    //
-    //    private fun updateRaceItemSession(session: Session, item: RaceItem): RaceItem {
-    //        item.session = session
-    //        return item
-    //    }
-    //
-    //
-    //    fun getDrivers(teamId: Int): Single<List<Driver>> {
-    //        return Single.error(RuntimeException()) //driversRepository.getByTeam(teamId)
-    //    }
-    //
-    //    fun resetRace(): Observable<Optional<*>> {
-    //        return Observable.empty()
-    //        //        return sessionsRepository.clear()
-    //        //                .flatMap { count -> raceRepository.get().toList() }
-    //        //                .flatMap { raceItems ->
-    //        //                    Observable.zip<RaceItem, Session, RaceItem>(
-    //        //                            Observable.fromIterable(raceItems),
-    //        //                            sessionsRepository.newSessions(Session.Type.TRACK, *Ints.toArray(Collections2.transform(raceItems) { input -> input.team.id })),
-    //        //                            { item, session ->
-    //        //                                item.session = session
-    //        //                                item
-    //        //                            }).toList()
-    //        //                }
-    //        //                .flatMapObservable<Boolean>(Function<List<RaceItem>, ObservableSource<out Boolean>> { raceRepository.update(it) })
-    //        //                .map { list -> Optional.empty<Any>() }
     //    }
     //
     //    fun removeAll(): Single<Void> {
