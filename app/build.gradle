@@ -4,8 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-def mainVersion = "1"
-def sprintNumber = "2"
+def mainVersion = "2"
+def sprintNumber = "0"
 def buildNumber = project.hasProperty("build.number") ? project.ext["build.number"] : "dev"
 
 android {
