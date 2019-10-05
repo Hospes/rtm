@@ -20,7 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.settings_title)
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
     }
 
@@ -37,7 +37,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         prefSessionButtonType?.summary = preferencesManager.sessionButtonType.toLowerCase(Locale.getDefault())
         prefSessionButtonType?.setOnPreferenceChangeListener { preference, newValue ->
             preference.summary = newValue.toString()
-            preference.isEnabled = "pit".equals(newValue.toString(), ignoreCase = true)
+            prefAssignPitStops?.isEnabled = "pit".equals(newValue.toString(), ignoreCase = true)
             true
         }
         prefAssignPitStops?.isEnabled = "pit".equals(preferencesManager.sessionButtonType, ignoreCase = true)

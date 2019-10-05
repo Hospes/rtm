@@ -21,13 +21,12 @@ import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.utils.TimeUtils
-import ua.hospes.undobutton.UndoButtonController
 import javax.inject.Inject
 
 private const val REQUEST_CODE_PERMISSION = 11
 
 internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.View {
-    private lateinit var undoController: UndoButtonController<*>
+    //    private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     @Inject lateinit var presenter: RacePresenter
     @Inject lateinit var preferencesManager: PreferencesManager
@@ -35,7 +34,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     private var currentNanoTime = 0L
 
     private val sessionButtonType: String by lazy { preferencesManager.sessionButtonType }
-    private val adapter: RaceAdapter by lazy { RaceAdapter(requireContext(), sessionButtonType, undoController) }
+    private val adapter: RaceAdapter by lazy { RaceAdapter(requireContext(), sessionButtonType/*, undoController*/) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,13 +47,13 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
-            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
-
-            override fun defaultTimeSHow(): Boolean = true
-
-            override fun defaultDelay(): Int = 15
-        }
+        //        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
+        //            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
+        //
+        //            override fun defaultTimeSHow(): Boolean = true
+        //
+        //            override fun defaultDelay(): Int = 15
+        //        }
 
         list.setHasFixedSize(true)
         list.layoutManager = LinearLayoutManager(context)
@@ -70,8 +69,8 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
         timerListController = TimerListController(presenter).apply { list.addOnScrollListener(this) }
 
-        if ("undo".equals(sessionButtonType, ignoreCase = true))
-            list.addOnScrollListener(undoController)
+        //        if ("undo".equals(sessionButtonType, ignoreCase = true))
+        //            list.addOnScrollListener(undoController)
 
         presenter.attachView(this, lifecycle)
     }
@@ -130,15 +129,15 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
     override fun onDestroyView() {
         super.onDestroyView()
-        undoController.release()
+        //        undoController.release()
     }
 
     override fun onData(items: List<RaceItem>) {
         Timber.d(items.toString())
         adapter.submitList(items)
         timerListController.forceUpdate(list)
-        if ("undo".equals(sessionButtonType, ignoreCase = true))
-            undoController.forceUpdate(list)
+        //        if ("undo".equals(sessionButtonType, ignoreCase = true))
+        //            undoController.forceUpdate(list)
     }
 
     override fun onError(t: Throwable) = Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()

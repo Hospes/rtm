@@ -26,7 +26,7 @@ import java.util.*
 
 internal class RaceAdapter(context: Context,
                            private val sessionButtonType: String,
-                           private val undoButtonController: UndoButtonController<*>
+                           private val undoButtonController: UndoButtonController<*>? = null
 ) : ListAdapter<RaceItem, RaceAdapter.MyHolder>(DIFF_CALLBACK) {
     @ColorInt private val carDefaultColor: Int
     @ColorInt private val sessionTrackColor: Int
@@ -84,7 +84,7 @@ internal class RaceAdapter(context: Context,
         holder.driverTimeView.session = session
         holder.sessionTimeView.session = session
 
-        holder.undoBind(undoButtonController, item.id)
+        undoButtonController?.let { holder.undoBind(it, item.id) }
 
         if (session != null) {
             val car = session.car
@@ -215,7 +215,7 @@ internal class RaceAdapter(context: Context,
             btnNextSession.setController(undoButtonController)
         }
 
-        override fun undoBind(controller: UndoButtonController<*>, id: Long) = undoButtonController.onBind(id.toInt(), btnNextSession)
+        override fun undoBind(controller: UndoButtonController<*>, id: Long) = undoButtonController?.onBind(id.toInt(), btnNextSession) ?: Unit
     }
 
 
