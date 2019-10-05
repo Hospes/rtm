@@ -20,13 +20,13 @@ import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.widgets.CustomToggleButton
 import ua.hospes.rtm.widgets.DriverTimeView
 import ua.hospes.rtm.widgets.SessionTimeView
-import ua.hospes.undobutton.UndoButton
-import ua.hospes.undobutton.UndoButtonController
+//import ua.hospes.undobutton.UndoButton
+//import ua.hospes.undobutton.UndoButtonController
 import java.util.*
 
 internal class RaceAdapter(context: Context,
-                           private val sessionButtonType: String,
-                           private val undoButtonController: UndoButtonController<*>? = null
+                           private val sessionButtonType: String/*,
+                           private val undoButtonController: UndoButtonController<*>? = null*/
 ) : ListAdapter<RaceItem, RaceAdapter.MyHolder>(DIFF_CALLBACK) {
     @ColorInt private val carDefaultColor: Int
     @ColorInt private val sessionTrackColor: Int
@@ -84,7 +84,7 @@ internal class RaceAdapter(context: Context,
         holder.driverTimeView.session = session
         holder.sessionTimeView.session = session
 
-        undoButtonController?.let { holder.undoBind(it, item.id) }
+        //undoButtonController?.let { holder.undoBind(it, item.id) }
 
         if (session != null) {
             val car = session.car
@@ -157,7 +157,7 @@ internal class RaceAdapter(context: Context,
 
         internal open fun setPitChecked(checked: Boolean) {}
 
-        internal open fun undoBind(controller: UndoButtonController<*>, id: Long) {}
+        //internal open fun undoBind(controller: UndoButtonController<*>, id: Long) {}
     }
 
     internal inner class MyHolderNext(parent: ViewGroup,
@@ -201,21 +201,21 @@ internal class RaceAdapter(context: Context,
                                           nextClickListener: (position: Int) -> Unit,
                                           undoClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_undo_next, itemClickListener, carClickListener, driverClickListener) {
-        val btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
+        //val btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
 
         init {
-            btnNextSession.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                nextClickListener.invoke(adapterPosition)
-            }
-            btnNextSession.setOnUndoClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnUndoClickListener
-                undoClickListener.invoke(adapterPosition)
-            }
-            btnNextSession.setController(undoButtonController)
+            //            btnNextSession.setOnClickListener {
+            //                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+            //                nextClickListener.invoke(adapterPosition)
+            //            }
+            //            btnNextSession.setOnUndoClickListener {
+            //                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnUndoClickListener
+            //                undoClickListener.invoke(adapterPosition)
+            //            }
+            //            btnNextSession.setController(undoButtonController)
         }
 
-        override fun undoBind(controller: UndoButtonController<*>, id: Long) = undoButtonController?.onBind(id.toInt(), btnNextSession) ?: Unit
+        //override fun undoBind(controller: UndoButtonController<*>, id: Long) = undoButtonController?.onBind(id.toInt(), btnNextSession) ?: Unit
     }
 
 

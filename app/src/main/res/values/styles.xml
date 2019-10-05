@@ -20,7 +20,7 @@
         <item name="timeView_OnPit">@color/session_pit</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="delayedButtonStyle">@style/UndoButton</item>
+<!--        <item name="delayedButtonStyle">@style/UndoButton</item>-->
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
     </style>
 

@@ -54,14 +54,14 @@
         android:minWidth="@dimen/race_item_driver_all_time_min_width"
         android:text="@string/holder_time" />
 
-    <ua.hospes.undobutton.UndoButton android:id="@+id/btn_next"
-                                     android:layout_width="@dimen/race_item_next_session_width"
-                                     android:layout_height="wrap_content"
-                                     android:layout_gravity="center_vertical"
-                                     android:layout_marginEnd="@dimen/race_item_next_session_margin_right"
-                                     android:layout_marginStart="@dimen/race_item_next_session_margin_left"
-                                     android:text="@string/race_btn_next_session"
-                                     app:delb_textUndo="@string/race_btn_undo_session" />
+<!--    <ua.hospes.undobutton.UndoButton android:id="@+id/btn_next"-->
+<!--                                     android:layout_width="@dimen/race_item_next_session_width"-->
+<!--                                     android:layout_height="wrap_content"-->
+<!--                                     android:layout_gravity="center_vertical"-->
+<!--                                     android:layout_marginEnd="@dimen/race_item_next_session_margin_right"-->
+<!--                                     android:layout_marginStart="@dimen/race_item_next_session_margin_left"-->
+<!--                                     android:text="@string/race_btn_next_session"-->
+<!--                                     app:delb_textUndo="@string/race_btn_undo_session" />-->
 
     <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="match_parent"
