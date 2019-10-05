@@ -77,9 +77,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
 
     //region ActionBar Menu
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.race, menu)
-    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = inflater.inflate(R.menu.race, menu)
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         val stopWatchStarted = isStopWatchStarted
