@@ -24,9 +24,8 @@ internal class TeamsRepositoryImpl(private val dao: TeamDAO, private val driverD
     override fun listen(): Flow<List<Team>> = dao.observe().map { list -> list.map { it.toDomain(driverDAO) } }
 
 
-    override suspend fun save(team: Team) = withContext(Dispatchers.IO) {
-        dao.save(team.toDbEntity(), team.drivers.map { it.id }.toLongArray())
-    }
+    override suspend fun save(team: Team) =
+            withContext(Dispatchers.IO) { dao.save(team.toDbEntity(), team.drivers.map { it.id }.toLongArray()) }
 
     override suspend fun delete(id: Long) =
             withContext(Dispatchers.IO) { dao.delete(id) }

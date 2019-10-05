@@ -68,7 +68,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         adapter.setDriverClickListener = { presenter.clickSetDriver(it) }
         adapter.itemClickListener = { /*RaceItemDetailActivity.start(context, item.id)*/ }
 
-        timerListController = TimerListController().apply { list.addOnScrollListener(this) }
+        timerListController = TimerListController(presenter).apply { list.addOnScrollListener(this) }
 
         if ("undo".equals(sessionButtonType, ignoreCase = true))
             list.addOnScrollListener(undoController)
@@ -130,7 +130,6 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
 
     override fun onDestroyView() {
         super.onDestroyView()
-        timerListController.unsubscribe()
         undoController.release()
     }
 

@@ -57,7 +57,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
             R.id.nav_teams -> navigateTo(TeamsFragment())
             R.id.nav_drivers -> navigateTo(DriversFragment())
             R.id.nav_cars -> navigateTo(CarsFragment())
-            R.id.nav_settings -> navigateTo(SettingsFragment.newInstance())
+            R.id.nav_settings -> navigateTo(SettingsFragment())
             else -> navigateTo(PlaceHolderFragment())
         }
         return true

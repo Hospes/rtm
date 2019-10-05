@@ -16,7 +16,5 @@
         <CheckBoxPreference android:defaultValue="false"
                             android:key="enable_export_xls"
                             android:title="@string/pref_EnableExportXLS" />
-
-        <Preference android:key="theme" android:title="Select theme" />
     </PreferenceCategory>
 </PreferenceScreen>

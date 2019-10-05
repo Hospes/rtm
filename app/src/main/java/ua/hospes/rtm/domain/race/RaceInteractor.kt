@@ -1,7 +1,5 @@
 package ua.hospes.rtm.domain.race
 
-import io.reactivex.Observable
-import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.cars.CarsRepository
 import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.domain.preferences.PreferencesManager
@@ -17,8 +15,8 @@ internal class RaceInteractor @Inject constructor(
         private val driversRepository: DriversRepository,
         private val carsRepository: CarsRepository) {
 
-    val carsNotInRace: Observable<Car>
-        get() = Observable.empty() //carsRepository.getNotInRace()
+    //    val carsNotInRace: Observable<Car>
+    //        get() = Observable.empty() //carsRepository.getNotInRace()
 
 
     //    fun setDriver(sessionId: Int, teamId: Int, driverId: Int): Observable<Boolean> {

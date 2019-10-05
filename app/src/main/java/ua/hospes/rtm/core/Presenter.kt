@@ -4,26 +4,24 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.crashlytics.android.Crashlytics
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.consumeEach
 import timber.log.Timber
-import ua.hospes.rtm.utils.RxUtils
-import ua.hospes.rtm.utils.plusAssign
 import kotlin.coroutines.CoroutineContext
 
+@Suppress("EXPERIMENTAL_API_USAGE")
 abstract class Presenter<V>(
-        private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+        private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : CoroutineScope, LifecycleObserver {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = job + defaultDispatcher + exceptionHandler
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, t -> unexpectedErrors.onNext(t) }
+    private val exceptionHandler = CoroutineExceptionHandler { _, t -> unexpectedErrors.offer(t) }
 
-    protected val disposables = CompositeDisposable()
-    private val unexpectedErrors = PublishSubject.create<Throwable>()
-    private val errors = PublishSubject.create<Throwable>()
+    private val unexpectedErrors = BroadcastChannel<Throwable>(1)
+    private val errors = BroadcastChannel<Throwable>(1)
 
 
     protected var view: V? = null
@@ -33,30 +31,31 @@ abstract class Presenter<V>(
         this.view = view
         lc.addObserver(this)
 
-        disposables += errors.compose(RxUtils.applySchedulers())
-                .doOnNext {
-                    Timber.w(it)
-                    Crashlytics.logException(it)
-                }
-                .subscribe(this::onError)
+        launch {
+            errors.consumeEach {
+                Timber.w(it)
+                Crashlytics.logException(it)
+                withContext(Dispatchers.Main) { onError(it) }
+            }
+        }
 
-        disposables += unexpectedErrors.compose(RxUtils.applySchedulers())
-                .doOnNext {
-                    Timber.w(it)
-                    Crashlytics.logException(it)
-                }
-                .subscribe(this::onUnexpectedError)
+        launch {
+            unexpectedErrors.consumeEach {
+                Timber.w(it)
+                Crashlytics.logException(it)
+                withContext(Dispatchers.Main) { onUnexpectedError(it) }
+            }
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     protected open fun detachView() {
         job.cancel()
-        disposables.dispose()
         view = null
     }
 
 
-    fun error(throwable: Throwable): Unit = errors.onNext(throwable)
+    fun error(throwable: Throwable) = errors.offer(throwable).let { Unit }
 
 
     open fun onError(throwable: Throwable) {}

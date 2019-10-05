@@ -1,22 +1,28 @@
 package ua.hospes.rtm.ui.race
 
 import androidx.recyclerview.widget.RecyclerView
-import ua.hospes.rtm.core.ui.RxScrollListener
-import ua.hospes.rtm.utils.RxUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
+import ua.hospes.rtm.core.ui.ReactiveScrollListener
 import ua.hospes.rtm.widgets.TimeView
 import java.util.*
-import java.util.concurrent.TimeUnit
 
-internal class TimerListController : RxScrollListener() {
+private const val AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.1f
+private const val AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.1f
+private const val SKIP_RECALCULATION_DURATION: Long = 300
+
+@Suppress("EXPERIMENTAL_API_USAGE")
+internal class TimerListController(cs: CoroutineScope) : ReactiveScrollListener() {
 
     private var playingItems: Set<TimeView> = HashSet()
 
     private var lastRecalculationTime: Long = 0
 
     init {
-        RxUtils.manage(this, subject.debounce(SKIP_RECALCULATION_DURATION, TimeUnit.MILLISECONDS)
-                .compose(RxUtils.applySchedulers())
-                .subscribe { this.onActionCall(it) })
+        cs.launch { subject.asFlow().debounce(SKIP_RECALCULATION_DURATION).collect { onActionCall(it) } }
     }
 
     private fun onActionCall(recyclerView: RecyclerView) {
@@ -57,15 +63,5 @@ internal class TimerListController : RxScrollListener() {
 
     fun updateTime(currentNanoTime: Long) {
         for (tv in playingItems) tv.currentNanoTime = currentNanoTime
-    }
-
-    fun unsubscribe() {
-        RxUtils.unsubscribe(this)
-    }
-
-    companion object {
-        private val AUTO_PLAY_AREA_START_PADDING_RELATIVE = 0.1f
-        private val AUTO_PLAY_AREA_END_PADDING_RELATIVE = 0.1f
-        private val SKIP_RECALCULATION_DURATION: Long = 300
     }
 }

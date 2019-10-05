@@ -73,7 +73,7 @@ internal class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.Vie
     override fun onShowSelectDialog(selected: List<Driver>) =
             SelectDriversDialogFragment.newInstance(selected).apply {
                 setTargetFragment(this@EditTeamDialogFragment, REQUEST_CODE_SELECT_DRIVERS)
-            }.show(requireFragmentManager(), "select_drivers")
+            }.show(parentFragmentManager, "select_drivers")
 
     override fun onDeleteButtonAvailable(available: Boolean) = with(btn_delete) { isEnabled = available }
 
