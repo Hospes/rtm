@@ -60,7 +60,7 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            
+
             firebaseAppDistribution {
                 serviceCredentialsFile = "racing-time-manager-ad1811bea75d.json"
                 releaseNotesFile = "release-notes"
@@ -116,6 +116,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    debugImplementation 'com.facebook.stetho:stetho:1.5.1'
 }
 
 androidExtensions {

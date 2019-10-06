@@ -12,11 +12,11 @@ import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import ua.hospes.rtm.di.DaggerAppComponent
 
-class App : DaggerApplication() {
+abstract class AppBase : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        Timber.plant(Timber.DebugTree())
+        Timber.plant(provideTimberTree())
 
         createNotificationChannel()
 
@@ -41,4 +41,6 @@ class App : DaggerApplication() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    abstract fun provideTimberTree(): Timber.Tree
 }

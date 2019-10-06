@@ -30,32 +30,11 @@ internal class RacePresenter @Inject constructor(
     override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
 
 
-    fun startRace(startTime: Long) = launch {
-        // Legacy way
-        //val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
-        //sessionRepo.startSessions(startTime, startTime, *sessionIds.toIntArray())
+    fun startRace(startTime: Long) = launch { sessionRepo.startRace(startTime) }
+    fun stopRace(stopTime: Long) = launch { sessionRepo.stopRace(stopTime) }
 
-        // New way
-        sessionRepo.startRace(startTime)
-    }
-
-    fun stopRace(stopTime: Long) = launch {
-        // Legacy way
-        //val sessionIds = raceRepo.get().filterNot { it.session == null }.map { it.id }
-        //sessionRepo.closeSessions(stopTime, *sessionIds.toIntArray())
-
-        // New way
-        sessionRepo.stopRace(stopTime)
-    }
-
-    fun onPit(item: RaceItem, time: Long) = launch {
-        val oldSessionId = item.session?.id ?: throw IllegalStateException("Race team doesn't have session to close")
-        val raceStartTime = item.session.raceStartTime ?: throw IllegalStateException("Session doesn't have race start time")
-        // Close old session
-        sessionRepo.closeSessions(time, oldSessionId)
-        // Open new session
-        sessionRepo.startNewSession(item.team.id, raceStartTime, time, Session.Type.PIT)
-    }
+    fun onPit(item: RaceItem, time: Long) = launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
+    fun onOut(item: RaceItem, time: Long) = launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
 
     //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
     //        var driverId = -1
@@ -75,13 +54,6 @@ internal class RacePresenter @Inject constructor(
     //                .toList()
     //                .flatMapObservable(Function<List<RaceItem>, ObservableSource<out Boolean>> { raceRepository.update(it) })
     //    }
-
-
-    fun onOut(item: RaceItem, time: Long) {
-        //        disposables += interactor.teamOut(item, time)
-        //                .compose(RxUtils.applySchedulers())
-        //                .subscribe({ }, this::error)
-    }
 
     fun undoLastSession(item: RaceItem) {
         //        disposables += interactor.removeLastSession(item)

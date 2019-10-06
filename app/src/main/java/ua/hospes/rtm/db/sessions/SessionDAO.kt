@@ -57,6 +57,26 @@ internal interface SessionDAO {
 
 
     @Transaction
+    suspend fun closeCurrentStartNew(raceItemId: Long, time: Long, type: Session.Type) {
+        val item = getRaceItem(raceItemId)
+
+        val raceStartTime = item.sessionId?.let {
+            val session = get(it)
+            closeSession(it, time)
+            session.raceStartTime
+        }
+        val newSessionId = save(
+                SessionEntity(
+                        teamId = item.teamId,
+                        raceStartTime = raceStartTime,
+                        startDurationTime = time,
+                        type = type.name)
+        )
+        saveRace(item.copy(sessionId = newSessionId))
+    }
+
+
+    @Transaction
     suspend fun resetRace() {
         clear()
         getRaceItems().forEach {
@@ -86,6 +106,9 @@ internal interface SessionDAO {
     suspend fun clear()
 
     // Additional methods
+    @Query("SELECT * FROM race WHERE id = :id")
+    suspend fun getRaceItem(id: Long): RaceEntity
+
     @Query("SELECT * FROM race")
     suspend fun getRaceItems(): List<RaceEntity>
 

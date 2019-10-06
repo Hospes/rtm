@@ -3,7 +3,7 @@ package ua.hospes.rtm.di
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
-import ua.hospes.rtm.App
+import ua.hospes.rtm.AppBase
 import ua.hospes.rtm.di.module.*
 import javax.inject.Singleton
 
@@ -12,7 +12,7 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     AppModule::class, DbModule::class, NetModule::class, RepoModule::class,
     ActivitiesModule::class])
-interface AppComponent : AndroidInjector<App> {
+interface AppComponent : AndroidInjector<AppBase> {
     @Component.Builder
-    abstract class Builder : AndroidInjector.Builder<App>()
+    abstract class Builder : AndroidInjector.Builder<AppBase>()
 }

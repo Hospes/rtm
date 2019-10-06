@@ -32,20 +32,6 @@ internal class RaceInteractor @Inject constructor(
     //    }
 
     //
-    //    fun teamOut(item: RaceItem, time: Long): Observable<Boolean> {
-    //        return Observable.empty()
-    //        //        var raceStartTime: Long = -1
-    //        //        if (item.session != null) raceStartTime = item.session!!.raceStartTime
-    //        //        return Observable.zip<Session, Session, RaceItem>(
-    //        //                closeSession(time, item.session),
-    //        //                sessionsRepository.startNewSessions(raceStartTime, time, Session.Type.TRACK, item.team.id),
-    //        //                { closedSession, openedSession ->
-    //        //                    item.session = openedSession
-    //        //                    item
-    //        //                })
-    //        //                .toList()
-    //        //                .flatMapObservable(Function<List<RaceItem>, ObservableSource<out Boolean>> { raceRepository.update(it) })
-    //    }
     //
     //    fun removeLastSession(raceItem: RaceItem): Observable<Boolean> {
     //        return Observable.empty()
