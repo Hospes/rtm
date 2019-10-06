@@ -4,12 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface SessionsRepository {
     suspend fun get(): List<Session>
-    suspend fun get(vararg ids: Long): List<Session>
     suspend fun getByTeam(teamId: Long): List<Session>
-    suspend fun getByTeamAndDriver(teamId: Long, driverId: Long): List<Session>
 
-    fun listen(): Flow<List<Session>>
-    fun listenByTeamId(teamId: Long): Flow<List<Session>>
     fun listenByRaceId(raceId: Long): Flow<List<Session>>
 
     suspend fun setSessionDriver(sessionId: Long, driverId: Long)

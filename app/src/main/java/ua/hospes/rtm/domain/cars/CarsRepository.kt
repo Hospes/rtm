@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 internal interface CarsRepository {
     suspend fun get(): List<Car>
 
-    suspend fun get(vararg ids: Long): List<Car>
-
     suspend fun getNotInRace(): List<Car>
 
 

@@ -24,21 +24,9 @@ internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
     override suspend fun get(): List<Session> =
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
-    override suspend fun get(vararg ids: Long): List<Session> =
-            withContext(Dispatchers.IO) { dao.get(*ids).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
-
     override suspend fun getByTeam(teamId: Long): List<Session> =
             withContext(Dispatchers.IO) { dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
-    override suspend fun getByTeamAndDriver(teamId: Long, driverId: Long): List<Session> =
-            withContext(Dispatchers.IO) { dao.getByTeamAndDriver(teamId, driverId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
-
-
-    override fun listen(): Flow<List<Session>> =
-            dao.observe().map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
-
-    override fun listenByTeamId(teamId: Long): Flow<List<Session>> =
-            dao.observeByTeam(teamId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
     override fun listenByRaceId(raceId: Long): Flow<List<Session>> =
             dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }

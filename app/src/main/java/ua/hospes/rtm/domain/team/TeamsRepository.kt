@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 internal interface TeamsRepository {
     suspend fun get(): List<Team>
 
-    suspend fun get(vararg ids: Long): List<Team>
-
     suspend fun getNotInRace(): List<Team>
 
 

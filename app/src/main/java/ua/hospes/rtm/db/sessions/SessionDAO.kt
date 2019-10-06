@@ -86,8 +86,8 @@ internal interface SessionDAO {
     }
 
 
-    @Query("SELECT COUNT() FROM sessions WHERE team_id = :teamId")
-    suspend fun teamSessionsCount(teamId: Long): Int
+    @Query("SELECT COUNT() FROM sessions WHERE team_id = :teamId AND type = :type")
+    suspend fun teamSessionsCount(teamId: Long, type: String = Session.Type.TRACK.name): Int
 
 
     /**

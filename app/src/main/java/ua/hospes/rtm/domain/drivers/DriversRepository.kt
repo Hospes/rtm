@@ -7,8 +7,6 @@ internal interface DriversRepository {
 
     suspend fun get(vararg ids: Long): List<Driver>
 
-    suspend fun getByTeamId(teamId: Long): List<Driver>
-
     suspend fun getNotInRace(teamId: Long): List<Driver>
 
 

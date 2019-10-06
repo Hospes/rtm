@@ -14,9 +14,6 @@ internal class CarsRepositoryImpl(private val dao: CarDAO) : CarsRepository {
     override suspend fun get(): List<Car> =
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain() } }
 
-    override suspend fun get(vararg ids: Long): List<Car> =
-            withContext(Dispatchers.IO) { dao.getByIds(*ids).map { it.toDomain() } }
-
     override suspend fun getNotInRace(): List<Car> =
             withContext(Dispatchers.IO) { dao.getNotSelected().map { it.toDomain() } }
 

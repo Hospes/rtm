@@ -14,9 +14,6 @@ internal class TeamsRepositoryImpl(private val dao: TeamDAO, private val driverD
     override suspend fun get(): List<Team> =
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain(driverDAO) } }
 
-    override suspend fun get(vararg ids: Long): List<Team> =
-            withContext(Dispatchers.IO) { dao.get(*ids).map { it.toDomain(driverDAO) } }
-
     override suspend fun getNotInRace(): List<Team> =
             withContext(Dispatchers.IO) { dao.getNotInRace().map { it.toDomain(driverDAO) } }
 

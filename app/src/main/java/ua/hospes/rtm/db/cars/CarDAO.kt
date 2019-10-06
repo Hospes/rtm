@@ -11,9 +11,6 @@ internal interface CarDAO {
     @Query("SELECT * FROM cars WHERE id = :id LIMIT 1")
     suspend fun get(id: Long): CarEntity
 
-    @Query("SELECT * FROM cars WHERE id IN (:ids)")
-    suspend fun getByIds(vararg ids: Long): List<CarEntity>
-
     @Query("SELECT * FROM cars WHERE id NOT IN (SELECT DISTINCT car_id FROM sessions WHERE end_time IS NULL AND car_id NOT NULL)")
     suspend fun getNotSelected(): List<CarEntity>
 
