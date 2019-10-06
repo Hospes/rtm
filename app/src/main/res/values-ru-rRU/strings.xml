@@ -72,4 +72,10 @@
     <string name="session_button_type_pit">pit</string>
     <string name="session_button_type_next">next</string>
     <string name="session_button_type_undo">undo</string>
+
+    <!-- Privacy Policy -->
+    <string name="privacy_title">Политика конфиденциальности</string>
+
+    <!-- Terms & Conditions -->
+    <string name="terms_title">Условия использования</string>
 </resources>

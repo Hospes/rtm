@@ -25,10 +25,15 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity android:name=".ui.race.detail.RaceItemDetailActivity" />
+        <activity android:name=".ui.PrivacyActivity"
+                  android:theme="@style/AppTheme.DialogWhenLarge" />
+        <activity android:name=".ui.TermsActivity"
+                  android:theme="@style/AppTheme.DialogWhenLarge" />
 
         <service android:name=".core.StopWatchService"
                  android:exported="false" />

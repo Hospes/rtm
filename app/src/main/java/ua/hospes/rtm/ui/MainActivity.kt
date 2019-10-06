@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -44,20 +45,18 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        // set item as selected to persist highlight
-        menuItem.isChecked = true
-        // close drawer when item is tapped
         drawer_layout.closeDrawers()
 
-        // Add code here to update the UI based on the item selected
-        // For example, swap UI fragments here
-
         when (menuItem.itemId) {
-            R.id.nav_race -> navigateTo(RaceFragment())
-            R.id.nav_teams -> navigateTo(TeamsFragment())
-            R.id.nav_drivers -> navigateTo(DriversFragment())
-            R.id.nav_cars -> navigateTo(CarsFragment())
-            R.id.nav_settings -> navigateTo(SettingsFragment())
+            R.id.nav_race -> navigateTo(RaceFragment()).also { menuItem.isChecked = true }
+            R.id.nav_teams -> navigateTo(TeamsFragment()).also { menuItem.isChecked = true }
+            R.id.nav_drivers -> navigateTo(DriversFragment()).also { menuItem.isChecked = true }
+            R.id.nav_cars -> navigateTo(CarsFragment()).also { menuItem.isChecked = true }
+            R.id.nav_settings -> navigateTo(SettingsFragment()).also { menuItem.isChecked = true }
+
+            R.id.nav_privacy -> startActivity(Intent(this, PrivacyActivity::class.java))
+            R.id.nav_terms -> startActivity(Intent(this, TermsActivity::class.java))
+
             else -> navigateTo(PlaceHolderFragment())
         }
         return true
