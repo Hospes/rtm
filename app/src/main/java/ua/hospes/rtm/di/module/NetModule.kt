@@ -9,7 +9,6 @@ import javax.inject.Singleton
 
 @Module
 object NetModule {
-    @Singleton
-    @Provides @JvmStatic
+    @Provides @Singleton @JvmStatic
     internal fun providePrefs(ctx: Context): PreferencesManager = PreferencesManagerImpl(ctx)
 }

@@ -1,12 +1,9 @@
 package ua.hospes.rtm.utils
 
-import java.util.Locale
+import java.util.*
 
-/**
- * @author Andrew Khloponin
- */
 object TimeUtils {
-    private val NANO_2_MILLIS = 1000000L
+    private const val NANO_2_MILLIS = 1000000L
 
     fun format(millisTime: Long): String {
         val second = millisTime / 1000 % 60
