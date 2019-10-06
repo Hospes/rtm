@@ -67,7 +67,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
             R.id.nav_privacy -> startActivity(Intent(this, PrivacyActivity::class.java))
             R.id.nav_terms -> startActivity(Intent(this, TermsActivity::class.java))
 
-            else -> navigateTo(PlaceHolderFragment())
+            else -> Unit
         }
         return true
     }
@@ -95,10 +95,6 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
     }
 
     private fun navigateTo(fragment: Fragment) = supportFragmentManager.beginTransaction()
-            //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.container, fragment)
             .commit()
-
-
-    private class PlaceHolderFragment : Fragment(R.layout.fragment_main)
 }

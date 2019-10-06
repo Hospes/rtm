@@ -52,12 +52,12 @@ internal class RaceAdapter(context: Context,
                 carClickListener = { setCarClickListener?.invoke(getItem(it)) },
                 driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
                 nextClickListener = { onOutClickListener?.invoke(getItem(it)) })
-        "undo" -> MyHolderUndoNext(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
-                nextClickListener = { onOutClickListener?.invoke(getItem(it)) },
-                undoClickListener = { onUndoClickListener?.invoke(getItem(it)) })
+        //        "undo" -> MyHolderUndoNext(parent,
+        //                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+        //                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+        //                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+        //                nextClickListener = { onOutClickListener?.invoke(getItem(it)) },
+        //                undoClickListener = { onUndoClickListener?.invoke(getItem(it)) })
         else -> MyHolderPit(parent,
                 itemClickListener = { itemClickListener?.invoke(getItem(it)) },
                 carClickListener = { setCarClickListener?.invoke(getItem(it)) },

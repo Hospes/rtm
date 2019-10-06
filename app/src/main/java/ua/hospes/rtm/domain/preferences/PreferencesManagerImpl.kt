@@ -28,7 +28,7 @@ class PreferencesManagerImpl constructor(context: Context) : AbsPreferencesManag
         get() = getString(KEY_SESSION_BUTTON_TYPE, "pit") ?: "pit"
 
     override val isExportXLSEnabled: Boolean
-        get() = getBoolean(KEY_ENABLE_EXPORT_XLS, false)
+        get() = false //getBoolean(KEY_ENABLE_EXPORT_XLS, false)
 
 
     override var isPrivacyAccepted: Boolean

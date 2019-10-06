@@ -17,11 +17,11 @@
               android:title="@string/settings_title" />
     </group>
 
-    <group>
-        <item android:id="@+id/nav_privacy"
-              android:title="@string/privacy_title" />
+    <item android:enabled="false" android:title="" />
 
-        <item android:id="@+id/nav_terms"
-              android:title="@string/terms_title" />
-    </group>
+    <item android:id="@+id/nav_privacy"
+          android:title="@string/privacy_title" />
+
+    <item android:id="@+id/nav_terms"
+          android:title="@string/terms_title" />
 </menu>

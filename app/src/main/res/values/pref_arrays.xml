@@ -14,11 +14,12 @@
     <string-array name="session_button_type_titles">
         <item>@string/session_button_type_pit</item>
         <item>@string/session_button_type_next</item>
-        <item>@string/session_button_type_undo</item>
     </string-array>
+    <!--    <item>@string/session_button_type_undo</item>-->
+
     <string-array name="session_button_type_values" translatable="false">
         <item>pit</item>
         <item>next</item>
-        <item>undo</item>
     </string-array>
+    <!--    <item>undo</item>-->
 </resources>
