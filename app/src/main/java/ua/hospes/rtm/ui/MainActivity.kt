@@ -1,5 +1,6 @@
 package ua.hospes.rtm.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,13 +12,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.DiActivity
 import ua.hospes.rtm.core.StopWatchService
+import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.ui.cars.CarsFragment
 import ua.hospes.rtm.ui.drivers.DriversFragment
 import ua.hospes.rtm.ui.race.RaceFragment
 import ua.hospes.rtm.ui.settings.SettingsFragment
 import ua.hospes.rtm.ui.teams.TeamsFragment
+import javax.inject.Inject
+
+private const val REQUEST_CODE_PRIVACY = 10
+private const val REQUEST_CODE_TERMS = 20
 
 class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNavigationItemSelectedListener {
+    @Inject lateinit var prefs: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +42,9 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
             nav_view.setCheckedItem(R.id.nav_race)
             navigateTo(RaceFragment())
         }
+
+        if (!prefs.isPrivacyAccepted) startActivityForResult(Intent(this, PrivacyActivity::class.java), REQUEST_CODE_PRIVACY)
+        else if (!prefs.isTermsAccepted) startActivityForResult(Intent(this, TermsActivity::class.java), REQUEST_CODE_TERMS)
 
         StopWatchService.checkDeath(this)
     }
@@ -69,6 +79,20 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
             super.onBackPressed()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when (requestCode) {
+        REQUEST_CODE_PRIVACY -> when (resultCode) {
+            Activity.RESULT_OK ->
+                if (!prefs.isTermsAccepted)
+                    startActivityForResult(Intent(this, TermsActivity::class.java), REQUEST_CODE_TERMS)
+                else Unit
+            else -> finish()
+        }
+        REQUEST_CODE_TERMS -> when (resultCode) {
+            Activity.RESULT_OK -> Unit
+            else -> finish()
+        }
+        else -> super.onActivityResult(requestCode, resultCode, data)
+    }
 
     private fun navigateTo(fragment: Fragment) = supportFragmentManager.beginTransaction()
             //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

@@ -2,6 +2,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/bg_window</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>
@@ -26,6 +27,7 @@
 
     <style name="AppTheme.DialogWhenLarge" parent="Theme.AppCompat.DialogWhenLarge">
         <item name="android:windowBackground">@color/bg_window</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -48,6 +50,7 @@
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.MinWidth">
         <item name="android:windowBackground">@color/bg_window</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primary_dark</item>

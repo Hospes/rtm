@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -17,6 +18,28 @@
 
     <WebView android:id="@+id/webview"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="1"
              app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <LinearLayout android:id="@+id/bottom_bar"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="end|center_vertical"
+                  android:orientation="horizontal">
+
+        <Button android:id="@+id/decline"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:text="Decline" />
+
+        <Button android:id="@+id/accept"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:text="Accept" />
+    </LinearLayout>
+</LinearLayout>
