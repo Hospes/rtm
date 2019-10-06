@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_driver_details.view.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.race.models.DriverDetails
 
@@ -23,19 +24,16 @@ class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyH
             val bg2 = TypedValue()
             context.theme.resolveAttribute(R.attr.listItemBackground2, bg2, false)
 
-            setBackgroundResource(if (position % 2 == 0) bg1.data else bg2.data);
+            val resBG = if ((position / 2) % 2 == 0) {
+                if (position % 2 == 0) bg1.data else bg2.data
+            } else {
+                if (position % 2 == 0) bg2.data else bg1.data
+            }
+            setBackgroundResource(resBG)
 
-            //        int resBG;
-            //        if ((position / 2) % 2 == 0) {
-            //            resBG = position % 2 == 0 ? bg1.data : bg2.data;
-            //        } else {
-            //            resBG = position % 2 == 0 ? bg2.data : bg1.data;
-            //        }
-            //        holder.itemView.setBackgroundResource(resBG);
-            //
-            //        holder.name.setText(item.getName());
-            //        holder.driver.setSession(item.getSession());
-            //        holder.driver.setPrevDuration(item.getPrevDuration());
+            name.text = item.name
+            driver.session = item.session
+            driver.prevDuration = item.prevDuration
         }
     }
 
@@ -44,5 +42,5 @@ class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyH
 private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DriverDetails>() {
     override fun areItemsTheSame(old: DriverDetails, new: DriverDetails): Boolean = old.id == new.id
 
-    override fun areContentsTheSame(old: DriverDetails, new: DriverDetails): Boolean = old.equals(new)
+    override fun areContentsTheSame(old: DriverDetails, new: DriverDetails): Boolean = old == new
 }

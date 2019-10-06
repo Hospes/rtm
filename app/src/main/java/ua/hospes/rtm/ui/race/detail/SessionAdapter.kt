@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_race_detail_session.view.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.sessions.Session
+import ua.hospes.rtm.utils.TimeUtils
 
 class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = MyHolder(parent)
@@ -24,21 +26,25 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
             context.theme.resolveAttribute(R.attr.listItemBackground2, bg2, false)
 
             setBackgroundResource(if (position % 2 == 0) bg1.data else bg2.data);
-            //
-            //
-            //        Car car = item.getCar();
-            //        holder.car.setText(car == null ? "" : String.valueOf(car.getNumber()));
-            //        if (item.getRaceStartTime() == -1 || item.getStartDurationTime() == -1) {
-            //            holder.start.setText("");
-            //        } else {
-            //            holder.start.setText(TimeUtils.formatNanoWithMills(item.getStartDurationTime() - item.getRaceStartTime()));
-            //        }
-            //        holder.driver.setText(item.getDriver() == null ? "" : item.getDriver().getName());
-            //        if (item.getStartDurationTime() == -1 || item.getEndDurationTime() == -1)
-            //            holder.duration.setText(R.string.race_now);
-            //        else
-            //            holder.duration.setText(TimeUtils.formatNanoWithMills(item.getEndDurationTime() - item.getStartDurationTime()));
-            //        holder.type.setText(item.getType().getTitle());
+
+
+            car.text = item.car?.number?.toString() ?: ""
+            if (item.raceStartTime == null || item.startDurationTime == null) {
+                start.text = ""
+            } else {
+                start.text = TimeUtils.formatNanoWithMills(item.startDurationTime - item.raceStartTime);
+            }
+
+            driver.text = item.driver?.name ?: ""
+            if (item.startDurationTime == null || item.endDurationTime == null)
+                duration.setText(R.string.race_now)
+            else
+                duration.text = TimeUtils.formatNanoWithMills(item.endDurationTime - item.startDurationTime)
+
+            type.text = when (item.type) {
+                Session.Type.PIT -> "PIT"
+                Session.Type.TRACK -> "TRACK"
+            }
         }
     }
 }
@@ -46,5 +52,5 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
 private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Session>() {
     override fun areItemsTheSame(old: Session, new: Session): Boolean = old.id == new.id
 
-    override fun areContentsTheSame(old: Session, new: Session): Boolean = old.equals(new)
+    override fun areContentsTheSame(old: Session, new: Session): Boolean = old == new
 }

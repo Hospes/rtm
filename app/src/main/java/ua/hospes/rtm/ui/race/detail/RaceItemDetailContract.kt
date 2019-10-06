@@ -5,8 +5,8 @@ import ua.hospes.rtm.domain.sessions.Session
 
 interface RaceItemDetailContract {
     interface View {
-        fun onUpdateRaceItem(item: RaceItem)
-        fun onUpdateSessions(list: List<Session>)
+        fun onRaceItem(item: RaceItem)
+        fun onSessions(list: List<Session>)
 
         fun onError(t: Throwable)
     }

@@ -30,9 +30,8 @@ internal class RaceRepositoryImpl(db: AppDatabase) : RaceRepository {
     override fun listen(): Flow<List<RaceItem>> = dao.observe()
             .map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) } }
 
-    override fun listen(id: Int): Flow<RaceItem> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun listen(id: Long): Flow<RaceItem> = dao.observe(id)
+            .map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) }
 
     override suspend fun save(race: RaceItem) = withContext(Dispatchers.IO) {
         Timber.d("Save: $race | Entity: ${race.toEntity()}")

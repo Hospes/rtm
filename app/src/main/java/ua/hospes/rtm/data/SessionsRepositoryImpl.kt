@@ -44,6 +44,9 @@ internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
     override fun listenByTeamId(teamId: Long): Flow<List<Session>> =
             dao.observeByTeam(teamId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
+    override fun listenByRaceId(raceId: Long): Flow<List<Session>> =
+            dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+
 
     override suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
             withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }

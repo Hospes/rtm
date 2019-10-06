@@ -16,6 +16,8 @@ internal interface SessionsRepository {
 
     fun listenByTeamId(teamId: Long): Flow<List<Session>>
 
+    fun listenByRaceId(raceId: Long): Flow<List<Session>>
+
 
     suspend fun setSessionDriver(sessionId: Long, driverId: Long)
 

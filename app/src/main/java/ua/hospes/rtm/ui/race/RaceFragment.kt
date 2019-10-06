@@ -20,6 +20,7 @@ import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
+import ua.hospes.rtm.ui.race.detail.intentRaceItemDetails
 import ua.hospes.rtm.utils.TimeUtils
 import javax.inject.Inject
 
@@ -65,7 +66,7 @@ internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceCon
         adapter.onUndoClickListener = { presenter.undoLastSession(it) }
         adapter.setCarClickListener = { presenter.clickSetCar(it) }
         adapter.setDriverClickListener = { presenter.clickSetDriver(it) }
-        adapter.itemClickListener = { /*RaceItemDetailActivity.start(context, item.id)*/ }
+        adapter.itemClickListener = { startActivity(context?.intentRaceItemDetails(it.id)) }
 
         timerListController = TimerListController(presenter).apply { list.addOnScrollListener(this) }
 

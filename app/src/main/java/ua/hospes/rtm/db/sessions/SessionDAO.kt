@@ -29,6 +29,9 @@ internal interface SessionDAO {
     @Query("SELECT * FROM sessions WHERE team_id = :teamId")
     fun observeByTeam(teamId: Long): Flow<List<SessionEntity>>
 
+    @Query("SELECT * FROM sessions WHERE team_id IN (SELECT team_id FROM race WHERE id = :raceId)")
+    fun observeByRace(raceId: Long): Flow<List<SessionEntity>>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(entity: SessionEntity): Long

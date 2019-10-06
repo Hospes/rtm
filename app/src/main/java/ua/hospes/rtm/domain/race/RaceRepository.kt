@@ -7,7 +7,7 @@ internal interface RaceRepository {
     suspend fun get(): List<RaceItem>
 
     fun listen(): Flow<List<RaceItem>>
-    fun listen(id: Int): Flow<RaceItem>
+    fun listen(id: Long): Flow<RaceItem>
 
     suspend fun save(race: RaceItem)
     suspend fun save(vararg races: RaceItem)
