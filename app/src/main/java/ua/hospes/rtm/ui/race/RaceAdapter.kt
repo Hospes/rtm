@@ -62,7 +62,8 @@ internal class RaceAdapter(context: Context,
                 itemClickListener = { itemClickListener?.invoke(getItem(it)) },
                 carClickListener = { setCarClickListener?.invoke(getItem(it)) },
                 driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
-                pitOutClickListener = { onPitClickListener?.invoke(getItem(it)) })
+                pitClickListener = { onPitClickListener?.invoke(getItem(it)) },
+                outClickListener = { onOutClickListener?.invoke(getItem(it)) })
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -178,14 +179,18 @@ internal class RaceAdapter(context: Context,
                                      itemClickListener: (position: Int) -> Unit,
                                      carClickListener: (position: Int) -> Unit,
                                      driverClickListener: (position: Int) -> Unit,
-                                     pitOutClickListener: (position: Int) -> Unit
+                                     pitClickListener: (position: Int) -> Unit,
+                                     outClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_pit, itemClickListener, carClickListener, driverClickListener) {
         private val btnPitOut: CustomToggleButton = itemView.findViewById(R.id.btn_pit_out)
 
         init {
             btnPitOut.setOnClickListener {
                 if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                pitOutClickListener.invoke(adapterPosition)
+                when ((it as CustomToggleButton).isChecked) {
+                    true -> pitClickListener.invoke(adapterPosition)
+                    false -> outClickListener.invoke(adapterPosition)
+                }
             }
         }
 

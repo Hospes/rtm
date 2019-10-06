@@ -29,17 +29,17 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
 
 
             car.text = item.car?.number?.toString() ?: ""
-            if (item.raceStartTime == null || item.startDurationTime == null) {
+            if (item.raceStartTime == null || item.startTime == null) {
                 start.text = ""
             } else {
-                start.text = TimeUtils.formatNanoWithMills(item.startDurationTime - item.raceStartTime);
+                start.text = TimeUtils.formatNanoWithMills(item.startTime - item.raceStartTime);
             }
 
             driver.text = item.driver?.name ?: ""
-            if (item.startDurationTime == null || item.endDurationTime == null)
+            if (item.startTime == null || item.endTime == null)
                 duration.setText(R.string.race_now)
             else
-                duration.text = TimeUtils.formatNanoWithMills(item.endDurationTime - item.startDurationTime)
+                duration.text = TimeUtils.formatNanoWithMills(item.endTime - item.startTime)
 
             type.text = when (item.type) {
                 Session.Type.PIT -> "PIT"

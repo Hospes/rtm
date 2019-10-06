@@ -46,10 +46,10 @@ internal interface SessionDAO {
     @Query("UPDATE sessions SET car_id = :carId WHERE id = :sessionId")
     suspend fun setCar(sessionId: Long, carId: Long)
 
-    @Query("UPDATE sessions SET race_start_time = :raceStartTime AND start_duration_time = :startTime AND end_duration_time = NULL WHERE id = :sessionId")
+    @Query("UPDATE sessions SET race_start_time = :raceStartTime AND start_time = :startTime AND end_time = NULL WHERE id = :sessionId")
     suspend fun openSession(sessionId: Long, raceStartTime: Long, startTime: Long)
 
-    @Query("UPDATE sessions SET end_duration_time = :stopTime WHERE id = :sessionId")
+    @Query("UPDATE sessions SET end_time = :stopTime WHERE id = :sessionId")
     suspend fun closeSession(sessionId: Long, stopTime: Long)
 
     @Query("UPDATE sessions SET race_start_time = :startTime WHERE id = :sessionId")
@@ -69,7 +69,7 @@ internal interface SessionDAO {
                 SessionEntity(
                         teamId = item.teamId,
                         raceStartTime = raceStartTime,
-                        startDurationTime = time,
+                        startTime = time,
                         type = type.name)
         )
         saveRace(item.copy(sessionId = newSessionId))
@@ -86,13 +86,17 @@ internal interface SessionDAO {
     }
 
 
+    @Query("SELECT COUNT() FROM sessions WHERE team_id = :teamId")
+    suspend fun teamSessionsCount(teamId: Long): Int
+
+
     /**
      * Request should place start time for all sessions that currently exists in 'race' table
      */
-    @Query("UPDATE sessions SET race_start_time = :time, start_duration_time = :time WHERE id IN (SELECT session_id FROM race)")
+    @Query("UPDATE sessions SET race_start_time = :time, start_time = :time WHERE id IN (SELECT session_id FROM race)")
     suspend fun startRace(time: Long)
 
-    @Query("UPDATE sessions SET end_duration_time = :time WHERE id IN (SELECT session_id FROM race)")
+    @Query("UPDATE sessions SET end_time = :time WHERE id IN (SELECT session_id FROM race)")
     suspend fun stopRace(time: Long)
 
 

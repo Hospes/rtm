@@ -2,30 +2,13 @@ package ua.hospes.rtm.domain.race.models
 
 import android.util.SparseLongArray
 
-
-/**
- * @author Andrew Khloponin
- */
-class RaceItemDetails {
-    var pitStops = 0
+data class RaceItemDetails(
+        val pitStops: Int = 0
+) {
     private val completedDriversDuration = SparseLongArray()
 
+    fun addDriverDuration(driverId: Long, duration: Long) =
+            getDriverDuration(driverId).apply { completedDriversDuration.put(driverId.toInt(), this + duration) }.let { Unit }
 
-    fun addDriverDuration(driverId: Long, duration: Long) {
-        val oldDuration = getDriverDuration(driverId)
-        completedDriversDuration.put(driverId.toInt(), oldDuration + duration)
-    }
-
-    fun getDriverDuration(driverId: Long): Long {
-        val l = completedDriversDuration.get(driverId.toInt())
-        return l ?: 0L
-    }
-
-
-    override fun toString(): String {
-        return "RaceItemDetails{" +
-                "pitStops=" + pitStops +
-                ", completedDriversDuration=" + completedDriversDuration +
-                '}'.toString()
-    }
+    fun getDriverDuration(driverId: Long): Long = completedDriversDuration.get(driverId.toInt())
 }

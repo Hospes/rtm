@@ -9,8 +9,8 @@ data class Session(
         val driver: Driver? = null,
         val car: Car? = null,
         val raceStartTime: Long? = null,
-        val startDurationTime: Long? = null,
-        val endDurationTime: Long? = null,
+        val startTime: Long? = null,
+        val endTime: Long? = null,
         val type: Type = Type.TRACK
 ) {
     enum class Type {

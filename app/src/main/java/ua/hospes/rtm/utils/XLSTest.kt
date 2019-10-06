@@ -86,12 +86,12 @@ object XLSTest {
         sheet.setColumnView(column, cvCarSize)
 
         // Write start time
-        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER, row, TimeUtils.formatNanoWithMills(session.startDurationTime!! - session.raceStartTime!!)))
+        sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER, row, TimeUtils.formatNanoWithMills(session.startTime!! - session.raceStartTime!!)))
         sheet.setColumnView(column + 1 + i * COLUMNS_PER_DRIVER, cvTimeSize)
 
         // Write duration
         sheet.addCell(Label(column + 1 + i * COLUMNS_PER_DRIVER + 1, row,
-                TimeUtils.formatNanoWithMills(session.endDurationTime ?: 0L - session.startDurationTime)))
+                TimeUtils.formatNanoWithMills(session.endTime ?: 0L - session.startTime)))
         sheet.setColumnView(column + 1 + i * COLUMNS_PER_DRIVER + 1, cvTimeSize)
     }
 }

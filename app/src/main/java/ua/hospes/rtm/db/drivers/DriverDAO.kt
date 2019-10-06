@@ -17,7 +17,7 @@ internal interface DriverDAO {
     @Query("SELECT * FROM drivers WHERE team_id = :id")
     suspend fun getByTeamId(id: Long): List<DriverEntity>
 
-    @Query("SELECT d.* FROM drivers d LEFT JOIN sessions s ON s.driver_id = d.id WHERE s.driver_id IS NULL AND s.end_duration_time IS NULL AND d.team_id = :teamId")
+    @Query("SELECT * FROM drivers WHERE team_id = :teamId AND id NOT IN (SELECT driver_id FROM sessions WHERE end_time IS NULL AND driver_id NOT NULL)")
     suspend fun getNotSelected(teamId: Long): List<DriverEntity>
 
 

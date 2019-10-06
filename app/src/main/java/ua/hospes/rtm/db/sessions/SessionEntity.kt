@@ -19,8 +19,8 @@ data class SessionEntity(
         @ColumnInfo(name = "driver_id") val driverId: Long? = null,
         @ColumnInfo(name = "car_id") val carId: Long? = null,
         @ColumnInfo(name = "race_start_time") val raceStartTime: Long? = null,
-        @ColumnInfo(name = "start_duration_time") val startDurationTime: Long? = null,
-        @ColumnInfo(name = "end_duration_time") val endDurationTime: Long? = null,
+        @ColumnInfo(name = "start_time") val startTime: Long? = null,
+        @ColumnInfo(name = "end_time") val endTime: Long? = null,
         @ColumnInfo(name = "type") val type: String
 )
 
@@ -31,8 +31,8 @@ internal suspend fun SessionEntity.toDomain(teamDAO: TeamDAO, driverDAO: DriverD
             driver = driverId?.let { driverDAO.get(it).toDomain(teamDAO) },
             car = carId?.let { carDAO.get(it).toDomain() },
             raceStartTime = raceStartTime,
-            startDurationTime = startDurationTime,
-            endDurationTime = endDurationTime,
+            startTime = startTime,
+            endTime = endTime,
             type = Session.Type.valueOf(type)
     )
 }

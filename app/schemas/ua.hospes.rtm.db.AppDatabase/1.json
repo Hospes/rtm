@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "40aa6c01ae103376ef7b4f9bef016c99",
+    "identityHash": "d9d77b33db16db4af1c31c5f0b360889",
     "entities": [
       {
         "tableName": "cars",
@@ -123,7 +123,7 @@
       },
       {
         "tableName": "sessions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `team_id` INTEGER NOT NULL, `driver_id` INTEGER, `car_id` INTEGER, `race_start_time` INTEGER, `start_duration_time` INTEGER, `end_duration_time` INTEGER, `type` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `team_id` INTEGER NOT NULL, `driver_id` INTEGER, `car_id` INTEGER, `race_start_time` INTEGER, `start_time` INTEGER, `end_time` INTEGER, `type` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -156,14 +156,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "startDurationTime",
-            "columnName": "start_duration_time",
+            "fieldPath": "startTime",
+            "columnName": "start_time",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "endDurationTime",
-            "columnName": "end_duration_time",
+            "fieldPath": "endTime",
+            "columnName": "end_time",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -226,13 +226,20 @@
         },
         "indices": [
           {
-            "name": "index_race_team_id_session_id",
+            "name": "index_race_team_id",
             "unique": false,
             "columnNames": [
-              "team_id",
+              "team_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_race_team_id` ON `${TABLE_NAME}` (`team_id`)"
+          },
+          {
+            "name": "index_race_session_id",
+            "unique": false,
+            "columnNames": [
               "session_id"
             ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_race_team_id_session_id` ON `${TABLE_NAME}` (`team_id`, `session_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_race_session_id` ON `${TABLE_NAME}` (`session_id`)"
           }
         ],
         "foreignKeys": [
@@ -264,7 +271,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '40aa6c01ae103376ef7b4f9bef016c99')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd9d77b33db16db4af1c31c5f0b360889')"
     ]
   }
 }

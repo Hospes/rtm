@@ -9,9 +9,10 @@ import ua.hospes.rtm.db.sessions.toDomain
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.db.team.TeamEntity
 import ua.hospes.rtm.domain.race.models.RaceItem
+import ua.hospes.rtm.domain.race.models.RaceItemDetails
 
 @Entity(tableName = "race",
-        indices = [Index(value = ["team_id", "session_id"])],
+        indices = [Index(value = ["team_id"]), Index(value = ["session_id"])],
         foreignKeys = [
             ForeignKey(entity = SessionEntity::class,
                     parentColumns = ["id"],
@@ -38,6 +39,13 @@ data class RaceEntity(
                     teamNumber = teamNumber,
                     team = teamDAO.get(teamId).toDomain(driverDAO),
                     session = sessionId?.let { sessionDAO.get(it) }?.toDomain(teamDAO, driverDAO, carDAO),
-                    details = null
+                    details = RaceItemDetails(sessionDAO.teamSessionsCount(teamId) - 1)
+                            .apply {
+                                sessionDAO.getByTeam(teamId).forEach {
+                                    val duration = if (it.startTime == null || it.endTime == null) null else it.endTime - it.startTime
+                                    if (it.driverId == null || duration == null) return@forEach
+                                    addDriverDuration(it.driverId, duration)
+                                }
+                            }
             )
 }
