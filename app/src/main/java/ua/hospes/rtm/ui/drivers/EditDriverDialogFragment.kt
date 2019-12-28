@@ -29,7 +29,7 @@ internal class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.AppTheme_Dialog)
+        setStyle(STYLE_NORMAL, R.style.Theme_RTM_Dialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)

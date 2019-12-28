@@ -16,9 +16,9 @@ abstract class WebViewActivity : DiActivity(R.layout.activity_webview) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
         setSupportActionBar(toolbar)
-        supportActionBar?.setHomeButtonEnabled(showBackIcon())
         supportActionBar?.setDisplayHomeAsUpEnabled(showBackIcon())
         supportActionBar?.setTitle(title())
 

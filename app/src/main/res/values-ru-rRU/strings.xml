@@ -75,7 +75,7 @@
 
     <!-- Privacy Policy -->
     <string name="privacy_title">Политика конфиденциальности</string>
-
-    <!-- Terms & Conditions -->
     <string name="terms_title">Условия использования</string>
+    <string name="btn_decline">Отказаться</string>
+    <string name="btn_accept">Принять</string>
 </resources>

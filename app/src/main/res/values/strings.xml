@@ -83,7 +83,7 @@
 
     <!-- Privacy Policy -->
     <string name="privacy_title">Privacy Policy</string>
-
-    <!-- Terms & Conditions -->
     <string name="terms_title">Terms &amp; Conditions</string>
+    <string name="btn_decline">Decline</string>
+    <string name="btn_accept">Accept</string>
 </resources>
