@@ -42,6 +42,7 @@
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <!--        <item name="delayedButtonStyle">@style/UndoButton</item>-->
+        <item name="android:dialogTheme">@style/Theme.RTM.Dialog</item>
     </style>
 
     <style name="Theme.RTM.DialogWhenLarge" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge">
@@ -57,8 +58,6 @@
         <item name="windowNoTitle">true</item>
 
         <item name="colorPrimary">@color/rtm_green</item>
-        <!--        <item name="colorPrimaryDark">@color/primary_dark</item>-->
-        <!--        <item name="colorAccent">@color/default_accent</item>-->
 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
@@ -99,16 +98,11 @@
         <item name="colorError">@color/rtm_error</item>
         <item name="colorOnError">@color/white</item>
 
-        <!--        <item name="colorAccent">@color/default_accent</item>-->
-
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/rtm_yellow</item>
         <item name="android:textColorTertiary">@color/white</item>
         <item name="android:textColorLink">@color/rtm_blue</item>
 
         <item name="appBarLayoutStyle">@style/Widget.RTM.AppBarLayout</item>
-
-        <item name="android:windowMinWidthMajor">640dp</item>
-        <item name="android:windowMinWidthMinor">640dp</item>
     </style>
 </resources>

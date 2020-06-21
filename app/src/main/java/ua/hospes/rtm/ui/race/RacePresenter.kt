@@ -1,19 +1,21 @@
 package ua.hospes.rtm.ui.race
 
 import androidx.lifecycle.Lifecycle
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.cars.CarsRepository
-import ua.hospes.rtm.domain.drivers.DriversRepository
-import ua.hospes.rtm.domain.race.RaceRepository
+import ua.hospes.rtm.data.CarsRepository
+import ua.hospes.rtm.data.DriversRepository
+import ua.hospes.rtm.data.RaceRepository
+import ua.hospes.rtm.data.SessionsRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.domain.sessions.SessionsRepository
 import javax.inject.Inject
 
-internal class RacePresenter @Inject constructor(
+@ActivityRetainedScoped
+class RacePresenter @Inject constructor(
         private val raceRepo: RaceRepository,
         private val sessionRepo: SessionsRepository,
         private val carsRepo: CarsRepository,

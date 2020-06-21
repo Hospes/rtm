@@ -1,14 +1,15 @@
 package ua.hospes.rtm.domain.race
 
-import ua.hospes.rtm.domain.cars.CarsRepository
-import ua.hospes.rtm.domain.drivers.DriversRepository
+import ua.hospes.rtm.data.CarsRepository
+import ua.hospes.rtm.data.DriversRepository
+import ua.hospes.rtm.data.RaceRepository
+import ua.hospes.rtm.data.SessionsRepository
 import ua.hospes.rtm.domain.preferences.PreferencesManager
-import ua.hospes.rtm.domain.sessions.SessionsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class RaceInteractor @Inject constructor(
+internal class RaceInteractor /*@Inject*/ constructor(
         private val preferencesManager: PreferencesManager,
         private val raceRepository: RaceRepository,
         private val sessionsRepository: SessionsRepository,

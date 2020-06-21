@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_edit_team.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.utils.extentions.extra
@@ -18,7 +18,7 @@ import javax.inject.Inject
 private const val KEY_TEAM = "team"
 private const val REQUEST_CODE_SELECT_DRIVERS = 11
 
-internal class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.View {
+internal class EditTeamDialogFragment : DialogFragment(), EditTeamContract.View {
     @Inject lateinit var presenter: EditTeamPresenter
     private val team by extra<Team>(KEY_TEAM)
 
@@ -28,11 +28,6 @@ internal class EditTeamDialogFragment : DiDialogFragment(), EditTeamContract.Vie
                 .apply { arguments = Bundle().apply { putParcelable(KEY_TEAM, item) } }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.Theme_RTM_Dialog)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             : View? = inflater.inflate(R.layout.dialog_edit_team, container, false)

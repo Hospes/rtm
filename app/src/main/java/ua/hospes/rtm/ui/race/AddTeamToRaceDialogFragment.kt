@@ -5,22 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_add_race_item.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.ui.drivers.TeamSpinnerAdapter
 import javax.inject.Inject
 
-internal class AddTeamToRaceDialogFragment : DiDialogFragment(), AddTeamToRaceContract.View {
+@AndroidEntryPoint
+class AddTeamToRaceDialogFragment : DialogFragment(), AddTeamToRaceContract.View {
     @Inject lateinit var presenter: AddTeamToRacePresenter
     private lateinit var adapter: TeamSpinnerAdapter
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.Theme_RTM_Dialog)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             : View? = inflater.inflate(R.layout.dialog_add_race_item, container, false)

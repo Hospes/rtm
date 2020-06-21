@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.drivers.DriversRepository
+import ua.hospes.rtm.data.DriversRepository
 import javax.inject.Inject
 
-internal class SelectDriversPresenter @Inject constructor(
+class SelectDriversPresenter @Inject constructor(
         private val repo: DriversRepository
 ) : Presenter<SelectDriversContract.View>() {
 

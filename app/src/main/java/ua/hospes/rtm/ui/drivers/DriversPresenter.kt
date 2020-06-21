@@ -5,10 +5,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.drivers.DriversRepository
+import ua.hospes.rtm.data.DriversRepository
 import javax.inject.Inject
 
-internal class DriversPresenter @Inject constructor(private val repo: DriversRepository) : Presenter<DriversContract.View>() {
+class DriversPresenter @Inject constructor(private val repo: DriversRepository) : Presenter<DriversContract.View>() {
 
     override fun attachView(view: DriversContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)

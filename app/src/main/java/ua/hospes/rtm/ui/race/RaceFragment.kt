@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_race.*
 import timber.log.Timber
 import ua.hospes.rtm.R
@@ -26,7 +27,8 @@ import javax.inject.Inject
 
 private const val REQUEST_CODE_PERMISSION = 11
 
-internal class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.View {
+@AndroidEntryPoint
+class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.View {
     //    private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     @Inject lateinit var presenter: RacePresenter

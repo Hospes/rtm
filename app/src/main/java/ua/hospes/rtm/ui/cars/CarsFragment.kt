@@ -8,13 +8,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_cars.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.cars.Car
 import javax.inject.Inject
 
-internal class CarsFragment : AbsFragment(R.layout.fragment_cars), CarsContract.View {
+@AndroidEntryPoint
+class CarsFragment : AbsFragment(R.layout.fragment_cars), CarsContract.View {
     @Inject lateinit var presenter: CarsPresenter
     private val adapter = CarsAdapter()
 
@@ -57,7 +59,7 @@ internal class CarsFragment : AbsFragment(R.layout.fragment_cars), CarsContract.
 
     private fun showEditCarDialog(car: Car?) = EditCarDialogFragment.newInstance(car).show(childFragmentManager, "add_car")
 
-    private fun showClearDialog() = AlertDialog.Builder(context!!)
+    private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.cars_remove_all)
             .setPositiveButton(R.string.yes) { _, _ -> presenter.removeAll() }
             .setNegativeButton(R.string.no) { _, _ -> }

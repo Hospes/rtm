@@ -6,14 +6,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_webview.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
-abstract class WebViewActivity : DiActivity(R.layout.activity_webview) {
+abstract class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
     @Inject lateinit var prefs: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {

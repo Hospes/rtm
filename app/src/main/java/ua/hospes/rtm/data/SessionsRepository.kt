@@ -12,50 +12,52 @@ import ua.hospes.rtm.db.sessions.SessionEntity
 import ua.hospes.rtm.db.sessions.toDomain
 import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.domain.sessions.SessionsRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class SessionsRepositoryImpl(db: AppDatabase) : SessionsRepository {
+@Singleton
+class SessionsRepository @Inject constructor(db: AppDatabase) {
     private val dao: SessionDAO = db.sessionDao()
     private val teamDAO: TeamDAO = db.teamDao()
     private val driverDAO: DriverDAO = db.driverDao()
     private val carDAO: CarDAO = db.carDao()
     private val raceDAO = db.raceDao()
 
-    override suspend fun get(): List<Session> =
+    suspend fun get(): List<Session> =
             withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
-    override suspend fun getByTeam(teamId: Long): List<Session> =
+    suspend fun getByTeam(teamId: Long): List<Session> =
             withContext(Dispatchers.IO) { dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
-    override fun listenByRaceId(raceId: Long): Flow<List<Session>> =
+    fun listenByRaceId(raceId: Long): Flow<List<Session>> =
             dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
-    override suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
+    suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
             withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }
 
-    override suspend fun setSessionCar(sessionId: Long, carId: Long) =
+    suspend fun setSessionCar(sessionId: Long, carId: Long) =
             withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
 
-    override suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
-    override suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
-    override suspend fun resetRace() = withContext(Dispatchers.IO) { dao.resetRace() }
+    suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
+    suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
+    suspend fun resetRace() = withContext(Dispatchers.IO) { dao.resetRace() }
 
 
-    override suspend fun newSession(type: Session.Type, teamId: Long): Session = withContext(Dispatchers.IO) {
+    suspend fun newSession(type: Session.Type, teamId: Long): Session = withContext(Dispatchers.IO) {
         val id = dao.save(SessionEntity(teamId = teamId, type = type.name))
         Session(id = id, teamId = teamId, type = type)
     }
 
-    override suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: Session.Type) =
+    suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: Session.Type) =
             withContext(Dispatchers.IO) { dao.closeCurrentStartNew(raceItemId, currentTime, type) }
 
-    override suspend fun removeLastSession(teamId: Long) {
+    suspend fun removeLastSession(teamId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
+    suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
 
     //    override fun removeLastSession(teamId: Int): Observable<Session> =
     //            dbStorage.getByTeamId(teamId)

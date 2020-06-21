@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_teams.*
 import timber.log.Timber
 import ua.hospes.rtm.R
@@ -15,7 +16,8 @@ import ua.hospes.rtm.core.ui.AbsFragment
 import ua.hospes.rtm.domain.team.Team
 import javax.inject.Inject
 
-internal class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContract.View {
+@AndroidEntryPoint
+class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContract.View {
     @Inject lateinit var presenter: TeamsPresenter
     private val adapter = TeamsAdapter()
 
@@ -58,7 +60,7 @@ internal class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContra
 
     private fun showEditDialog(item: Team?) = EditTeamDialogFragment.newInstance(item).show(childFragmentManager, "add_team")
 
-    private fun showClearDialog() = AlertDialog.Builder(context!!)
+    private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.teams_remove_all)
             .setPositiveButton(R.string.yes) { _, _ -> presenter.removeAll() }
             .setNegativeButton(R.string.no) { _, _ -> }

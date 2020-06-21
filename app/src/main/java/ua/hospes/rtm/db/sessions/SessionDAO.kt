@@ -6,7 +6,7 @@ import ua.hospes.rtm.db.race.RaceEntity
 import ua.hospes.rtm.domain.sessions.Session
 
 @Dao
-internal interface SessionDAO {
+interface SessionDAO {
     @Query("SELECT * FROM sessions")
     suspend fun get(): List<SessionEntity>
 

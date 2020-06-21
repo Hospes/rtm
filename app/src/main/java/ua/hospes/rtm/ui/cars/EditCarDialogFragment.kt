@@ -5,16 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_add_car.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.utils.extentions.extra
 import javax.inject.Inject
 
 private const val KEY_CAR = "car"
 
-internal class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View {
+@AndroidEntryPoint
+class EditCarDialogFragment : DialogFragment(), EditCarContract.View {
     @Inject lateinit var presenter: EditCarPresenter
     private val car by extra<Car>(KEY_CAR)
     private val qualities = arrayOf(Car.Quality.LOW, Car.Quality.NORMAL, Car.Quality.HIGH)
@@ -26,18 +28,13 @@ internal class EditCarDialogFragment : DiDialogFragment(), EditCarContract.View 
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.Theme_RTM_Dialog)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             : View? = inflater.inflate(R.layout.dialog_add_car, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sp_quality.adapter = CarQualityAdapter(context!!, *qualities)
+        sp_quality.adapter = CarQualityAdapter(requireContext(), *qualities)
         if (car == null) sp_quality.setSelection(1)
 
         btn_save.setOnClickListener { presenter.save(et_number.text, sp_quality.selectedItem as Car.Quality, cb_broken.isChecked) }

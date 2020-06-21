@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_edit_driver.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.utils.extentions.extra
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 private const val KEY_DRIVER = "driver"
 
-internal class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract.View {
+@AndroidEntryPoint
+class EditDriverDialogFragment : DialogFragment(), EditDriverContract.View {
     @Inject lateinit var presenter: EditDriverPresenter
     private val driver by extra<Driver>(KEY_DRIVER)
     private lateinit var adapter: TeamSpinnerAdapter
@@ -33,7 +35,7 @@ internal class EditDriverDialogFragment : DiDialogFragment(), EditDriverContract
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = TeamSpinnerAdapter(context!!)
+        adapter = TeamSpinnerAdapter(requireContext())
         sp_team.prompt = "Select team"
         sp_team.adapter = adapter
 

@@ -4,7 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import ua.hospes.rtm.core.DiDialogFragment
+import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.utils.extentions.extraNotNull
 import javax.inject.Inject
@@ -12,7 +13,8 @@ import javax.inject.Inject
 private const val KEY_SESSION_ID = "session_id"
 private const val KEY_CARS = "cars"
 
-internal class SetCarDialogFragment : DiDialogFragment(), SetCarContract.View {
+@AndroidEntryPoint
+class SetCarDialogFragment : DialogFragment(), SetCarContract.View {
     @Inject lateinit var presenter: SetCarPresenter
     private val sessionId by extraNotNull<Long>(KEY_SESSION_ID)
     private val cars by extraNotNull<List<Car>>(KEY_CARS)

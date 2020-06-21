@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
+import ua.hospes.rtm.data.DriversRepository
+import ua.hospes.rtm.data.TeamsRepository
 import ua.hospes.rtm.domain.drivers.Driver
-import ua.hospes.rtm.domain.drivers.DriversRepository
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.domain.team.TeamsRepository
 import javax.inject.Inject
 
 @Suppress("EXPERIMENTAL_API_USAGE")
-internal class EditDriverPresenter @Inject constructor(
+class EditDriverPresenter @Inject constructor(
         private val driversRepo: DriversRepository,
         private val teamsRepo: TeamsRepository
 ) : Presenter<EditDriverContract.View>(Dispatchers.Main) {

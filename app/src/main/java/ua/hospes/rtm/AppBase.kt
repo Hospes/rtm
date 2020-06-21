@@ -1,14 +1,14 @@
 package ua.hospes.rtm
 
+import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import ua.hospes.rtm.di.DaggerAppComponent
 
-abstract class AppBase : DaggerApplication() {
+abstract class AppBase : Application() {
+
     override fun onCreate() {
         super.onCreate()
 
@@ -16,8 +16,6 @@ abstract class AppBase : DaggerApplication() {
 
         createNotificationChannel()
     }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> = DaggerAppComponent.builder().create(this)
 
     private fun createNotificationChannel() {
         val name = BuildConfig.NOTIFICATION_CHANNEL_RACE

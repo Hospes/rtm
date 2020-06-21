@@ -4,15 +4,15 @@ import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.race.RaceRepository
+import ua.hospes.rtm.data.RaceRepository
+import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.data.TeamsRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.domain.sessions.SessionsRepository
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.domain.team.TeamsRepository
 import javax.inject.Inject
 
-internal class AddTeamToRacePresenter @Inject constructor(
+class AddTeamToRacePresenter @Inject constructor(
         private val raceRepo: RaceRepository,
         private val sessionsRepo: SessionsRepository,
         private val teamsRepo: TeamsRepository

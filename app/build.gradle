@@ -2,10 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.firebase.appdistribution'
-apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def buildNumber = project.hasProperty("build.number") ? project.ext["build.number"] : "dev"
 
@@ -26,7 +25,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
 
@@ -106,22 +105,22 @@ dependencies {
 
     //implementation "ua.hospes.undobutton:undobutton:0.2.0"
 
-    def dagger = '2.28'
-//    implementation "com.google.dagger:hilt-android:$dagger"
-//    kapt "com.google.dagger:hilt-android-compiler:$dagger"
-    //implementation "com.google.dagger:dagger:$dagger"
-    implementation "com.google.dagger:dagger-android:$dagger"
-    implementation "com.google.dagger:dagger-android-support:$dagger"
-    kapt "com.google.dagger:dagger-compiler:$dagger"
-    kapt "com.google.dagger:dagger-android-processor:$dagger"
+    def hilt = '2.28-alpha'
+    implementation "com.google.dagger:hilt-android:$hilt"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt"
 
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
 
-    implementation 'com.google.firebase:firebase-perf:19.0.7'
     implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
     implementation 'com.google.firebase:firebase-analytics:17.4.3'
 
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 androidExtensions { experimental = true }
+
+apply plugin: 'com.google.gms.google-services'

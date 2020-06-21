@@ -6,13 +6,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiActivity
 import ua.hospes.rtm.core.StopWatchService
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.ui.cars.CarsFragment
@@ -26,7 +27,8 @@ import javax.inject.Inject
 private const val REQUEST_CODE_PRIVACY = 10
 private const val REQUEST_CODE_TERMS = 20
 
-class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNavigationItemSelectedListener {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(R.layout.activity_main), NavigationView.OnNavigationItemSelectedListener {
     @Inject lateinit var prefs: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +61,7 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         android.R.id.home -> drawer_layout.openDrawer(GravityCompat.START).let { true }
+        null -> false
         else -> super.onOptionsItemSelected(item)
     }
 

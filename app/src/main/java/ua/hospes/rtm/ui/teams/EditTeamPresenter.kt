@@ -5,13 +5,13 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
+import ua.hospes.rtm.data.TeamsRepository
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.domain.team.TeamsRepository
 import javax.inject.Inject
 
 @Suppress("EXPERIMENTAL_API_USAGE")
-internal class EditTeamPresenter @Inject constructor(private val repo: TeamsRepository) : Presenter<EditTeamContract.View>() {
+internal class EditTeamPresenter /*@Inject*/ constructor(private val repo: TeamsRepository) : Presenter<EditTeamContract.View>() {
     private val initTeam = ConflatedBroadcastChannel<Team>()
     private val teamDrivers = ConflatedBroadcastChannel<List<Driver>>(emptyList())
     private val deleteButton = ConflatedBroadcastChannel<Boolean>(false)

@@ -7,17 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_select_drivers.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiDialogFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.utils.extentions.extraNotNull
 import javax.inject.Inject
 
 private const val KEY_DRIVERS = "drivers"
 
-internal class SelectDriversDialogFragment : DiDialogFragment(), SelectDriversContract.View {
+@AndroidEntryPoint
+class SelectDriversDialogFragment : DialogFragment(), SelectDriversContract.View {
     @Inject lateinit var presenter: SelectDriversPresenter
     private val adapter = SelectDriversAdapter()
     private val selected by extraNotNull(KEY_DRIVERS, emptyList<Driver>())

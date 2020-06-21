@@ -5,24 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_race_item_detail.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.DiActivity
 import ua.hospes.rtm.domain.race.models.DriverDetails
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.extentions.extraNotNull
-import javax.inject.Inject
 
 fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivity::class.java)
         .apply { putExtra(KEY_ID, id) }
 
 private const val KEY_ID = "key_id"
 
-internal class RaceItemDetailActivity : DiActivity(R.layout.activity_race_item_detail), RaceItemDetailContract.View {
-    @Inject lateinit var presenter: RaceItemDetailPresenter
+internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail), RaceItemDetailContract.View {
+    /*@Inject*/ lateinit var presenter: RaceItemDetailPresenter
     private val raceItemId by extraNotNull<Long>(KEY_ID)
 
     private val driversAdapter = DriverDetailsAdapter()

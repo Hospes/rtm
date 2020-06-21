@@ -5,10 +5,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.team.TeamsRepository
+import ua.hospes.rtm.data.TeamsRepository
 import javax.inject.Inject
 
-internal class TeamsPresenter @Inject constructor(private val repo: TeamsRepository) : Presenter<TeamsContract.View>() {
+class TeamsPresenter @Inject constructor(private val repo: TeamsRepository) : Presenter<TeamsContract.View>() {
 
     override fun attachView(view: TeamsContract.View?, lc: Lifecycle) {
         super.attachView(view, lc)

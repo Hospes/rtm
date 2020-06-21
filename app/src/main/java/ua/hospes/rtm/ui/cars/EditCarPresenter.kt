@@ -7,12 +7,12 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.hospes.rtm.core.Presenter
+import ua.hospes.rtm.data.CarsRepository
 import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.domain.cars.CarsRepository
 import javax.inject.Inject
 
 @Suppress("EXPERIMENTAL_API_USAGE")
-internal class EditCarPresenter @Inject constructor(private val repo: CarsRepository) : Presenter<EditCarContract.View>() {
+class EditCarPresenter @Inject constructor(private val repo: CarsRepository) : Presenter<EditCarContract.View>() {
     private val initCar = ConflatedBroadcastChannel<Car>()
     private val deleteAvailable = ConflatedBroadcastChannel(false)
 

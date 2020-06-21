@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import ua.hospes.rtm.core.DiFragment
+import androidx.fragment.app.Fragment
 
-abstract class AbsFragment : DiFragment {
+abstract class AbsFragment : Fragment {
 
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)
@@ -20,7 +20,7 @@ abstract class AbsFragment : DiFragment {
     @StringRes
     protected abstract fun setActionBarTitle(): Int
 
-    protected fun updateABTitle(activity: Activity?, @StringRes title: Int) {
+    private fun updateABTitle(activity: Activity?, @StringRes title: Int) {
         if (title == -1 || title == 0 || activity !is AppCompatActivity) return
 
         val ab = activity.supportActionBar

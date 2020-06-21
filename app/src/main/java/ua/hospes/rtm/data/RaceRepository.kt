@@ -11,11 +11,13 @@ import ua.hospes.rtm.db.drivers.DriverDAO
 import ua.hospes.rtm.db.race.RaceDAO
 import ua.hospes.rtm.db.sessions.SessionDAO
 import ua.hospes.rtm.db.team.TeamDAO
-import ua.hospes.rtm.domain.race.RaceRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.race.models.toEntity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class RaceRepositoryImpl(db: AppDatabase) : RaceRepository {
+@Singleton
+class RaceRepository @Inject constructor(db: AppDatabase) {
     private val dao: RaceDAO = db.raceDao()
     private val teamDAO: TeamDAO = db.teamDao()
     private val driverDAO: DriverDAO = db.driverDao()
@@ -23,18 +25,18 @@ internal class RaceRepositoryImpl(db: AppDatabase) : RaceRepository {
     private val sessionDAO: SessionDAO = db.sessionDao()
 
 
-    override fun listen(): Flow<List<RaceItem>> = dao.observe()
+    fun listen(): Flow<List<RaceItem>> = dao.observe()
             .map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) } }
 
-    override fun listen(id: Long): Flow<RaceItem> = dao.observe(id)
+    fun listen(id: Long): Flow<RaceItem> = dao.observe(id)
             .map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) }
 
-    override suspend fun save(race: RaceItem) = withContext(Dispatchers.IO) {
+    suspend fun save(race: RaceItem) = withContext(Dispatchers.IO) {
         Timber.d("Save: $race | Entity: ${race.toEntity()}")
         dao.save(race.toEntity()).let { Unit }
     }
 
-    override suspend fun clear() = withContext(Dispatchers.IO) {
+    suspend fun clear() = withContext(Dispatchers.IO) {
         dao.clear()
         sessionDAO.clear()
     }

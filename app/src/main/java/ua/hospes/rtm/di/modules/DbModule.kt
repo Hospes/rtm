@@ -1,4 +1,4 @@
-package ua.hospes.rtm.di.module
+package ua.hospes.rtm.di.modules
 
 import android.content.Context
 import androidx.room.Room
@@ -6,38 +6,22 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ua.hospes.rtm.BuildConfig
 import ua.hospes.rtm.db.AppDatabase
-import ua.hospes.rtm.db.cars.CarDAO
-import ua.hospes.rtm.db.drivers.DriverDAO
-import ua.hospes.rtm.db.race.RaceDAO
-import ua.hospes.rtm.db.sessions.SessionDAO
-import ua.hospes.rtm.db.team.TeamDAO
 import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
-internal object DbModule {
-    @Provides @Singleton @JvmStatic
-    fun provideDb(ctx: Context): AppDatabase = Room.databaseBuilder(ctx, AppDatabase::class.java, "rtm")
+@InstallIn(ApplicationComponent::class)
+object DbModule {
+
+    @Provides @Singleton
+    fun provideDb(@ApplicationContext ctx: Context): AppDatabase = Room.databaseBuilder(ctx, AppDatabase::class.java, "rtm")
             .apply { if (BuildConfig.DEBUG) addCallback(prepopulateData) }
             .build()
-
-    @Provides @JvmStatic
-    fun provideCarDAO(db: AppDatabase): CarDAO = db.carDao()
-
-    @Provides @JvmStatic
-    fun provideTeamDAO(db: AppDatabase): TeamDAO = db.teamDao()
-
-    @Provides @JvmStatic
-    fun provideDriverDAO(db: AppDatabase): DriverDAO = db.driverDao()
-
-    @Provides @JvmStatic
-    fun provideSessionDAO(db: AppDatabase): SessionDAO = db.sessionDao()
-
-    @Provides @JvmStatic
-    fun provideRaceDAO(db: AppDatabase): RaceDAO = db.raceDao()
-
 
     private val prepopulateData = object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {

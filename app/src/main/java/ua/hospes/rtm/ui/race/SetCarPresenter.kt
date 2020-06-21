@@ -2,10 +2,10 @@ package ua.hospes.rtm.ui.race
 
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.core.Presenter
-import ua.hospes.rtm.domain.sessions.SessionsRepository
+import ua.hospes.rtm.data.SessionsRepository
 import javax.inject.Inject
 
-internal class SetCarPresenter @Inject constructor(
+class SetCarPresenter @Inject constructor(
         private val sesRepo: SessionsRepository
 ) : Presenter<SetCarContract.View>() {
 

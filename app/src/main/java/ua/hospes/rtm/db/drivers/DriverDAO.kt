@@ -4,7 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface DriverDAO {
+interface DriverDAO {
     @Query("SELECT * FROM drivers")
     suspend fun get(): List<DriverEntity>
 
