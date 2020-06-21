@@ -1,5 +1,5 @@
 <resources>
-    <style name="Widget.RTM.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface">
+    <style name="Widget.RTM.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface" />
 
-    </style>
+    <style name="Widget.RTM.Toolbar" parent="Widget.MaterialComponents.Toolbar.PrimarySurface" />
 </resources>

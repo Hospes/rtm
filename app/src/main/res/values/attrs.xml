@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="headerBackground" format="reference" />
-    <attr name="headerTitleColor" format="color" />
     <attr name="listItemBackground1" format="reference" />
     <attr name="listItemBackground2" format="reference" />
 
@@ -9,12 +7,4 @@
         <attr name="timeView_OnTrack" format="color" />
         <attr name="timeView_OnPit" format="color" />
     </declare-styleable>
-
-    <!-- Temp solution for ConstraintLayout 2.0.+ -->
-    <attr name="flow_horizontalSeparator"/>
-    <attr name="flow_verticalSeparator"/>
-    <attr name="motionProgress"/>
-    <attr name="waveDecay"/>
-    <attr name="motionPathRotate"/>
-    <attr name="duration"/>
 </resources>

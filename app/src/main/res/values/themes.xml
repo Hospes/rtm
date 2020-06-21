@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.RTM" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/bg_window</item>
-        <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
-        <!-- Set the navigation bar to 50% translucent white -->
-        <item name="android:navigationBarColor">#80FFFFFF</item>
-        <!-- Since the nav bar is white, we will use dark icons -->
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
-        <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primary_dark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimary">@color/rtm_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorPrimaryVariant">@color/rtm_dark_green</item>
+        <!--        <item name="colorPrimaryDark">@color/rtm_dark_green</item>-->
+
+        <item name="colorSecondary">@color/rtm_orange</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="android:colorBackground">@color/rtm_surface</item>
+        <item name="colorOnBackground">@color/white</item>
+
+        <item name="colorSurface">@color/rtm_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <item name="colorError">@color/rtm_error</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!--        <item name="colorAccent">@color/default_accent</item>-->
 
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/rtm_yellow</item>
         <item name="android:textColorTertiary">@color/white</item>
+        <item name="android:textColorLink">@color/rtm_blue</item>
 
-        <item name="headerBackground">@color/bg_small_header</item>
-        <item name="headerTitleColor">@color/default_accent</item>
         <item name="listItemBackground1">@drawable/bg_list_item_1</item>
         <item name="listItemBackground2">@drawable/bg_list_item_2</item>
 
@@ -25,30 +38,32 @@
         <item name="timeView_OnPit">@color/session_pit</item>
 
         <item name="appBarLayoutStyle">@style/Widget.RTM.AppBarLayout</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
+        <!--        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>-->
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <!--        <item name="delayedButtonStyle">@style/UndoButton</item>-->
     </style>
 
     <style name="Theme.RTM.DialogWhenLarge" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge">
-        <item name="android:windowBackground">@color/bg_window</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
-        
+        <item name="android:colorBackground">@color/rtm_surface</item>
+        <item name="android:windowBackground">@color/rtm_surface</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primary_dark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimary">@color/rtm_green</item>
+        <!--        <item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <!--        <item name="colorAccent">@color/default_accent</item>-->
 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:textColorTertiary">@color/white</item>
 
-        <item name="headerBackground">@color/bg_small_header</item>
-        <item name="headerTitleColor">@color/default_accent</item>
         <item name="listItemBackground1">@drawable/bg_list_item_1</item>
         <item name="listItemBackground2">@drawable/bg_list_item_2</item>
 
@@ -59,17 +74,41 @@
     </style>
 
     <style name="Theme.RTM.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.MinWidth">
-        <item name="android:windowBackground">@color/bg_window</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
-        <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primary_dark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="android:colorBackground">@color/rtm_surface</item>
+        <item name="android:windowBackground">@color/rtm_surface</item>
+
+        <item name="colorPrimary">@color/rtm_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorPrimaryVariant">@color/rtm_dark_green</item>
+        <!--        <item name="colorPrimaryDark">@color/rtm_dark_green</item>-->
+
+        <item name="colorSecondary">@color/rtm_orange</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="colorOnBackground">@color/white</item>
+
+        <item name="colorSurface">@color/rtm_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <item name="colorError">@color/rtm_error</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!--        <item name="colorAccent">@color/default_accent</item>-->
 
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/rtm_yellow</item>
         <item name="android:textColorTertiary">@color/white</item>
+        <item name="android:textColorLink">@color/rtm_blue</item>
 
         <item name="appBarLayoutStyle">@style/Widget.RTM.AppBarLayout</item>
+
+        <item name="android:windowMinWidthMajor">640dp</item>
+        <item name="android:windowMinWidthMinor">640dp</item>
     </style>
 </resources>

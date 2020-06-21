@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.updatePadding
 import kotlinx.android.synthetic.main.activity_webview.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.preferences.PreferencesManager
+import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
 abstract class WebViewActivity : DiActivity(R.layout.activity_webview) {
@@ -16,7 +18,15 @@ abstract class WebViewActivity : DiActivity(R.layout.activity_webview) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        root.doOnApplyWindowInsets { view, insets, padding, _ ->
+            view.updatePadding(bottom = padding.bottom + insets.systemWindowInsetBottom)
+        }
+        toolbar.doOnApplyWindowInsets { view, insets, padding, _ ->
+            view.updatePadding(top = padding.top + insets.systemWindowInsetTop)
+        }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(showBackIcon())
@@ -38,6 +48,7 @@ abstract class WebViewActivity : DiActivity(R.layout.activity_webview) {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         android.R.id.home -> onBackPressed().let { true }
+        null -> false
         else -> super.onOptionsItemSelected(item)
     }
 

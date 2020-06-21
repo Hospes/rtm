@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,6 +20,7 @@ import ua.hospes.rtm.ui.drivers.DriversFragment
 import ua.hospes.rtm.ui.race.RaceFragment
 import ua.hospes.rtm.ui.settings.SettingsFragment
 import ua.hospes.rtm.ui.teams.TeamsFragment
+import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
 private const val REQUEST_CODE_PRIVACY = 10
@@ -28,7 +31,12 @@ class MainActivity : DiActivity(R.layout.activity_main), NavigationView.OnNaviga
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        drawer_layout.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        toolbar.doOnApplyWindowInsets { view, insets, padding, _ ->
+            view.updatePadding(top = padding.top + insets.systemWindowInsetTop)
+        }
         setSupportActionBar(toolbar)
 
         nav_view.setNavigationItemSelectedListener(this)

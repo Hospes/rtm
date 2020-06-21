@@ -3,7 +3,7 @@ package ua.hospes.rtm.core
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
@@ -34,7 +34,7 @@ abstract class Presenter<V>(
         launch {
             errors.consumeEach {
                 Timber.w(it)
-                Crashlytics.logException(it)
+                FirebaseCrashlytics.getInstance().recordException(it)
                 withContext(Dispatchers.Main) { onError(it) }
             }
         }
@@ -42,7 +42,7 @@ abstract class Presenter<V>(
         launch {
             unexpectedErrors.consumeEach {
                 Timber.w(it)
-                Crashlytics.logException(it)
+                FirebaseCrashlytics.getInstance().recordException(it)
                 withContext(Dispatchers.Main) { onUnexpectedError(it) }
             }
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/nav_group_1" android:checkableBehavior="single">
         <item android:id="@+id/nav_race"
               android:title="Race" />
 
@@ -17,11 +17,11 @@
               android:title="@string/settings_title" />
     </group>
 
-    <item android:enabled="false" android:title="" />
+    <group android:id="@+id/nav_group_2" android:checkableBehavior="none">
+        <item android:id="@+id/nav_privacy"
+              android:title="@string/privacy_title" />
 
-    <item android:id="@+id/nav_privacy"
-          android:title="@string/privacy_title" />
-
-    <item android:id="@+id/nav_terms"
-          android:title="@string/terms_title" />
+        <item android:id="@+id/nav_terms"
+              android:title="@string/terms_title" />
+    </group>
 </menu>

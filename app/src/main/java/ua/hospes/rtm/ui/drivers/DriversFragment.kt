@@ -54,7 +54,8 @@ internal class DriversFragment : AbsFragment(R.layout.fragment_drivers), Drivers
     override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 
 
-    private fun showEditDriverDialog(driver: Driver?) = EditDriverDialogFragment.newInstance(driver).show(childFragmentManager, "add_driver")
+    private fun showEditDriverDialog(driver: Driver?) =
+            EditDriverDialogFragment.newInstance(driver).show(childFragmentManager, "add_driver")
 
     private fun showClearDialog() = AlertDialog.Builder(context!!)
             .setMessage(R.string.drivers_remove_all)

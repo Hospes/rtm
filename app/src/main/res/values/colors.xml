@@ -3,13 +3,6 @@
     <color name="white">#FFF</color>
     <color name="black">#000</color>
 
-    <color name="bg_window">#424242</color>
-
-    <color name="default_primary">#ef6c00</color>
-    <color name="default_primary_dark">#e65100</color>
-    <color name="default_accent">#FFC107</color>
-    <color name="light_accent">#ef6c00</color>
-
     <color name="car_quality_low">#ff0000</color>
     <color name="car_quality_normal">#ffd000</color>
     <color name="car_quality_high">#00ff00</color>
@@ -22,4 +15,16 @@
 
     <color name="bg_small_header">#58000000</color>
     <color name="bg_list_item_2">#338b8b8b</color>
+
+
+    <color name="rtm_green">#1EB980</color>
+    <color name="rtm_dark_green">#045D56</color>
+    <color name="rtm_orange">#FF6859</color>
+    <color name="rtm_yellow">#FFCF44</color>
+    <color name="rtm_purple">#B15DFF</color>
+    <color name="rtm_blue">#72DEFF</color>
+
+    <color name="rtm_background">#3C3C3C</color>
+    <color name="rtm_surface">#3C3C3C</color>
+    <color name="rtm_error">#B00020</color>
 </resources>
