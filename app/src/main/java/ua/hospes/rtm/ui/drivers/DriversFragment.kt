@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_drivers.*
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.ui.AbsFragment
+import ua.hospes.rtm.core.ui.AbsMainFragment
 import ua.hospes.rtm.domain.drivers.Driver
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DriversFragment : AbsFragment(R.layout.fragment_drivers), DriversContract.View {
+class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContract.View {
     @Inject lateinit var presenter: DriversPresenter
     private val adapter = DriversAdapter()
 

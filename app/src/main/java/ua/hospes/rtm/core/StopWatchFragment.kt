@@ -6,9 +6,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 
-import ua.hospes.rtm.core.ui.AbsFragment
+import ua.hospes.rtm.core.ui.AbsMainFragment
 
-abstract class StopWatchFragment : AbsFragment, StopWatch.OnStopWatchListener {
+abstract class StopWatchFragment : AbsMainFragment, StopWatch.OnStopWatchListener {
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)
 

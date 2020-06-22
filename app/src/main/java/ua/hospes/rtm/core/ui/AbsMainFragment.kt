@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
-abstract class AbsFragment : Fragment {
+abstract class AbsMainFragment : Fragment {
 
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)

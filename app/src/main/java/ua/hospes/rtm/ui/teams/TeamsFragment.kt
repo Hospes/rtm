@@ -12,12 +12,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_teams.*
 import timber.log.Timber
 import ua.hospes.rtm.R
-import ua.hospes.rtm.core.ui.AbsFragment
+import ua.hospes.rtm.core.ui.AbsMainFragment
 import ua.hospes.rtm.domain.team.Team
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TeamsFragment : AbsFragment(R.layout.fragment_teams), TeamsContract.View {
+class TeamsFragment : AbsMainFragment(R.layout.fragment_teams), TeamsContract.View {
     @Inject lateinit var presenter: TeamsPresenter
     private val adapter = TeamsAdapter()
 
