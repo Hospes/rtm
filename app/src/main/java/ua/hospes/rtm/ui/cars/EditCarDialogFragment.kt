@@ -4,20 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_add_car.*
+import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.utils.extentions.extra
-import javax.inject.Inject
 
 private const val KEY_CAR = "car"
 
 @AndroidEntryPoint
-class EditCarDialogFragment : DialogFragment(), EditCarContract.View {
-    @Inject lateinit var presenter: EditCarPresenter
+class EditCarDialogFragment : DialogFragment() {
+    private val viewModel: EditCarViewModel by viewModels()
     private val car by extra<Car>(KEY_CAR)
     private val qualities = arrayOf(Car.Quality.LOW, Car.Quality.NORMAL, Car.Quality.HIGH)
 
@@ -37,16 +39,18 @@ class EditCarDialogFragment : DialogFragment(), EditCarContract.View {
         sp_quality.adapter = CarQualityAdapter(requireContext(), *qualities)
         if (car == null) sp_quality.setSelection(1)
 
-        btn_save.setOnClickListener { presenter.save(et_number.text, sp_quality.selectedItem as Car.Quality, cb_broken.isChecked) }
+        btn_save.setOnClickListener { clickSave() }
         btn_cancel.setOnClickListener { dismiss() }
-        btn_delete.setOnClickListener { presenter.delete() }
+        btn_delete.setOnClickListener { clickDelete() }
 
-        presenter.initCar(car)
-        presenter.attachView(this, lifecycle)
+        viewModel.initCar(car)
+
+        viewModel.init.observe(viewLifecycleOwner) { onInitCar(it) }
+        viewModel.delAvailable.observe(viewLifecycleOwner) { onDeleteButtonAvailable(it) }
     }
 
 
-    override fun onInitCar(car: Car) {
+    private fun onInitCar(car: Car) {
         val number = car.number.toString()
         et_number.setText(number)
         et_number.setSelection(number.length)
@@ -62,10 +66,15 @@ class EditCarDialogFragment : DialogFragment(), EditCarContract.View {
     }
 
 
-    override fun onDeleteButtonAvailable(available: Boolean) = with(btn_delete) { isEnabled = available }
+    private fun onDeleteButtonAvailable(available: Boolean) = with(btn_delete) { isEnabled = available }
 
-    override fun onSaved() = dismiss()
-    override fun onDeleted() = dismiss()
+    private fun clickSave() = lifecycleScope.launch {
+        viewModel.save(et_number.text, sp_quality.selectedItem as Car.Quality, cb_broken.isChecked)
+        dismiss()
+    }.let { Unit }
 
-    override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
+    private fun clickDelete() = lifecycleScope.launch {
+        viewModel.delete()
+        dismiss()
+    }.let { Unit }
 }
