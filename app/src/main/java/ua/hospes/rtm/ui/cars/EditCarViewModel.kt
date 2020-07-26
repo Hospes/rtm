@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import ua.hospes.rtm.data.CarsRepository
 import ua.hospes.rtm.domain.cars.Car
 
-@Suppress("EXPERIMENTAL_API_USAGE")
 class EditCarViewModel @ViewModelInject constructor(
         private val repo: CarsRepository
 ) : ViewModel() {
