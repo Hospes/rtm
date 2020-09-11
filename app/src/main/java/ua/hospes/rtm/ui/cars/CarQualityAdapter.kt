@@ -13,7 +13,7 @@ class CarQualityAdapter(ctx: Context, vararg qualities: Car.Quality)
     override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater, R.layout.item_color)
 
     override fun onBindViewHolder(holder: MyHolder, item: Car.Quality?, position: Int) {
-        item?.color?.let { holder.bg.setBackgroundColor(resources.getColor(it)) }
+        item?.color?.let { holder.bg.setBackgroundColor(resources.getColor(it, holder.itemView.context.theme)) }
     }
 
 

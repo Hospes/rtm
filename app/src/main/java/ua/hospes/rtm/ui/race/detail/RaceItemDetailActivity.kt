@@ -47,7 +47,7 @@ internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race
         presenter.attachView(this, lifecycle)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> onBackPressed().let { true }
         else -> super.onOptionsItemSelected(item)
     }

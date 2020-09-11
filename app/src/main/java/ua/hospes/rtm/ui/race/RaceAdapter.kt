@@ -140,18 +140,18 @@ internal class RaceAdapter(context: Context,
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                itemClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                itemClickListener.invoke(bindingAdapterPosition)
             }
 
             btnSessionCar.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                carClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                carClickListener.invoke(bindingAdapterPosition)
             }
 
             btnSessionDriver.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                driverClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                driverClickListener.invoke(bindingAdapterPosition)
             }
         }
 
@@ -169,8 +169,8 @@ internal class RaceAdapter(context: Context,
     ) : MyHolder(parent, R.layout.item_race_next, itemClickListener, carClickListener, driverClickListener) {
         init {
             itemView.findViewById<Button>(R.id.btn_next).setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                nextClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                nextClickListener.invoke(bindingAdapterPosition)
             }
         }
     }
@@ -186,10 +186,10 @@ internal class RaceAdapter(context: Context,
 
         init {
             btnPitOut.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
                 when ((it as CustomToggleButton).isChecked) {
-                    true -> pitClickListener.invoke(adapterPosition)
-                    false -> outClickListener.invoke(adapterPosition)
+                    true -> pitClickListener.invoke(bindingAdapterPosition)
+                    false -> outClickListener.invoke(bindingAdapterPosition)
                 }
             }
         }
@@ -210,12 +210,12 @@ internal class RaceAdapter(context: Context,
 
         init {
             //            btnNextSession.setOnClickListener {
-            //                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-            //                nextClickListener.invoke(adapterPosition)
+            //                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+            //                nextClickListener.invoke(bindingAdapterPosition)
             //            }
             //            btnNextSession.setOnUndoClickListener {
-            //                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnUndoClickListener
-            //                undoClickListener.invoke(adapterPosition)
+            //                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnUndoClickListener
+            //                undoClickListener.invoke(bindingAdapterPosition)
             //            }
             //            btnNextSession.setController(undoButtonController)
         }

@@ -30,14 +30,14 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
 
-                val item = getItem(adapterPosition)
+                val item = getItem(bindingAdapterPosition)
                 when (selectedIds.contains(item.id)) {
                     true -> selectedIds.remove(item.id)
                     else -> item.id.let { selectedIds.add(it) }
                 }
-                notifyItemChanged(adapterPosition)
+                notifyItemChanged(bindingAdapterPosition)
             }
         }
 

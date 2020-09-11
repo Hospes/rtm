@@ -25,8 +25,8 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.MyHolder>(DIFF_CALLBAC
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                itemClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                itemClickListener.invoke(bindingAdapterPosition)
             }
         }
 

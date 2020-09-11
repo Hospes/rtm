@@ -25,8 +25,8 @@ class TeamsAdapter : ListAdapter<Team, TeamsAdapter.MyHolder>(DIFF_CALLBACK) {
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                itemClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                itemClickListener.invoke(bindingAdapterPosition)
             }
         }
 

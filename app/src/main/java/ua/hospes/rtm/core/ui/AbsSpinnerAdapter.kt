@@ -141,17 +141,18 @@ abstract class AbsSpinnerAdapter<T, VH : AbsSpinnerAdapter.ViewHolder> : BaseAda
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var convertView = convertView
+        var view = convertView
         val holder: VH
-        if (convertView == null) {
+        if (view == null) {
             holder = onCreateViewHolder(mInflater)
-            convertView = holder.itemView
-            convertView.tag = holder
+            view = holder.itemView
+            view.tag = holder
         } else {
-            holder = convertView.tag as VH
+            @Suppress("UNCHECKED_CAST")
+            holder = view.tag as VH
         }
         onBindViewHolder(holder, getItem(position), position)
-        return convertView
+        return view
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View = getView(position, convertView, parent)

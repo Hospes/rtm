@@ -25,8 +25,8 @@ class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
-                itemClickListener.invoke(adapterPosition)
+                if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
+                itemClickListener.invoke(bindingAdapterPosition)
             }
         }
 
@@ -38,7 +38,7 @@ class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
                     broken.visibility = View.VISIBLE
                 }
                 else -> {
-                    number.setTextColor(resources.getColor(item.quality.color))
+                    number.setTextColor(resources.getColor(item.quality.color, itemView.context.theme))
                     broken.visibility = View.GONE
                 }
             }

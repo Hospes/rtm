@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.0-alpha10'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+        classpath "com.google.gms:google-services:4.3.3"
+
+        classpath "com.google.firebase:firebase-crashlytics-gradle:2.2.1"
+        classpath "com.google.firebase:firebase-appdistribution-gradle:2.0.1"
+
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.29.1-alpha"
+    }
+}
+
+subprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+
+    // TODO: Remove when the Coroutine and Flow APIs leave experimental/internal/preview.
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            // Treat all Kotlin warnings as errors
+            // allWarningsAsErrors = true
+
+            freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+
+            // Enable experimental coroutines APIs, including Flow
+            freeCompilerArgs += '-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi'
+            freeCompilerArgs += '-Xopt-in=kotlinx.coroutines.FlowPreview'
+            freeCompilerArgs += '-Xopt-in=kotlin.Experimental'
+            freeCompilerArgs += '-Xallow-jvm-ir-dependencies'
+
+            // Set JVM target to 1.8
+            jvmTarget = "1.8"
+        }
+    }
+}

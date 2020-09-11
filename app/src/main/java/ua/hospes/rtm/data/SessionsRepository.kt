@@ -53,10 +53,6 @@ class SessionsRepository @Inject constructor(db: AppDatabase) {
     suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: Session.Type) =
             withContext(Dispatchers.IO) { dao.closeCurrentStartNew(raceItemId, currentTime, type) }
 
-    suspend fun removeLastSession(teamId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
 
     //    override fun removeLastSession(teamId: Int): Observable<Session> =
