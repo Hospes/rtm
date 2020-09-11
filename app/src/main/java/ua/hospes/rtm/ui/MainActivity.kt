@@ -59,9 +59,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), NavigationView.O
         StopWatchService.checkDeath(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> drawer_layout.openDrawer(GravityCompat.START).let { true }
-        null -> false
         else -> super.onOptionsItemSelected(item)
     }
 

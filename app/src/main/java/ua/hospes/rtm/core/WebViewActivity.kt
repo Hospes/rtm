@@ -48,9 +48,8 @@ abstract class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
         webview.loadUrl(Uri.decode("file:///android_asset${this.localUrl()}"))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> onBackPressed().let { true }
-        null -> false
         else -> super.onOptionsItemSelected(item)
     }
 
