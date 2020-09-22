@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_race_item_detail.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.race.models.DriverDetails
@@ -15,13 +16,13 @@ import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.extentions.extraNotNull
 
-fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivity::class.java)
-        .apply { putExtra(KEY_ID, id) }
+fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivity::class.java).apply { putExtra(KEY_ID, id) }
 
 private const val KEY_ID = "key_id"
 
-internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail), RaceItemDetailContract.View {
-    /*@Inject*/ lateinit var presenter: RaceItemDetailPresenter
+@AndroidEntryPoint
+class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail) {
+    private val viewModel: RaceItemDetailViewModel by viewModels()
     private val raceItemId by extraNotNull<Long>(KEY_ID)
 
     private val driversAdapter = DriverDetailsAdapter()
@@ -43,8 +44,12 @@ internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race
             adapter = sessionsAdapter
         }
 
-        presenter.setRaceItemId(raceItemId)
-        presenter.attachView(this, lifecycle)
+        viewModel.listenRaceItem().observe(this) { onRaceItem(it) }
+        viewModel.listenSessions().observe(this) { onSessions(it) }
+
+        if (savedInstanceState == null) {
+            viewModel.init(raceItemId)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -53,7 +58,7 @@ internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race
     }
 
 
-    override fun onRaceItem(item: RaceItem) {
+    private fun onRaceItem(item: RaceItem) {
         supportActionBar?.title = item.team.name
 
         val drivers = mutableListOf<DriverDetails>()
@@ -71,7 +76,5 @@ internal class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race
         driversAdapter.submitList(drivers)
     }
 
-    override fun onSessions(list: List<Session>) = sessionsAdapter.submitList(list)
-
-    override fun onError(t: Throwable) = Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+    private fun onSessions(list: List<Session>) = sessionsAdapter.submitList(list)
 }

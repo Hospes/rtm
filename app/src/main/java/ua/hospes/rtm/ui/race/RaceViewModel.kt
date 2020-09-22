@@ -1,42 +1,38 @@
 package ua.hospes.rtm.ui.race
 
-import androidx.lifecycle.Lifecycle
-import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ua.hospes.rtm.core.Presenter
 import ua.hospes.rtm.data.CarsRepository
 import ua.hospes.rtm.data.DriversRepository
 import ua.hospes.rtm.data.RaceRepository
 import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import javax.inject.Inject
 
-@ActivityRetainedScoped
-class RacePresenter @Inject constructor(
-        private val raceRepo: RaceRepository,
+class RaceViewModel @ViewModelInject constructor(
         private val sessionRepo: SessionsRepository,
-        private val carsRepo: CarsRepository,
-        private val driversRepo: DriversRepository
-) : Presenter<RaceContract.View>() {
+        private val driversRepo: DriversRepository,
+        private val raceRepo: RaceRepository,
+        private val carsRepo: CarsRepository
+) : ViewModel() {
 
-    override fun attachView(view: RaceContract.View?, lc: Lifecycle) {
-        super.attachView(view, lc)
+    val uiEvents = MutableLiveData<UIEvent>()
+    val race = raceRepo.listen().asLiveData()
 
-        launch(Dispatchers.Main) { raceRepo.listen().collect { view?.onData(it) } }
-    }
+    fun startRace(startTime: Long) = viewModelScope.launch { sessionRepo.startRace(startTime) }
+    fun stopRace(stopTime: Long) = viewModelScope.launch { sessionRepo.stopRace(stopTime) }
 
-    override fun onError(throwable: Throwable) = view?.onError(throwable) ?: Unit
-    override fun onUnexpectedError(throwable: Throwable) = view?.onError(throwable) ?: Unit
+    fun onPit(item: RaceItem, time: Long) =
+            viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
 
-
-    fun startRace(startTime: Long) = launch { sessionRepo.startRace(startTime) }
-    fun stopRace(stopTime: Long) = launch { sessionRepo.stopRace(stopTime) }
-
-    fun onPit(item: RaceItem, time: Long) = launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
-    fun onOut(item: RaceItem, time: Long) = launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
+    fun onOut(item: RaceItem, time: Long) =
+            viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
 
     //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
     //        var driverId = -1
@@ -71,20 +67,25 @@ class RacePresenter @Inject constructor(
         //                }, this::error)
     }
 
-    fun resetRace() = launch { sessionRepo.resetRace() }
-    fun removeAll() = launch { raceRepo.clear() }
+    fun resetRace() = viewModelScope.launch { sessionRepo.resetRace() }
+    fun removeAll() = viewModelScope.launch { raceRepo.clear() }
 
-    fun clickSetCar(item: RaceItem) = launch(Dispatchers.Main) {
+    fun clickSetCar(item: RaceItem) = viewModelScope.launch {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
         val items = carsRepo.getNotInRace()
 
-        view?.onOpenSetCarDialog(id, items)
+        uiEvents.value = UIEvent.SetCar(id, items)
     }
 
-    fun clickSetDriver(item: RaceItem) = launch(Dispatchers.Main) {
+    fun clickSetDriver(item: RaceItem) = viewModelScope.launch {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
         val items = driversRepo.getNotInRace(item.team.id)
 
-        view?.onOpenSetDriverDialog(id, items)
+        uiEvents.value = UIEvent.SetDriver(id, items)
+    }
+
+    sealed class UIEvent {
+        data class SetCar(val id: Long, val cars: List<Car>) : UIEvent()
+        data class SetDriver(val id: Long, val drivers: List<Driver>) : UIEvent()
     }
 }

@@ -9,7 +9,7 @@ import ua.hospes.rtm.domain.drivers.Driver
 data class Team(
         val id: Long = 0,
         val name: String,
-        val drivers: MutableList<Driver> = mutableListOf()
+        val drivers: List<Driver> = emptyList()
 ) : Parcelable
 
 fun Team.toDbEntity(): TeamEntity = TeamEntity(id, name)

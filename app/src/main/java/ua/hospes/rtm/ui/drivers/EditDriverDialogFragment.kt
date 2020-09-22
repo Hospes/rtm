@@ -1,73 +1,79 @@
 package ua.hospes.rtm.ui.drivers
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_edit_driver.*
+import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.utils.extentions.extra
-import javax.inject.Inject
-
-private const val KEY_DRIVER = "driver"
 
 @AndroidEntryPoint
-class EditDriverDialogFragment : DialogFragment(), EditDriverContract.View {
-    @Inject lateinit var presenter: EditDriverPresenter
+class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
+    private val viewModel: EditDriverViewModel by viewModels()
     private val driver by extra<Driver>(KEY_DRIVER)
-    private lateinit var adapter: TeamSpinnerAdapter
+    private val adapter by lazy { TeamSpinnerAdapter(requireContext()) }
 
 
     companion object {
-        @JvmStatic fun newInstance(driver: Driver?) = EditDriverDialogFragment()
+        private const val KEY_DRIVER = "driver"
+
+        fun newInstance(driver: Driver?) = EditDriverDialogFragment()
                 .apply { arguments = Bundle().apply { putParcelable(KEY_DRIVER, driver) } }
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.dialog_edit_driver, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = TeamSpinnerAdapter(requireContext())
         sp_team.prompt = "Select team"
         sp_team.adapter = adapter
 
-
-        btn_save.setOnClickListener { presenter.save(et_name.text, sp_team.selectedItem as? Team) }
+        btn_save.setOnClickListener { clickSave() }
         btn_cancel.setOnClickListener { dismiss() }
-        btn_delete.setOnClickListener { presenter.delete() }
+        btn_delete.setOnClickListener { clickDelete() }
 
-        presenter.initDriver(driver)
-        presenter.attachView(this, lifecycle)
+        viewModel.driver.observe(this) { onDriver(it) }
+        viewModel.teams.observe(this) { onTeams(it) }
+
+        if (savedInstanceState == null) {
+            viewModel.initDriver(driver)
+        }
     }
 
 
-    override fun onInitDriver(driver: Driver) {
+    private fun onDriver(driver: Driver?) {
+        btn_delete.isEnabled = driver != null
+        driver ?: return
         et_name.setText(driver.name)
         et_name.setSelection(driver.name.length)
     }
 
-    override fun onTeamSelectionIndex(index: Int) {
-        sp_team.setSelection(index + 1)
-    }
-
-    override fun onTeamsLoaded(teams: List<Team>) {
+    private fun onTeams(teams: List<Team>) {
         adapter.clear()
         adapter.add(null)
         adapter.addAll(teams)
+
+        preselectTeam()
     }
 
-    override fun onDeleteButtonAvailable(available: Boolean) = with(btn_delete) { isEnabled = available }
+    private fun preselectTeam() = lifecycleScope.launch {
+        val i = viewModel.getDriverTeamIndex()
+        if (i != -1) sp_team.setSelection(i + 1)
+    }
 
-    override fun onSaved() = dismiss()
-    override fun onDeleted() = dismiss()
+    private fun clickSave() = lifecycleScope.launch {
+        viewModel.save(et_name.text.toString(), sp_team.selectedItem as? Team)
+        dismiss()
+    }.let { Unit }
 
-    override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
+    private fun clickDelete() = lifecycleScope.launch {
+        viewModel.delete()
+        dismiss()
+    }.let { Unit }
 }

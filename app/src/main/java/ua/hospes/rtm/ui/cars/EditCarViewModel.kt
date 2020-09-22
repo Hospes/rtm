@@ -1,53 +1,26 @@
 package ua.hospes.rtm.ui.cars
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ua.hospes.rtm.data.CarsRepository
 import ua.hospes.rtm.domain.cars.Car
 
 class EditCarViewModel @ViewModelInject constructor(
+        @Assisted private val savedStateHandle: SavedStateHandle,
         private val repo: CarsRepository
 ) : ViewModel() {
-    private val initCar = ConflatedBroadcastChannel<Car>()
-    private val deleteAvailable = MutableStateFlow(false)
+
+    private val carLiveData = savedStateHandle.getLiveData<Car>("car", null)
+    val car: LiveData<Car?> = carLiveData
 
 
-    init {
-        viewModelScope.launch { initCar.asFlow().take(1).collect { deleteAvailable.value = true } }
-    }
+    fun initCar(car: Car?) = carLiveData.postValue(car)
 
+    suspend fun save(number: Int, quality: Car.Quality, broken: Boolean) =
+            repo.save(Car(carLiveData.value?.id ?: 0, number, quality, broken))
 
-    val init: LiveData<Car>
-        get() = initCar.asFlow().asLiveData()
-
-    val delAvailable: LiveData<Boolean>
-        get() = deleteAvailable.asLiveData()
-
-
-    fun initCar(car: Car?) = car?.let { initCar.offer(it) }.let { Unit }
-
-    suspend fun save(number: CharSequence?, quality: Car.Quality, broken: Boolean) = withContext(Dispatchers.Default) {
-        val car = Car(
-                initCar.valueOrNull?.id ?: 0,
-                number?.toString()?.toIntOrNull() ?: return@withContext,
-                quality,
-                broken
-        )
-
-        repo.save(car)
-        Unit
-    }
-
-    suspend fun delete() = withContext(Dispatchers.Default) { repo.delete(initCar.valueOrNull?.id ?: return@withContext) }
+    suspend fun delete() = carLiveData.value?.id?.let { repo.delete(it) } ?: Unit
 }

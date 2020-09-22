@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_cars.*
@@ -41,7 +40,6 @@ class CarsFragment : AbsMainFragment(R.layout.fragment_cars) {
     }
 
 
-    //region ActionBar Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = inflater.inflate(R.menu.cars, menu)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -49,7 +47,6 @@ class CarsFragment : AbsMainFragment(R.layout.fragment_cars) {
         R.id.action_clear -> showClearDialog().let { true }
         else -> super.onOptionsItemSelected(item)
     }
-    //endregion
 
 
     private fun showEditCarDialog(car: Car?) = EditCarDialogFragment.newInstance(car).show(childFragmentManager, "add_car")

@@ -5,19 +5,18 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_drivers.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
 import ua.hospes.rtm.domain.drivers.Driver
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContract.View {
-    @Inject lateinit var presenter: DriversPresenter
+class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
+    private val viewModel: DriversViewModel by viewModels()
     private val adapter = DriversAdapter()
 
 
@@ -28,6 +27,7 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContr
 
     override fun setActionBarTitle(): Int = R.string.drivers_title
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,11 +36,10 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContr
         list.adapter = adapter
         adapter.itemClickListener = { showEditDriverDialog(it) }
 
-        presenter.attachView(this, lifecycle)
+        viewModel.drivers.observe(viewLifecycleOwner) { adapter.submitList(it) }
     }
 
 
-    //region ActionBar Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = inflater.inflate(R.menu.drivers, menu)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -48,12 +47,6 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContr
         R.id.action_clear -> showClearDialog().let { true }
         else -> super.onOptionsItemSelected(item)
     }
-    //endregion
-
-
-    override fun onData(list: List<Driver>) = adapter.submitList(list)
-
-    override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 
 
     private fun showEditDriverDialog(driver: Driver?) =
@@ -61,7 +54,7 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), DriversContr
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.drivers_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> presenter.removeAll() }
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
             .setNegativeButton(R.string.no) { _, _ -> }
             .show()
 }

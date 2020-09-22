@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_race.*
@@ -28,10 +30,10 @@ import javax.inject.Inject
 private const val REQUEST_CODE_PERMISSION = 11
 
 @AndroidEntryPoint
-class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.View {
+class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
     //    private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
-    @Inject lateinit var presenter: RacePresenter
+    private val viewModel: RaceViewModel by viewModels()
     @Inject lateinit var preferencesManager: PreferencesManager
     private var tvTime: TextView? = null
     private var currentNanoTime = 0L
@@ -47,8 +49,8 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
 
     override fun setActionBarTitle(): Int = R.string.race_title
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
         //            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
@@ -63,19 +65,25 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
         list.adapter = adapter
         list.itemAnimator = null
 
-        adapter.onPitClickListener = { presenter.onPit(it, currentNanoTime) }
-        adapter.onOutClickListener = { presenter.onOut(it, currentNanoTime) }
-        adapter.onUndoClickListener = { presenter.undoLastSession(it) }
-        adapter.setCarClickListener = { presenter.clickSetCar(it) }
-        adapter.setDriverClickListener = { presenter.clickSetDriver(it) }
+        adapter.onPitClickListener = { viewModel.onPit(it, currentNanoTime) }
+        adapter.onOutClickListener = { viewModel.onOut(it, currentNanoTime) }
+        adapter.onUndoClickListener = { viewModel.undoLastSession(it) }
+        adapter.setCarClickListener = { viewModel.clickSetCar(it) }
+        adapter.setDriverClickListener = { viewModel.clickSetDriver(it) }
         adapter.itemClickListener = { startActivity(context?.intentRaceItemDetails(it.id)) }
 
-        timerListController = TimerListController(presenter).apply { list.addOnScrollListener(this) }
+        timerListController = TimerListController(lifecycleScope).apply { list.addOnScrollListener(this) }
 
         //        if ("undo".equals(sessionButtonType, ignoreCase = true))
         //            list.addOnScrollListener(undoController)
 
-        presenter.attachView(this, lifecycle)
+        viewModel.race.observe(viewLifecycleOwner) { onData(it) }
+        viewModel.uiEvents.observe(viewLifecycleOwner) {
+            when (it) {
+                is RaceViewModel.UIEvent.SetCar -> openSetCarDialog(it.id, it.cars)
+                is RaceViewModel.UIEvent.SetDriver -> openSetDriverDialog(it.id, it.drivers)
+            }
+        }
     }
 
 
@@ -108,13 +116,13 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
             // Assume thisActivity is the current activity
             val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permissionCheck == PackageManager.PERMISSION_GRANTED)
-                presenter.exportXLS()
+                viewModel.exportXLS()
             else
                 requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
             true
         }
 
-        R.id.action_reset -> presenter.resetRace().let { true }
+        R.id.action_reset -> viewModel.resetRace().let { true }
         R.id.action_clear -> showClearDialog().let { true }
         else -> super.onOptionsItemSelected(item)
     }
@@ -122,7 +130,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) = when (requestCode) {
         REQUEST_CODE_PERMISSION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            presenter.exportXLS()
+            viewModel.exportXLS()
         } else Unit
 
         else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -133,7 +141,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
         //        undoController.release()
     }
 
-    override fun onData(items: List<RaceItem>) {
+    private fun onData(items: List<RaceItem>) {
         Timber.d(items.toString())
         adapter.submitList(items)
         timerListController.forceUpdate(list)
@@ -141,11 +149,11 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
         //            undoController.forceUpdate(list)
     }
 
-    override fun onError(t: Throwable) = Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+    // override fun onError(t: Throwable) = Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
 
 
-    override fun onStopWatchStarted(startTime: Long, nanoStartTime: Long) = presenter.startRace(nanoStartTime).let { Unit }
-    override fun onStopWatchStopped(stopTime: Long, nanoStopTime: Long) = presenter.stopRace(nanoStopTime).let { Unit }
+    override fun onStopWatchStarted(startTime: Long, nanoStartTime: Long) = viewModel.startRace(nanoStartTime).let { Unit }
+    override fun onStopWatchStopped(stopTime: Long, nanoStopTime: Long) = viewModel.stopRace(nanoStopTime).let { Unit }
     override fun onStopWatchStateChanged(runningState: Int) = activity?.invalidateOptionsMenu() ?: Unit
 
     override fun onStopWatchTick(time: Long, nanoTime: Long, currentNanoTime: Long) {
@@ -157,16 +165,16 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), RaceContract.Vie
     }
 
 
-    override fun onOpenSetCarDialog(sessionId: Long, cars: List<Car>) =
+    private fun openSetCarDialog(sessionId: Long, cars: List<Car>) =
             SetCarDialogFragment.newInstance(sessionId, cars).show(childFragmentManager, "set_car")
 
-    override fun onOpenSetDriverDialog(sessionId: Long, drivers: List<Driver>) =
+    private fun openSetDriverDialog(sessionId: Long, drivers: List<Driver>) =
             SetDriverDialogFragment.newInstance(sessionId, drivers).show(childFragmentManager, "set_driver")
 
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
             .setMessage(R.string.teams_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> presenter.removeAll() }
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
             .setNegativeButton(R.string.no) { _, _ -> }
             .show()
 }

@@ -3,41 +3,32 @@ package ua.hospes.rtm.ui.teams
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_select_drivers.*
+import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.utils.extentions.extraNotNull
-import javax.inject.Inject
-
-private const val KEY_DRIVERS = "drivers"
 
 @AndroidEntryPoint
-class SelectDriversDialogFragment : DialogFragment(), SelectDriversContract.View {
-    @Inject lateinit var presenter: SelectDriversPresenter
+class SelectDriversDialogFragment : DialogFragment(R.layout.dialog_select_drivers) {
+    private val viewModel: SelectDriversViewModel by viewModels()
     private val adapter = SelectDriversAdapter()
     private val selected by extraNotNull(KEY_DRIVERS, emptyList<Driver>())
 
 
     companion object {
-        @JvmStatic fun newInstance(drivers: List<Driver>) = SelectDriversDialogFragment()
+        private const val KEY_DRIVERS = "drivers"
+
+        fun newInstance(drivers: List<Driver>) = SelectDriversDialogFragment()
                 .apply { arguments = Bundle().apply { putParcelableArrayList(KEY_DRIVERS, ArrayList(drivers)) } }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.Theme_RTM_Dialog)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? = inflater.inflate(R.layout.dialog_select_drivers, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,18 +40,16 @@ class SelectDriversDialogFragment : DialogFragment(), SelectDriversContract.View
         adapter.setSelected(selected)
 
         btn_cancel.setOnClickListener { dismiss() }
-        btn_save.setOnClickListener { presenter.save(adapter.getSelectedIds()) }
+        btn_save.setOnClickListener { save(adapter.getSelectedIds()) }
 
-        presenter.attachView(this, lifecycle)
+        viewModel.drivers.observe(this) { adapter.submitList(it) }
     }
 
 
-    override fun onDrivers(list: List<Driver>) = adapter.submitList(list)
+    private fun save(selectedIds: List<Long>) = lifecycleScope.launch { onSaveSelectedDrivers(viewModel.save(selectedIds)) }
 
-    override fun onSaveSelectedDrivers(list: List<Driver>) {
+    private fun onSaveSelectedDrivers(list: List<Driver>) {
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, Intent().putExtra("drivers", ArrayList(list)))
         dismiss()
     }
-
-    override fun onError(throwable: Throwable) = Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
 }
