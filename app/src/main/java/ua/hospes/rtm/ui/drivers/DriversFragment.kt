@@ -9,13 +9,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_drivers.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
+import ua.hospes.rtm.databinding.FragmentDriversBinding
 import ua.hospes.rtm.domain.drivers.Driver
+import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
+class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), ViewBindingHolder<FragmentDriversBinding> by ViewBindingHolder.Impl() {
     private val viewModel: DriversViewModel by viewModels()
     private val adapter = DriversAdapter()
 
@@ -30,10 +31,11 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(FragmentDriversBinding.bind(view), this)
 
-        list.setHasFixedSize(true)
-        list.layoutManager = LinearLayoutManager(context)
-        list.adapter = adapter
+        binding.list.setHasFixedSize(true)
+        binding.list.layoutManager = LinearLayoutManager(context)
+        binding.list.adapter = adapter
         adapter.itemClickListener = { showEditDriverDialog(it) }
 
         viewModel.drivers.observe(viewLifecycleOwner) { adapter.submitList(it) }

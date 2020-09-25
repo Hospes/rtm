@@ -9,8 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_race_item_detail.*
-import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ActivityRaceItemDetailBinding
 import ua.hospes.rtm.domain.race.models.DriverDetails
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
@@ -21,7 +20,8 @@ fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivit
 private const val KEY_ID = "key_id"
 
 @AndroidEntryPoint
-class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail) {
+class RaceItemDetailActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityRaceItemDetailBinding.inflate(layoutInflater) }
     private val viewModel: RaceItemDetailViewModel by viewModels()
     private val raceItemId by extraNotNull<Long>(KEY_ID)
 
@@ -30,16 +30,17 @@ class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_det
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        drivers.apply {
+        binding.drivers.apply {
             layoutManager = GridLayoutManager(this@RaceItemDetailActivity, 2)
             adapter = driversAdapter
         }
-        sessions.apply {
+        binding.sessions.apply {
             layoutManager = LinearLayoutManager(this@RaceItemDetailActivity)
             adapter = sessionsAdapter
         }

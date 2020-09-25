@@ -3,12 +3,11 @@ package ua.hospes.rtm.ui.drivers
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_driver.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemDriverBinding
 import ua.hospes.rtm.domain.drivers.Driver
 
 class DriversAdapter : ListAdapter<Driver, DriversAdapter.MyHolder>(DIFF_CALLBACK) {
@@ -20,8 +19,10 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.MyHolder>(DIFF_CALLBAC
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position), position)
 
 
-    inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int = R.layout.item_driver, itemClickListener: (position: Int) -> Unit)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+    inner class MyHolder(parent: ViewGroup, itemClickListener: (position: Int) -> Unit)
+        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver, parent, false)) {
+
+        private val binding = ItemDriverBinding.bind(itemView)
 
         init {
             itemView.setOnClickListener {
@@ -38,8 +39,8 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.MyHolder>(DIFF_CALLBAC
 
             setBackgroundResource(if (position % 2 == 0) bg2.data else bg1.data)
 
-            name.text = item.name
-            team.text = item.teamName ?: "No team"
+            binding.name.text = item.name
+            binding.team.text = item.teamName ?: "No team"
         }
     }
 }

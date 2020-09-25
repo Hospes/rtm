@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_car.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemCarBinding
 import ua.hospes.rtm.domain.cars.Car
 
 class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
@@ -23,6 +23,8 @@ class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
     inner class MyHolder(parent: ViewGroup, itemClickListener: (position: Int) -> Unit)
         : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_car, parent, false)) {
 
+        private val binding = ItemCarBinding.bind(itemView)
+
         init {
             itemView.setOnClickListener {
                 if (bindingAdapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
@@ -31,15 +33,15 @@ class CarsAdapter : ListAdapter<Car, CarsAdapter.MyHolder>(DIFF_CALLBACK) {
         }
 
         fun bind(item: Car) = with(itemView) {
-            number.text = item.number.toString()
+            binding.number.text = item.number.toString()
             when (item.broken) {
                 true -> {
-                    number.setTextColor(Color.GRAY)
-                    broken.visibility = View.VISIBLE
+                    binding.number.setTextColor(Color.GRAY)
+                    binding.broken.visibility = View.VISIBLE
                 }
                 else -> {
-                    number.setTextColor(resources.getColor(item.quality.color, itemView.context.theme))
-                    broken.visibility = View.GONE
+                    binding.number.setTextColor(resources.getColor(item.quality.color, itemView.context.theme))
+                    binding.broken.visibility = View.GONE
                 }
             }
         }

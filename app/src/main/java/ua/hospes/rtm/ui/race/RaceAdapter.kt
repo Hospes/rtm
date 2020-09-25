@@ -24,8 +24,8 @@ import ua.hospes.rtm.widgets.SessionTimeView
 //import ua.hospes.undobutton.UndoButtonController
 import java.util.*
 
-internal class RaceAdapter(context: Context,
-                           private val sessionButtonType: String/*,
+class RaceAdapter(context: Context,
+                  private val sessionButtonType: String/*,
                            private val undoButtonController: UndoButtonController<*>? = null*/
 ) : ListAdapter<RaceItem, RaceAdapter.MyHolder>(DIFF_CALLBACK) {
     @ColorInt private val carDefaultColor: Int
@@ -122,10 +122,10 @@ internal class RaceAdapter(context: Context,
     }
 
 
-    internal abstract inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int,
-                                           itemClickListener: (position: Int) -> Unit,
-                                           carClickListener: (position: Int) -> Unit,
-                                           driverClickListener: (position: Int) -> Unit)
+    abstract inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int,
+                                  itemClickListener: (position: Int) -> Unit,
+                                  carClickListener: (position: Int) -> Unit,
+                                  driverClickListener: (position: Int) -> Unit)
         : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
         val btnSessionCar: Button = itemView.findViewById(R.id.btn_session_car)
         val btnSessionDriver: Button = itemView.findViewById(R.id.btn_session_driver)
@@ -161,11 +161,11 @@ internal class RaceAdapter(context: Context,
         //internal open fun undoBind(controller: UndoButtonController<*>, id: Long) {}
     }
 
-    internal inner class MyHolderNext(parent: ViewGroup,
-                                      itemClickListener: (position: Int) -> Unit,
-                                      carClickListener: (position: Int) -> Unit,
-                                      driverClickListener: (position: Int) -> Unit,
-                                      nextClickListener: (position: Int) -> Unit
+    inner class MyHolderNext(parent: ViewGroup,
+                             itemClickListener: (position: Int) -> Unit,
+                             carClickListener: (position: Int) -> Unit,
+                             driverClickListener: (position: Int) -> Unit,
+                             nextClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_next, itemClickListener, carClickListener, driverClickListener) {
         init {
             itemView.findViewById<Button>(R.id.btn_next).setOnClickListener {
@@ -199,12 +199,12 @@ internal class RaceAdapter(context: Context,
         }
     }
 
-    internal inner class MyHolderUndoNext(parent: ViewGroup,
-                                          itemClickListener: (position: Int) -> Unit,
-                                          carClickListener: (position: Int) -> Unit,
-                                          driverClickListener: (position: Int) -> Unit,
-                                          nextClickListener: (position: Int) -> Unit,
-                                          undoClickListener: (position: Int) -> Unit
+    inner class MyHolderUndoNext(parent: ViewGroup,
+                                 itemClickListener: (position: Int) -> Unit,
+                                 carClickListener: (position: Int) -> Unit,
+                                 driverClickListener: (position: Int) -> Unit,
+                                 nextClickListener: (position: Int) -> Unit,
+                                 undoClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_undo_next, itemClickListener, carClickListener, driverClickListener) {
         //val btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
 
@@ -229,7 +229,7 @@ internal class RaceAdapter(context: Context,
         var ta: TypedArray? = null
         try {
             ta = context.obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary))
-            return ta!!.getColor(0, Color.WHITE)
+            return ta.getColor(0, Color.WHITE)
         } finally {
             ta?.recycle()
         }
@@ -240,7 +240,7 @@ internal class RaceAdapter(context: Context,
         var ta: TypedArray? = null
         try {
             ta = context.obtainStyledAttributes(intArrayOf(R.attr.timeView_OnTrack))
-            return ta!!.getColor(0, Color.GREEN)
+            return ta.getColor(0, Color.GREEN)
         } finally {
             ta?.recycle()
         }
@@ -251,7 +251,7 @@ internal class RaceAdapter(context: Context,
         var ta: TypedArray? = null
         try {
             ta = context.obtainStyledAttributes(intArrayOf(R.attr.timeView_OnPit))
-            return ta!!.getColor(0, Color.RED)
+            return ta.getColor(0, Color.RED)
         } finally {
             ta?.recycle()
         }

@@ -3,12 +3,11 @@ package ua.hospes.rtm.ui.teams
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_team.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemTeamBinding
 import ua.hospes.rtm.domain.team.Team
 
 class TeamsAdapter : ListAdapter<Team, TeamsAdapter.MyHolder>(DIFF_CALLBACK) {
@@ -20,8 +19,10 @@ class TeamsAdapter : ListAdapter<Team, TeamsAdapter.MyHolder>(DIFF_CALLBACK) {
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position), position)
 
 
-    inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int = R.layout.item_team, itemClickListener: (position: Int) -> Unit)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+    inner class MyHolder(parent: ViewGroup, itemClickListener: (position: Int) -> Unit)
+        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_team, parent, false)) {
+
+        private val binding = ItemTeamBinding.bind(itemView)
 
         init {
             itemView.setOnClickListener {
@@ -38,8 +39,8 @@ class TeamsAdapter : ListAdapter<Team, TeamsAdapter.MyHolder>(DIFF_CALLBACK) {
 
             setBackgroundResource(if (position % 2 == 0) bg2.data else bg1.data)
 
-            name.text = item.name
-            drivers.text = item.drivers.map { it.name }.toString().replace("[\\[\\]]".toRegex(), "")
+            binding.name.text = item.name
+            binding.drivers.text = item.drivers.map { it.name }.toString().replace("[\\[\\]]".toRegex(), "")
         }
     }
 }

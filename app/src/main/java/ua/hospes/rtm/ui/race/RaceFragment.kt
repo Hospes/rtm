@@ -14,23 +14,24 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_race.*
 import timber.log.Timber
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.StopWatchFragment
 import ua.hospes.rtm.core.StopWatchService
+import ua.hospes.rtm.databinding.FragmentRaceBinding
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.ui.race.detail.intentRaceItemDetails
 import ua.hospes.rtm.utils.TimeUtils
+import ua.hospes.rtm.utils.ViewBindingHolder
 import javax.inject.Inject
 
 private const val REQUEST_CODE_PERMISSION = 11
 
 @AndroidEntryPoint
-class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
+class RaceFragment : StopWatchFragment(R.layout.fragment_race), ViewBindingHolder<FragmentRaceBinding> by ViewBindingHolder.Impl() {
     //    private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     private val viewModel: RaceViewModel by viewModels()
@@ -51,6 +52,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(FragmentRaceBinding.bind(view), this)
 
         //        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
         //            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
@@ -60,10 +62,10 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
         //            override fun defaultDelay(): Int = 15
         //        }
 
-        list.setHasFixedSize(true)
-        list.layoutManager = LinearLayoutManager(context)
-        list.adapter = adapter
-        list.itemAnimator = null
+        binding.list.setHasFixedSize(true)
+        binding.list.layoutManager = LinearLayoutManager(context)
+        binding.list.adapter = adapter
+        binding.list.itemAnimator = null
 
         adapter.onPitClickListener = { viewModel.onPit(it, currentNanoTime) }
         adapter.onOutClickListener = { viewModel.onOut(it, currentNanoTime) }
@@ -72,7 +74,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
         adapter.setDriverClickListener = { viewModel.clickSetDriver(it) }
         adapter.itemClickListener = { startActivity(context?.intentRaceItemDetails(it.id)) }
 
-        timerListController = TimerListController(lifecycleScope).apply { list.addOnScrollListener(this) }
+        timerListController = TimerListController(lifecycleScope).apply { binding.list.addOnScrollListener(this) }
 
         //        if ("undo".equals(sessionButtonType, ignoreCase = true))
         //            list.addOnScrollListener(undoController)
@@ -105,7 +107,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_start -> {
             StopWatchService.start(requireContext())
-            timerListController.forceUpdate(list)
+            timerListController.forceUpdate(binding.list)
             true
         }
 
@@ -144,7 +146,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
     private fun onData(items: List<RaceItem>) {
         Timber.d(items.toString())
         adapter.submitList(items)
-        timerListController.forceUpdate(list)
+        timerListController.forceUpdate(binding.list)
         //        if ("undo".equals(sessionButtonType, ignoreCase = true))
         //            undoController.forceUpdate(list)
     }

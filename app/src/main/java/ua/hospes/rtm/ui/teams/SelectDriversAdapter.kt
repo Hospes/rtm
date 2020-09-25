@@ -2,12 +2,11 @@ package ua.hospes.rtm.ui.teams
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_driver_selectable.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemDriverSelectableBinding
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.widgets.CheckableFrameLayout
 
@@ -25,8 +24,10 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
     }
 
 
-    inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int = R.layout.item_driver_selectable)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+    inner class MyHolder(parent: ViewGroup)
+        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_selectable, parent, false)) {
+
+        private val binding = ItemDriverSelectableBinding.bind(itemView)
 
         init {
             itemView.setOnClickListener {
@@ -42,7 +43,7 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
         }
 
         fun bind(item: Driver) = with(itemView as CheckableFrameLayout) {
-            cb.text = when (item.teamId) {
+            binding.cb.text = when (item.teamId) {
                 null -> item.name
                 else -> "${item.name} (${item.teamName})"
             }

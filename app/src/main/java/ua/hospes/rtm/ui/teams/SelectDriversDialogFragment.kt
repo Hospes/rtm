@@ -9,14 +9,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_select_drivers.*
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.DialogSelectDriversBinding
 import ua.hospes.rtm.domain.drivers.Driver
+import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extraNotNull
 
 @AndroidEntryPoint
-class SelectDriversDialogFragment : DialogFragment(R.layout.dialog_select_drivers) {
+class SelectDriversDialogFragment : DialogFragment(R.layout.dialog_select_drivers),
+        ViewBindingHolder<DialogSelectDriversBinding> by ViewBindingHolder.Impl() {
     private val viewModel: SelectDriversViewModel by viewModels()
     private val adapter = SelectDriversAdapter()
     private val selected by extraNotNull(KEY_DRIVERS, emptyList<Driver>())
@@ -29,18 +31,18 @@ class SelectDriversDialogFragment : DialogFragment(R.layout.dialog_select_driver
                 .apply { arguments = Bundle().apply { putParcelableArrayList(KEY_DRIVERS, ArrayList(drivers)) } }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(DialogSelectDriversBinding.bind(view), this)
 
-        list.setHasFixedSize(true)
-        list.layoutManager = LinearLayoutManager(context)
-        list.adapter = adapter
+        binding.list.setHasFixedSize(true)
+        binding.list.layoutManager = LinearLayoutManager(context)
+        binding.list.adapter = adapter
 
         adapter.setSelected(selected)
 
-        btn_cancel.setOnClickListener { dismiss() }
-        btn_save.setOnClickListener { save(adapter.getSelectedIds()) }
+        binding.btnCancel.setOnClickListener { dismiss() }
+        binding.btnSave.setOnClickListener { save(adapter.getSelectedIds()) }
 
         viewModel.drivers.observe(this) { adapter.submitList(it) }
     }

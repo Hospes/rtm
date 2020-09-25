@@ -9,13 +9,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_teams.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
+import ua.hospes.rtm.databinding.FragmentTeamsBinding
 import ua.hospes.rtm.domain.team.Team
+import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class TeamsFragment : AbsMainFragment(R.layout.fragment_teams) {
+class TeamsFragment : AbsMainFragment(R.layout.fragment_teams), ViewBindingHolder<FragmentTeamsBinding> by ViewBindingHolder.Impl() {
     private val viewModel: TeamsViewModel by viewModels()
     private val adapter = TeamsAdapter()
 
@@ -30,10 +31,11 @@ class TeamsFragment : AbsMainFragment(R.layout.fragment_teams) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(FragmentTeamsBinding.bind(view), this)
 
-        list.setHasFixedSize(true)
-        list.layoutManager = LinearLayoutManager(context)
-        list.adapter = adapter
+        binding.list.setHasFixedSize(true)
+        binding.list.layoutManager = LinearLayoutManager(context)
+        binding.list.adapter = adapter
         adapter.itemClickListener = { showEditDialog(it) }
 
         viewModel.teams.observe(viewLifecycleOwner) { adapter.submitList(it) }

@@ -6,14 +6,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_add_car.*
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.DialogAddCarBinding
 import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extra
 
 @AndroidEntryPoint
-class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car) {
+class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car), ViewBindingHolder<DialogAddCarBinding> by ViewBindingHolder.Impl() {
     private val viewModel: EditCarViewModel by viewModels()
     private val car by extra<Car>(KEY_CAR)
     private val qualities = arrayOf(Car.Quality.LOW, Car.Quality.NORMAL, Car.Quality.HIGH)
@@ -28,12 +29,13 @@ class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(DialogAddCarBinding.bind(view), this)
 
-        sp_quality.adapter = CarQualityAdapter(requireContext(), *qualities)
+        binding.spQuality.adapter = CarQualityAdapter(requireContext(), *qualities)
 
-        btn_save.setOnClickListener { clickSave() }
-        btn_cancel.setOnClickListener { dismiss() }
-        btn_delete.setOnClickListener { clickDelete() }
+        binding.btnSave.setOnClickListener { clickSave() }
+        binding.btnCancel.setOnClickListener { dismiss() }
+        binding.btnDelete.setOnClickListener { clickDelete() }
 
         viewModel.car.observe(this) { onCar(it) }
 
@@ -43,28 +45,28 @@ class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car) {
     }
 
 
-    private fun onCar(car: Car?) {
-        btn_delete.isEnabled = car != null
-        if (car == null) sp_quality.setSelection(1)
+    private fun onCar(car: Car?) = with(binding) {
+        btnDelete.isEnabled = car != null
+        if (car == null) spQuality.setSelection(1)
         else selectQuality(car.quality)
         car ?: return
         val number = car.number.toString()
-        et_number.setText(number)
-        et_number.setSelection(number.length)
-        cb_broken.isChecked = car.broken
+        etNumber.setText(number)
+        etNumber.setSelection(number.length)
+        cbBroken.isChecked = car.broken
     }
 
     private fun selectQuality(quality: Car.Quality) = qualities.forEachIndexed { i, q ->
         if (q == quality) {
-            sp_quality.setSelection(i)
+            binding.spQuality.setSelection(i)
             return@forEachIndexed
         }
     }
 
 
     private fun clickSave() = lifecycleScope.launch {
-        val number = et_number.text.toString().toIntOrNull() ?: throw IllegalArgumentException("Number is null")
-        viewModel.save(number, sp_quality.selectedItem as Car.Quality, cb_broken.isChecked)
+        val number = binding.etNumber.text.toString().toIntOrNull() ?: throw IllegalArgumentException("Number is null")
+        viewModel.save(number, binding.spQuality.selectedItem as Car.Quality, binding.cbBroken.isChecked)
         dismiss()
     }.let { Unit }
 

@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_race_detail_session.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemRaceDetailSessionBinding
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.utils.TimeUtils
 
@@ -19,6 +19,8 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
     inner class MyHolder(parent: ViewGroup)
         : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_race_detail_session, parent, false)) {
 
+        private val binding = ItemRaceDetailSessionBinding.bind(itemView)
+
         fun bind(item: Session, position: Int) = with(itemView) {
             val bg1 = TypedValue()
             context.theme.resolveAttribute(R.attr.listItemBackground1, bg1, false)
@@ -28,20 +30,20 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
             setBackgroundResource(if (position % 2 == 0) bg1.data else bg2.data);
 
 
-            car.text = item.car?.number?.toString() ?: ""
+            binding.car.text = item.car?.number?.toString() ?: ""
             if (item.raceStartTime == null || item.startTime == null) {
-                start.text = ""
+                binding.start.text = ""
             } else {
-                start.text = TimeUtils.formatNanoWithMills(item.startTime - item.raceStartTime);
+                binding.start.text = TimeUtils.formatNanoWithMills(item.startTime - item.raceStartTime);
             }
 
-            driver.text = item.driver?.name ?: ""
+            binding.driver.text = item.driver?.name ?: ""
             if (item.startTime == null || item.endTime == null)
-                duration.setText(R.string.race_now)
+                binding.duration.setText(R.string.race_now)
             else
-                duration.text = TimeUtils.formatNanoWithMills(item.endTime - item.startTime)
+                binding.duration.text = TimeUtils.formatNanoWithMills(item.endTime - item.startTime)
 
-            type.text = when (item.type) {
+            binding.type.text = when (item.type) {
                 Session.Type.PIT -> "PIT"
                 Session.Type.TRACK -> "TRACK"
             }

@@ -7,45 +7,46 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_webview.*
-import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ActivityWebviewBinding
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
-abstract class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
+abstract class WebViewActivity : AppCompatActivity() {
     @Inject lateinit var prefs: PreferencesManager
+    private val binding by lazy { ActivityWebviewBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        root.doOnApplyWindowInsets { view, insets, padding, _ ->
-            view.updatePadding(bottom = padding.bottom + insets.systemWindowInsetBottom)
+        setContentView(binding.root)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        binding.root.doOnApplyWindowInsets { view, insets, padding, _ ->
+            view.updatePadding(bottom = padding.bottom + insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
         }
-        toolbar.doOnApplyWindowInsets { view, insets, padding, _ ->
-            view.updatePadding(top = padding.top + insets.systemWindowInsetTop)
+        binding.toolbar.doOnApplyWindowInsets { view, insets, padding, _ ->
+            view.updatePadding(top = padding.top + insets.getInsets(WindowInsetsCompat.Type.systemBars()).top)
         }
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(showBackIcon())
         supportActionBar?.setTitle(title())
 
-        accept.setOnClickListener {
+        binding.accept.setOnClickListener {
             accept()
             setResult(Activity.RESULT_OK)
             finish()
         }
-        decline.setOnClickListener { onBackPressed() }
-        bottom_bar.visibility = when (showAcceptButtons()) {
+        binding.decline.setOnClickListener { onBackPressed() }
+        binding.bottomBar.visibility = when (showAcceptButtons()) {
             true -> View.VISIBLE
             else -> View.GONE
         }
 
-        webview.loadUrl(Uri.decode("file:///android_asset${this.localUrl()}"))
+        binding.webview.loadUrl(Uri.decode("file:///android_asset${this.localUrl()}"))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {

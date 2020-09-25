@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_driver_details.view.*
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.ItemDriverDetailsBinding
 import ua.hospes.rtm.domain.race.models.DriverDetails
 
 class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyHolder>(DIFF_CALLBACK) {
@@ -17,6 +17,8 @@ class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyH
 
     inner class MyHolder(parent: ViewGroup)
         : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_details, parent, false)) {
+
+        private val binding = ItemDriverDetailsBinding.bind(itemView)
 
         fun bind(item: DriverDetails, position: Int) = with(itemView) {
             val bg1 = TypedValue()
@@ -31,9 +33,9 @@ class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyH
             }
             setBackgroundResource(resBG)
 
-            name.text = item.name
-            driver.session = item.session
-            driver.prevDuration = item.prevDuration
+            binding.name.text = item.name
+            binding.driver.session = item.session
+            binding.driver.prevDuration = item.prevDuration
         }
     }
 

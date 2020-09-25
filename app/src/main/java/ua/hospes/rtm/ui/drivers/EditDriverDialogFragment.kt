@@ -6,15 +6,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_edit_driver.*
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
+import ua.hospes.rtm.databinding.DialogEditDriverBinding
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
+import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extra
 
 @AndroidEntryPoint
-class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
+class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver), ViewBindingHolder<DialogEditDriverBinding> by ViewBindingHolder.Impl() {
     private val viewModel: EditDriverViewModel by viewModels()
     private val driver by extra<Driver>(KEY_DRIVER)
     private val adapter by lazy { TeamSpinnerAdapter(requireContext()) }
@@ -30,13 +31,14 @@ class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(DialogEditDriverBinding.bind(view), this)
 
-        sp_team.prompt = "Select team"
-        sp_team.adapter = adapter
+        binding.spTeam.prompt = "Select team"
+        binding.spTeam.adapter = adapter
 
-        btn_save.setOnClickListener { clickSave() }
-        btn_cancel.setOnClickListener { dismiss() }
-        btn_delete.setOnClickListener { clickDelete() }
+        binding.btnSave.setOnClickListener { clickSave() }
+        binding.btnCancel.setOnClickListener { dismiss() }
+        binding.btnDelete.setOnClickListener { clickDelete() }
 
         viewModel.driver.observe(this) { onDriver(it) }
         viewModel.teams.observe(this) { onTeams(it) }
@@ -48,10 +50,10 @@ class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
 
 
     private fun onDriver(driver: Driver?) {
-        btn_delete.isEnabled = driver != null
+        binding.btnDelete.isEnabled = driver != null
         driver ?: return
-        et_name.setText(driver.name)
-        et_name.setSelection(driver.name.length)
+        binding.etName.setText(driver.name)
+        binding.etName.setSelection(driver.name.length)
     }
 
     private fun onTeams(teams: List<Team>) {
@@ -64,11 +66,11 @@ class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
 
     private fun preselectTeam() = lifecycleScope.launch {
         val i = viewModel.getDriverTeamIndex()
-        if (i != -1) sp_team.setSelection(i + 1)
+        if (i != -1) binding.spTeam.setSelection(i + 1)
     }
 
     private fun clickSave() = lifecycleScope.launch {
-        viewModel.save(et_name.text.toString(), sp_team.selectedItem as? Team)
+        viewModel.save(binding.etName.text.toString(), binding.spTeam.selectedItem as? Team)
         dismiss()
     }.let { Unit }
 

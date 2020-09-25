@@ -9,13 +9,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_cars.*
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
+import ua.hospes.rtm.databinding.FragmentCarsBinding
 import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class CarsFragment : AbsMainFragment(R.layout.fragment_cars) {
+class CarsFragment : AbsMainFragment(R.layout.fragment_cars), ViewBindingHolder<FragmentCarsBinding> by ViewBindingHolder.Impl() {
     private val viewModel: CarsViewModel by viewModels()
     private val adapter = CarsAdapter()
 
@@ -30,10 +31,11 @@ class CarsFragment : AbsMainFragment(R.layout.fragment_cars) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding(FragmentCarsBinding.bind(view), this)
 
-        list.setHasFixedSize(true)
-        list.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.cars_column_count))
-        list.adapter = adapter
+        binding.list.setHasFixedSize(true)
+        binding.list.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.cars_column_count))
+        binding.list.adapter = adapter
         adapter.itemClickListener = { showEditCarDialog(it) }
 
         viewModel.cars.observe(viewLifecycleOwner) { adapter.submitList(it) }
