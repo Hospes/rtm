@@ -1,17 +1,18 @@
 package ua.hospes.rtm.ui.teams
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ua.hospes.rtm.data.TeamsRepository
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
+import javax.inject.Inject
 
-class EditTeamViewModel @ViewModelInject constructor(
-        @Assisted private val savedStateHandle: SavedStateHandle,
-        private val repo: TeamsRepository
+@HiltViewModel
+class EditTeamViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repo: TeamsRepository
 ) : ViewModel() {
 
     private val teamData = savedStateHandle.getLiveData<Team>("team", null)

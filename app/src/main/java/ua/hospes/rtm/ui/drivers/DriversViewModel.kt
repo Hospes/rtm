@@ -1,14 +1,16 @@
 package ua.hospes.rtm.ui.drivers
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.data.DriversRepository
+import javax.inject.Inject
 
-class DriversViewModel @ViewModelInject constructor(
-        private val repo: DriversRepository
+@HiltViewModel
+class DriversViewModel @Inject constructor(
+    private val repo: DriversRepository
 ) : ViewModel() {
 
     val drivers = repo.listen().asLiveData()

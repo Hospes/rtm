@@ -1,10 +1,10 @@
 package ua.hospes.rtm.ui.race
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.data.CarsRepository
 import ua.hospes.rtm.data.DriversRepository
@@ -14,12 +14,14 @@ import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
+import javax.inject.Inject
 
-class RaceViewModel @ViewModelInject constructor(
-        private val sessionRepo: SessionsRepository,
-        private val driversRepo: DriversRepository,
-        private val raceRepo: RaceRepository,
-        private val carsRepo: CarsRepository
+@HiltViewModel
+class RaceViewModel @Inject constructor(
+    private val sessionRepo: SessionsRepository,
+    private val driversRepo: DriversRepository,
+    private val raceRepo: RaceRepository,
+    private val carsRepo: CarsRepository
 ) : ViewModel() {
 
     val uiEvents = MutableLiveData<UIEvent>()
@@ -29,10 +31,10 @@ class RaceViewModel @ViewModelInject constructor(
     fun stopRace(stopTime: Long) = viewModelScope.launch { sessionRepo.stopRace(stopTime) }
 
     fun onPit(item: RaceItem, time: Long) =
-            viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
+        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
 
     fun onOut(item: RaceItem, time: Long) =
-            viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
+        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
 
     //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
     //        var driverId = -1

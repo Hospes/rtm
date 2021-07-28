@@ -2,7 +2,7 @@ package ua.hospes.rtm.domain.cars
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import ua.hospes.rtm.R
 import ua.hospes.rtm.db.cars.CarEntity
 
