@@ -1,7 +1,7 @@
 package ua.hospes.rtm.ui.test
 
 import androidx.compose.runtime.Composable
-import androidx.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.theme.RTMTheme
 

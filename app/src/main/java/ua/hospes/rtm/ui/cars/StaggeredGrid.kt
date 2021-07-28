@@ -1,18 +1,18 @@
 package ua.hospes.rtm.ui.cars
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Layout
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.Layout
 
 @Composable
 fun StaggeredGrid(
-        modifier: Modifier = Modifier,
-        rows: Int = 3,
-        children: @Composable() () -> Unit
+    modifier: Modifier = Modifier,
+    rows: Int = 3,
+    children: @Composable() () -> Unit
 ) {
     Layout(
-            modifier = modifier,
-            children = children
+        modifier = modifier,
+        content = children
     ) { measurables, constraints ->
 
         // Keep track of the width of each row
@@ -38,12 +38,12 @@ fun StaggeredGrid(
 
         // Grid's width is the widest row
         val width = rowWidths.maxOrNull()
-                ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth)) ?: constraints.minWidth
+            ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth)) ?: constraints.minWidth
 
         // Grid's height is the sum of the tallest element of each row
         // coerced to the height constraints
         val height = rowMaxHeights.sumBy { it }
-                .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
+            .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
 
         // Y of each row, based on the height accumulation of previous rows
         val rowY = IntArray(rows) { 0 }
@@ -59,8 +59,8 @@ fun StaggeredGrid(
             placeables.forEachIndexed { index, placeable ->
                 val row = index % rows
                 placeable.placeRelative(
-                        x = rowX[row],
-                        y = rowY[row]
+                    x = rowX[row],
+                    y = rowY[row]
                 )
                 rowX[row] += placeable.width
             }

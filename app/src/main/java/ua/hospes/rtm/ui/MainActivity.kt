@@ -22,7 +22,6 @@ import ua.hospes.rtm.ui.drivers.DriversFragment
 import ua.hospes.rtm.ui.race.RaceFragment
 import ua.hospes.rtm.ui.settings.SettingsFragment
 import ua.hospes.rtm.ui.teams.TeamsFragment
-import ua.hospes.rtm.ui.test.ComposeTestFragment
 import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
@@ -76,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_drivers -> navigateTo(DriversFragment()).also { menuItem.isChecked = true }
             R.id.nav_cars -> navigateTo(CarsFragment()).also { menuItem.isChecked = true }
             R.id.nav_settings -> navigateTo(SettingsFragment()).also { menuItem.isChecked = true }
-            R.id.nav_test -> navigateTo(ComposeTestFragment()).also { menuItem.isChecked = true }
+            //R.id.nav_test -> navigateTo(ComposeTestFragment()).also { menuItem.isChecked = true }
 
             R.id.nav_privacy -> startActivity(Intent(this, PrivacyActivity::class.java))
             R.id.nav_terms -> startActivity(Intent(this, TermsActivity::class.java))
