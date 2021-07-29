@@ -5,7 +5,6 @@ import ua.hospes.rtm.data.DriversRepository
 import ua.hospes.rtm.data.RaceRepository
 import ua.hospes.rtm.data.SessionsRepository
 import ua.hospes.rtm.domain.preferences.PreferencesManager
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton

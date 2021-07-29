@@ -1,24 +1,20 @@
 package ua.hospes.rtm.ui.cars
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnLifecycleDestroyed
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
-import ua.hospes.rtm.databinding.FragmentCarsBinding
 import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.utils.ViewBindingHolder
+import ua.hospes.rtm.theme.RTMTheme
 
 @AndroidEntryPoint
-class CarsFragment : AbsMainFragment(R.layout.fragment_cars), ViewBindingHolder<FragmentCarsBinding> by ViewBindingHolder.Impl() {
+class CarsFragment : AbsMainFragment() {
     private val viewModel: CarsViewModel by viewModels()
-    private val adapter = CarsAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,16 +25,19 @@ class CarsFragment : AbsMainFragment(R.layout.fragment_cars), ViewBindingHolder<
     override fun setActionBarTitle(): Int = R.string.cars_title
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initBinding(FragmentCarsBinding.bind(view), this)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(requireContext()).apply {
+        // Dispose the Composition when viewLifecycleOwner is destroyed
+        setViewCompositionStrategy(DisposeOnLifecycleDestroyed(viewLifecycleOwner))
 
-        binding.list.setHasFixedSize(true)
-        binding.list.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.cars_column_count))
-        binding.list.adapter = adapter
-        adapter.itemClickListener = { showEditCarDialog(it) }
-
-        viewModel.cars.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        setContent {
+            RTMTheme {
+                Cars(openEditCar = { showEditCarDialog(it) })
+            }
+        }
     }
 
 
@@ -54,8 +53,8 @@ class CarsFragment : AbsMainFragment(R.layout.fragment_cars), ViewBindingHolder<
     private fun showEditCarDialog(car: Car?) = EditCarDialogFragment.newInstance(car).show(childFragmentManager, "add_car")
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
-            .setMessage(R.string.cars_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
-            .setNegativeButton(R.string.no) { _, _ -> }
-            .show()
+        .setMessage(R.string.cars_remove_all)
+        .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
+        .setNegativeButton(R.string.no) { _, _ -> }
+        .show()
 }

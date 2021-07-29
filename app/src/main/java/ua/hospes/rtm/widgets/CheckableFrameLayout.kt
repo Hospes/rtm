@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
 import android.widget.FrameLayout
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * @author Andrew Khloponin
