@@ -13,8 +13,9 @@ class DriversViewModel @Inject constructor(
     private val repo: DriversRepository
 ) : ViewModel() {
 
-    val drivers = repo.listen().asLiveData()
+    val driversLiveData = repo.listen().asLiveData()
+    val drivers = repo.listen()
 
 
-    fun removeAll() = viewModelScope.launch { repo.clear() }.let { Unit }
+    fun removeAll() = viewModelScope.launch { repo.clear() }.let { }
 }

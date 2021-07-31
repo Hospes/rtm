@@ -7,17 +7,18 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.DialogEditTeamBinding
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extra
 
 @AndroidEntryPoint
-class EditTeamDialogFragment : DialogFragment(R.layout.dialog_edit_team), ViewBindingHolder<DialogEditTeamBinding> by ViewBindingHolder.Impl() {
+class EditTeamDialogFragment : DialogFragment(R.layout.dialog_edit_team) {
+    private val binding by viewBinding(DialogEditTeamBinding::bind)
     private val viewModel: EditTeamViewModel by viewModels()
     private val team by extra<Team>(KEY_TEAM)
 
@@ -26,12 +27,11 @@ class EditTeamDialogFragment : DialogFragment(R.layout.dialog_edit_team), ViewBi
         private const val REQUEST_CODE_SELECT_DRIVERS = 11
 
         fun newInstance(item: Team?) = EditTeamDialogFragment()
-                .apply { arguments = Bundle().apply { putParcelable(KEY_TEAM, item) } }
+            .apply { arguments = Bundle().apply { putParcelable(KEY_TEAM, item) } }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(DialogEditTeamBinding.bind(view), this)
 
         binding.btnAssignDrivers.setOnClickListener { showSelectDialog(viewModel.getSelectedDrivers()) }
 
@@ -65,9 +65,9 @@ class EditTeamDialogFragment : DialogFragment(R.layout.dialog_edit_team), ViewBi
 
 
     private fun showSelectDialog(selected: List<Driver>) =
-            SelectDriversDialogFragment.newInstance(selected).apply {
-                setTargetFragment(this@EditTeamDialogFragment, REQUEST_CODE_SELECT_DRIVERS)
-            }.show(parentFragmentManager, "select_drivers")
+        SelectDriversDialogFragment.newInstance(selected).apply {
+            setTargetFragment(this@EditTeamDialogFragment, REQUEST_CODE_SELECT_DRIVERS)
+        }.show(parentFragmentManager, "select_drivers")
 
 
     private fun save(name: CharSequence?) = lifecycleScope.launch {

@@ -131,6 +131,7 @@ dependencies {
     // logging
     implementation "com.jakewharton.timber:timber:${versions.timber}"
 
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.4.7'
 
     def room = '2.3.0'
     implementation "androidx.room:room-runtime:$room"

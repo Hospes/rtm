@@ -10,18 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import by.kirich1409.viewbindingdelegate.viewBinding
+import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.ActivityWebviewBinding
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.utils.extentions.doOnApplyWindowInsets
 import javax.inject.Inject
 
-abstract class WebViewActivity : AppCompatActivity() {
+abstract class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
     @Inject lateinit var prefs: PreferencesManager
-    private val binding by lazy { ActivityWebviewBinding.inflate(layoutInflater) }
+    private val binding by viewBinding(ActivityWebviewBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding.root.doOnApplyWindowInsets { view, insets, padding, _ ->

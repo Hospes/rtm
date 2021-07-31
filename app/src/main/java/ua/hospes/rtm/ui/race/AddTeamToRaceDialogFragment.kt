@@ -12,33 +12,30 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.DialogAddRaceItemBinding
 import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.ui.drivers.TeamSpinnerAdapter
-import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class AddTeamToRaceDialogFragment : DialogFragment(R.layout.dialog_add_race_item),
-        ViewBindingHolder<DialogAddRaceItemBinding> by ViewBindingHolder.Impl() {
+class AddTeamToRaceDialogFragment : DialogFragment(R.layout.dialog_add_race_item) {
     private val viewModel: AddTeamToRaceViewModel by viewModels()
-    private val adapter by lazy { TeamSpinnerAdapter(requireContext()) }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(DialogAddRaceItemBinding.bind(view), this)
-
+        val binding = DialogAddRaceItemBinding.bind(view)
+        val adapter = TeamSpinnerAdapter(requireContext())
         binding.spTeam.adapter = adapter
 
-        binding.btnSave.setOnClickListener { save() }
+        binding.btnSave.setOnClickListener { save(binding) }
         binding.btnCancel.setOnClickListener { dismiss() }
 
-        fetchTeams()
+        fetchTeams(adapter)
     }
 
-    private fun fetchTeams() = lifecycleScope.launch {
+    private fun fetchTeams(adapter: TeamSpinnerAdapter) = lifecycleScope.launch {
         adapter.clear()
         adapter.addAll(viewModel.getTeams())
     }
 
-    private fun save() = lifecycleScope.launch {
+    private fun save(binding: DialogAddRaceItemBinding) = lifecycleScope.launch {
         viewModel.save(binding.number.text.toString(), binding.spTeam.selectedItem as? Team)
         dismiss()
         Toast.makeText(context, "Team added to race!", Toast.LENGTH_SHORT).show()

@@ -5,33 +5,33 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.DialogEditDriverBinding
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extra
 
 @AndroidEntryPoint
-class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver), ViewBindingHolder<DialogEditDriverBinding> by ViewBindingHolder.Impl() {
+class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver) {
     private val viewModel: EditDriverViewModel by viewModels()
+    private val binding by viewBinding(DialogEditDriverBinding::bind)
     private val driver by extra<Driver>(KEY_DRIVER)
-    private val adapter by lazy { TeamSpinnerAdapter(requireContext()) }
 
 
     companion object {
         private const val KEY_DRIVER = "driver"
 
         fun newInstance(driver: Driver?) = EditDriverDialogFragment()
-                .apply { arguments = Bundle().apply { putParcelable(KEY_DRIVER, driver) } }
+            .apply { arguments = Bundle().apply { putParcelable(KEY_DRIVER, driver) } }
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(DialogEditDriverBinding.bind(view), this)
+        val adapter = TeamSpinnerAdapter(requireContext())
 
         binding.spTeam.prompt = "Select team"
         binding.spTeam.adapter = adapter
@@ -41,7 +41,7 @@ class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver), Vi
         binding.btnDelete.setOnClickListener { clickDelete() }
 
         viewModel.driver.observe(this) { onDriver(it) }
-        viewModel.teams.observe(this) { onTeams(it) }
+        viewModel.teams.observe(this) { onTeams(adapter, it) }
 
         if (savedInstanceState == null) {
             viewModel.initDriver(driver)
@@ -56,7 +56,7 @@ class EditDriverDialogFragment : DialogFragment(R.layout.dialog_edit_driver), Vi
         binding.etName.setSelection(driver.name.length)
     }
 
-    private fun onTeams(teams: List<Team>) {
+    private fun onTeams(adapter: TeamSpinnerAdapter, teams: List<Team>) {
         adapter.clear()
         adapter.add(null)
         adapter.addAll(teams)

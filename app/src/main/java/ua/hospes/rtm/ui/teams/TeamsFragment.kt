@@ -13,12 +13,10 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
 import ua.hospes.rtm.databinding.FragmentTeamsBinding
 import ua.hospes.rtm.domain.team.Team
-import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class TeamsFragment : AbsMainFragment(R.layout.fragment_teams), ViewBindingHolder<FragmentTeamsBinding> by ViewBindingHolder.Impl() {
+class TeamsFragment : AbsMainFragment(R.layout.fragment_teams) {
     private val viewModel: TeamsViewModel by viewModels()
-    private val adapter = TeamsAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +29,9 @@ class TeamsFragment : AbsMainFragment(R.layout.fragment_teams), ViewBindingHolde
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(FragmentTeamsBinding.bind(view), this)
+        val binding = FragmentTeamsBinding.bind(view)
 
+        val adapter = TeamsAdapter()
         binding.list.setHasFixedSize(true)
         binding.list.layoutManager = LinearLayoutManager(context)
         binding.list.adapter = adapter
@@ -54,8 +53,8 @@ class TeamsFragment : AbsMainFragment(R.layout.fragment_teams), ViewBindingHolde
     private fun showEditDialog(item: Team?) = EditTeamDialogFragment.newInstance(item).show(childFragmentManager, "add_team")
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
-            .setMessage(R.string.teams_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
-            .setNegativeButton(R.string.no) { _, _ -> }
-            .show()
+        .setMessage(R.string.teams_remove_all)
+        .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
+        .setNegativeButton(R.string.no) { _, _ -> }
+        .show()
 }

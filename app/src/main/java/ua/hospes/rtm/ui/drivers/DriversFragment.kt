@@ -13,12 +13,10 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
 import ua.hospes.rtm.databinding.FragmentDriversBinding
 import ua.hospes.rtm.domain.drivers.Driver
-import ua.hospes.rtm.utils.ViewBindingHolder
 
 @AndroidEntryPoint
-class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), ViewBindingHolder<FragmentDriversBinding> by ViewBindingHolder.Impl() {
+class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
     private val viewModel: DriversViewModel by viewModels()
-    private val adapter = DriversAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,14 +29,15 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), ViewBindingH
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(FragmentDriversBinding.bind(view), this)
+        val binding = FragmentDriversBinding.bind(view)
 
+        val adapter = DriversAdapter()
         binding.list.setHasFixedSize(true)
         binding.list.layoutManager = LinearLayoutManager(context)
         binding.list.adapter = adapter
         adapter.itemClickListener = { showEditDriverDialog(it) }
 
-        viewModel.drivers.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        viewModel.driversLiveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
     }
 
 
@@ -52,11 +51,11 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers), ViewBindingH
 
 
     private fun showEditDriverDialog(driver: Driver?) =
-            EditDriverDialogFragment.newInstance(driver).show(childFragmentManager, "add_driver")
+        EditDriverDialogFragment.newInstance(driver).show(childFragmentManager, "add_driver")
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
-            .setMessage(R.string.drivers_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
-            .setNegativeButton(R.string.no) { _, _ -> }
-            .show()
+        .setMessage(R.string.drivers_remove_all)
+        .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
+        .setNegativeButton(R.string.no) { _, _ -> }
+        .show()
 }

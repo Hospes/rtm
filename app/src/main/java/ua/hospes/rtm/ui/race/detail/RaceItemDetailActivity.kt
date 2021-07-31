@@ -8,7 +8,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.ActivityRaceItemDetailBinding
 import ua.hospes.rtm.domain.race.models.DriverDetails
 import ua.hospes.rtm.domain.race.models.RaceItem
@@ -20,8 +22,8 @@ fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivit
 private const val KEY_ID = "key_id"
 
 @AndroidEntryPoint
-class RaceItemDetailActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityRaceItemDetailBinding.inflate(layoutInflater) }
+class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail) {
+    private val binding by viewBinding(ActivityRaceItemDetailBinding::bind)
     private val viewModel: RaceItemDetailViewModel by viewModels()
     private val raceItemId by extraNotNull<Long>(KEY_ID)
 
@@ -30,7 +32,6 @@ class RaceItemDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setHomeButtonEnabled(true)

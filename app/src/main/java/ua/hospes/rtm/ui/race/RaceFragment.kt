@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import ua.hospes.rtm.R
@@ -25,16 +26,16 @@ import ua.hospes.rtm.domain.preferences.PreferencesManager
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.ui.race.detail.intentRaceItemDetails
 import ua.hospes.rtm.utils.TimeUtils
-import ua.hospes.rtm.utils.ViewBindingHolder
 import javax.inject.Inject
 
 private const val REQUEST_CODE_PERMISSION = 11
 
 @AndroidEntryPoint
-class RaceFragment : StopWatchFragment(R.layout.fragment_race), ViewBindingHolder<FragmentRaceBinding> by ViewBindingHolder.Impl() {
+class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
     //    private lateinit var undoController: UndoButtonController<*>
     private lateinit var timerListController: TimerListController
     private val viewModel: RaceViewModel by viewModels()
+    private val binding by viewBinding(FragmentRaceBinding::bind)
     @Inject lateinit var preferencesManager: PreferencesManager
     private var tvTime: TextView? = null
     private var currentNanoTime = 0L
@@ -52,7 +53,6 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), ViewBindingHolde
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(FragmentRaceBinding.bind(view), this)
 
         //        undoController = object : UndoButtonController<RaceAdapter.MyHolderUndoNext>(requireContext()) {
         //            override fun provideUndos(holder: RaceAdapter.MyHolderUndoNext) = arrayOf(holder.btnNextSession)
@@ -168,15 +168,15 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race), ViewBindingHolde
 
 
     private fun openSetCarDialog(sessionId: Long, cars: List<Car>) =
-            SetCarDialogFragment.newInstance(sessionId, cars).show(childFragmentManager, "set_car")
+        SetCarDialogFragment.newInstance(sessionId, cars).show(childFragmentManager, "set_car")
 
     private fun openSetDriverDialog(sessionId: Long, drivers: List<Driver>) =
-            SetDriverDialogFragment.newInstance(sessionId, drivers).show(childFragmentManager, "set_driver")
+        SetDriverDialogFragment.newInstance(sessionId, drivers).show(childFragmentManager, "set_driver")
 
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
-            .setMessage(R.string.teams_remove_all)
-            .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
-            .setNegativeButton(R.string.no) { _, _ -> }
-            .show()
+        .setMessage(R.string.teams_remove_all)
+        .setPositiveButton(R.string.yes) { _, _ -> viewModel.removeAll() }
+        .setNegativeButton(R.string.no) { _, _ -> }
+        .show()
 }

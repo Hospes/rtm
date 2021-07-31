@@ -5,17 +5,18 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ua.hospes.rtm.R
 import ua.hospes.rtm.databinding.DialogAddCarBinding
 import ua.hospes.rtm.domain.cars.Car
-import ua.hospes.rtm.utils.ViewBindingHolder
 import ua.hospes.rtm.utils.extentions.extra
 
 @AndroidEntryPoint
-class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car), ViewBindingHolder<DialogAddCarBinding> by ViewBindingHolder.Impl() {
+class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car) {
     private val viewModel: EditCarViewModel by viewModels()
+    private val binding by viewBinding(DialogAddCarBinding::bind)
     private val car by extra<Car>(KEY_CAR)
     private val qualities = arrayOf(Car.Quality.LOW, Car.Quality.NORMAL, Car.Quality.HIGH)
 
@@ -29,7 +30,6 @@ class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car), ViewBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding(DialogAddCarBinding.bind(view), this)
 
         binding.spQuality.adapter = CarQualityAdapter(requireContext(), *qualities)
 
@@ -68,10 +68,10 @@ class EditCarDialogFragment : DialogFragment(R.layout.dialog_add_car), ViewBindi
         val number = binding.etNumber.text.toString().toIntOrNull() ?: throw IllegalArgumentException("Number is null")
         viewModel.save(number, binding.spQuality.selectedItem as Car.Quality, binding.cbBroken.isChecked)
         dismiss()
-    }.let { Unit }
+    }.let { }
 
     private fun clickDelete() = lifecycleScope.launch {
         viewModel.delete()
         dismiss()
-    }.let { Unit }
+    }.let { }
 }
