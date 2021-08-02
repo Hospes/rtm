@@ -1,4 +1,4 @@
-package ua.hospes.rtm.ui.drivers
+package ua.hospes.rtm.ui.teams
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -19,35 +19,36 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.hospes.rtm.R
 import ua.hospes.rtm.domain.drivers.Driver
+import ua.hospes.rtm.domain.team.Team
 import ua.hospes.rtm.theme.RTMTheme
 import ua.hospes.rtm.utils.compose.rememberFlowWithLifecycle
 
 @Composable
-fun Drivers(
-    openEditDriver: (item: Driver?) -> Unit
+fun Teams(
+    openEditTeam: (item: Team?) -> Unit
 ) {
-    Drivers(
+    Teams(
         viewModel = hiltViewModel(),
-        openEdit = openEditDriver
+        openEdit = openEditTeam
     )
 }
 
 @Composable
-internal fun Drivers(
-    viewModel: DriversViewModel,
-    openEdit: (item: Driver?) -> Unit
+internal fun Teams(
+    viewModel: TeamsViewModel,
+    openEdit: (item: Team?) -> Unit
 ) {
-    val viewState by rememberFlowWithLifecycle(viewModel.drivers)
+    val viewState by rememberFlowWithLifecycle(viewModel.teams)
         .collectAsState(initial = emptyList())
 
-    Drivers(items = viewState, openEdit = openEdit)
+    Teams(items = viewState, openEdit = openEdit)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Drivers(
-    items: List<Driver>,
-    openEdit: (item: Driver?) -> Unit
+private fun Teams(
+    items: List<Team>,
+    openEdit: (item: Team?) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -61,7 +62,7 @@ private fun Drivers(
                     .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.drivers_name),
+                    text = stringResource(R.string.teams_name),
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.subtitle1,
                     modifier = Modifier.fillMaxWidth(0.5f)
@@ -70,7 +71,7 @@ private fun Drivers(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = stringResource(R.string.drivers_team),
+                    text = stringResource(R.string.teams_drivers),
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.subtitle1,
                     modifier = Modifier.fillMaxWidth(1f)
@@ -94,8 +95,8 @@ private fun Drivers(
 @Composable
 private fun ItemCell(
     even: Boolean = false,
-    item: Driver,
-    openEdit: (item: Driver?) -> Unit
+    item: Team,
+    openEdit: (item: Team?) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -113,7 +114,7 @@ private fun ItemCell(
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
-            text = item.teamName ?: "No team",
+            text = item.drivers.map(Driver::name).joinToString(), //toString().replace("[\\[\\]]".toRegex(), ""),
             color = MaterialTheme.colors.onBackground,
             modifier = Modifier.fillMaxWidth(1f)
         )
@@ -124,13 +125,13 @@ private fun ItemCell(
 @Composable
 private fun PreviewScreen() {
     RTMTheme {
-        Drivers(
+        Teams(
             items = listOf(
-                Driver(0, "Test driver"),
-                Driver(1, "Test driver"),
-                Driver(2, "Test driver"),
-                Driver(3, "Test driver"),
-                Driver(4, "Test driver"),
+                Team(0, "Test driver"),
+                Team(1, "Test driver"),
+                Team(2, "Test driver"),
+                Team(3, "Test driver"),
+                Team(4, "Test driver"),
             ),
             openEdit = {}
         )

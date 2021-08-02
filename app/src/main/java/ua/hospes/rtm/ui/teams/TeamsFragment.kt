@@ -1,21 +1,19 @@
 package ua.hospes.rtm.ui.teams
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
-import ua.hospes.rtm.databinding.FragmentTeamsBinding
 import ua.hospes.rtm.domain.team.Team
+import ua.hospes.rtm.theme.RTMTheme
 
 @AndroidEntryPoint
-class TeamsFragment : AbsMainFragment(R.layout.fragment_teams) {
+class TeamsFragment : AbsMainFragment() {
     private val viewModel: TeamsViewModel by viewModels()
 
 
@@ -27,17 +25,19 @@ class TeamsFragment : AbsMainFragment(R.layout.fragment_teams) {
     override fun setActionBarTitle(): Int = R.string.teams_title
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentTeamsBinding.bind(view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(requireContext()).apply {
+        // Dispose the Composition when viewLifecycleOwner is destroyed
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
 
-        val adapter = TeamsAdapter()
-        binding.list.setHasFixedSize(true)
-        binding.list.layoutManager = LinearLayoutManager(context)
-        binding.list.adapter = adapter
-        adapter.itemClickListener = { showEditDialog(it) }
-
-        viewModel.teams.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        setContent {
+            RTMTheme {
+                Teams(openEditTeam = { showEditDialog(it) })
+            }
+        }
     }
 
 

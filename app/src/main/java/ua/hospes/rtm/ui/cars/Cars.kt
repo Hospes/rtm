@@ -29,32 +29,30 @@ import ua.hospes.rtm.utils.compose.rememberFlowWithLifecycle
 
 @Composable
 fun Cars(
-    openEditCar: (car: Car?) -> Unit
+    openEditCar: (item: Car?) -> Unit
 ) {
     Cars(
         viewModel = hiltViewModel(),
-        openEditCar = openEditCar
+        openEdit = openEditCar
     )
 }
 
 @Composable
 internal fun Cars(
     viewModel: CarsViewModel,
-    openEditCar: (car: Car?) -> Unit
+    openEdit: (item: Car?) -> Unit
 ) {
-    //val viewState by rememberFlowWithLifecycle(viewModel.state)
-    //    .collectAsState(initial = EpisodeDetailsViewState.Empty)
     val viewState by rememberFlowWithLifecycle(viewModel.cars)
         .collectAsState(initial = emptyList())
 
-    Cars(items = viewState, openEditCar = openEditCar)
+    Cars(items = viewState, openEdit = openEdit)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Cars(
     items: List<Car>,
-    openEditCar: (car: Car?) -> Unit
+    openEdit: (item: Car?) -> Unit
 ) {
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
@@ -65,33 +63,33 @@ private fun Cars(
         items(
             items = items
         ) {
-            CarCell(car = it, openEditCar = openEditCar)
+            ItemCell(item = it, openEdit = openEdit)
         }
     }
 }
 
 @Composable
-private fun CarCell(
-    car: Car,
-    openEditCar: (car: Car?) -> Unit
+private fun ItemCell(
+    item: Car,
+    openEdit: (item: Car?) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { openEditCar.invoke(car) }
+            .clickable { openEdit.invoke(item) }
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = car.number.toString(),
-            color = when (car.broken) {
+            text = item.number.toString(),
+            color = when (item.broken) {
                 true -> Color.Gray
-                false -> colorResource(car.quality.color)
+                false -> colorResource(item.quality.color)
             },
             fontSize = 52.sp
         )
 
-        if (car.broken)
+        if (item.broken)
             Text(
                 text = stringResource(R.string.cars_broken),
                 color = colorResource(R.color.car_quality_low),

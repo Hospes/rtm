@@ -35,7 +35,7 @@ class DriversFragment : AbsMainFragment() {
 
         setContent {
             RTMTheme {
-                Drivers(openEditDriver = { showEditDriverDialog(it) })
+                Drivers(openEditDriver = { showEditDialog(it) })
             }
         }
     }
@@ -44,14 +44,14 @@ class DriversFragment : AbsMainFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = inflater.inflate(R.menu.drivers, menu)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_add -> showEditDriverDialog(null).let { true }
+        R.id.action_add -> showEditDialog(null).let { true }
         R.id.action_clear -> showClearDialog().let { true }
         else -> super.onOptionsItemSelected(item)
     }
 
 
-    private fun showEditDriverDialog(driver: Driver?) =
-        EditDriverDialogFragment.newInstance(driver).show(childFragmentManager, "add_driver")
+    private fun showEditDialog(item: Driver?) =
+        EditDriverDialogFragment.newInstance(item).show(childFragmentManager, "add_driver")
 
     private fun showClearDialog() = AlertDialog.Builder(requireContext())
         .setMessage(R.string.drivers_remove_all)
