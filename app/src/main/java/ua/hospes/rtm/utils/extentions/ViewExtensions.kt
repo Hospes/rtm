@@ -24,10 +24,10 @@ data class InitialPadding(val left: Int, val top: Int, val right: Int, val botto
 data class InitialMargin(val left: Int, val top: Int, val right: Int, val bottom: Int)
 
 private fun recordInitialPaddingForView(view: View) =
-        InitialPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
+    InitialPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
 
 private fun recordInitialMarginForView(view: View) = (view.layoutParams as? ViewGroup.MarginLayoutParams)
-        ?.let { InitialMargin(it.leftMargin, it.topMargin, it.rightMargin, it.bottomMargin) }
+    ?.let { InitialMargin(it.leftMargin, it.topMargin, it.rightMargin, it.bottomMargin) }
 
 fun View.requestApplyInsetsWhenAttached() {
     if (isAttachedToWindow) {

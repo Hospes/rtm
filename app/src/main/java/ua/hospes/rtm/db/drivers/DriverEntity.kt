@@ -7,20 +7,23 @@ import ua.hospes.rtm.db.team.TeamDAO
 import ua.hospes.rtm.db.team.TeamEntity
 import ua.hospes.rtm.domain.drivers.Driver
 
-@Entity(tableName = "drivers",
-        indices = [Index(value = ["team_id"])],
-        foreignKeys = [
-            ForeignKey(entity = TeamEntity::class,
-                    parentColumns = ["id"],
-                    childColumns = ["team_id"],
-                    onUpdate = ForeignKey.CASCADE,
-                    onDelete = ForeignKey.SET_NULL)
-        ]
+@Entity(
+    tableName = "drivers",
+    indices = [Index(value = ["team_id"])],
+    foreignKeys = [
+        ForeignKey(
+            entity = TeamEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["team_id"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.SET_NULL
+        )
+    ]
 )
 data class DriverEntity(
-        @PrimaryKey(autoGenerate = true) val id: Long = 0,
-        @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "team_id") val teamId: Long? = null
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "team_id") val teamId: Long? = null
 )
 
 fun DriverEntity.toDomain(team: TeamEntity? = null): Driver = team?.let {

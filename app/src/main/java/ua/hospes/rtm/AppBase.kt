@@ -21,9 +21,9 @@ abstract class AppBase : Application() {
         val descriptionText = "Notification for race progress visibility"
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(BuildConfig.NOTIFICATION_CHANNEL_RACE, name, importance)
-                .apply {
-                    description = descriptionText
-                }
+            .apply {
+                description = descriptionText
+            }
         // Register the channel with the system
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.RTM" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.RTM" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -46,7 +46,7 @@
         <item name="android:dialogTheme">@style/Theme.RTM.Dialog</item>
     </style>
 
-    <style name="Theme.RTM.DialogWhenLarge" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge">
+    <style name="Theme.RTM.DialogWhenLarge" parent="Theme.MaterialComponents.DialogWhenLarge">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -73,7 +73,7 @@
         <item name="appBarLayoutStyle">@style/Widget.RTM.AppBarLayout</item>
     </style>
 
-    <style name="Theme.RTM.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.MinWidth">
+    <style name="Theme.RTM.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

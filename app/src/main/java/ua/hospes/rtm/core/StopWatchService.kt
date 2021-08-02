@@ -65,15 +65,15 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
 
     private fun buildNotification(time: String): Notification {
         val startMainActivity = Intent(this, MainActivity::class.java)
-                .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }
+            .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }
         val pi = PendingIntent.getActivity(this, 0, startMainActivity, 0)
         return NotificationCompat.Builder(this, BuildConfig.NOTIFICATION_CHANNEL_RACE)
-                .setContentTitle("Marathon is running: $time")
-                .setContentIntent(pi)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setOnlyAlertOnce(true)
-                .setOngoing(true)
-                .build()
+            .setContentTitle("Marathon is running: $time")
+            .setContentIntent(pi)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+            .build()
     }
 
 
@@ -103,14 +103,14 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
     companion object {
         @JvmStatic
         fun checkDeath(context: Context) =
-                context.startService(Intent(context, StopWatchService::class.java)).let { Unit }
+            context.startService(Intent(context, StopWatchService::class.java)).let { Unit }
 
         @JvmStatic
         fun start(context: Context) =
-                context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_START)).let { Unit }
+            context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_START)).let { Unit }
 
         @JvmStatic
         fun stop(context: Context) =
-                context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_STOP)).let { Unit }
+            context.startService(Intent(context, StopWatchService::class.java).putExtra(KEY_ACTION, KEY_STOP)).let { Unit }
     }
 }

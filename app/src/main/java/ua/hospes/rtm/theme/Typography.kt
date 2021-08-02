@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 //)
 
 val RTMTypography = Typography(
-//    defaultFontFamily = MontserratFontFamily,
+    //    defaultFontFamily = MontserratFontFamily,
     h1 = TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 96.sp,
@@ -54,13 +54,13 @@ val RTMTypography = Typography(
         letterSpacing = 0.sp
     ),
     subtitle2 = TextStyle(
-//        fontFamily = KarlaFontFamily,
+        //        fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         letterSpacing = 0.1.sp
     ),
     body1 = TextStyle(
-//        fontFamily = KarlaFontFamily,
+        //        fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         letterSpacing = 0.sp,
@@ -77,7 +77,7 @@ val RTMTypography = Typography(
         letterSpacing = 1.25.sp
     ),
     caption = TextStyle(
-//        fontFamily = KarlaFontFamily,
+        //        fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         letterSpacing = 0.15.sp

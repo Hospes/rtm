@@ -66,11 +66,12 @@ interface SessionDAO {
             session.raceStartTime
         }
         val newSessionId = save(
-                SessionEntity(
-                        teamId = item.teamId,
-                        raceStartTime = raceStartTime,
-                        startTime = time,
-                        type = type.name)
+            SessionEntity(
+                teamId = item.teamId,
+                raceStartTime = raceStartTime,
+                startTime = time,
+                type = type.name
+            )
         )
         saveRace(item.copy(sessionId = newSessionId))
     }

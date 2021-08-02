@@ -9,11 +9,12 @@ import javax.inject.Singleton
 
 @Singleton
 internal class RaceInteractor /*@Inject*/ constructor(
-        private val preferencesManager: PreferencesManager,
-        private val raceRepository: RaceRepository,
-        private val sessionsRepository: SessionsRepository,
-        private val driversRepository: DriversRepository,
-        private val carsRepository: CarsRepository) {
+    private val preferencesManager: PreferencesManager,
+    private val raceRepository: RaceRepository,
+    private val sessionsRepository: SessionsRepository,
+    private val driversRepository: DriversRepository,
+    private val carsRepository: CarsRepository
+) {
 
     //    val carsNotInRace: Observable<Car>
     //        get() = Observable.empty() //carsRepository.getNotInRace()

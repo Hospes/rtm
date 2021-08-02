@@ -32,9 +32,9 @@ class SetCarDialogFragment : DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Select car")
-            .setItems(cars.map { it.number.toString() }.toTypedArray()) { _, which -> setCar(sessionId, cars[which].id) }
-            .create()
+        .setTitle("Select car")
+        .setItems(cars.map { it.number.toString() }.toTypedArray()) { _, which -> setCar(sessionId, cars[which].id) }
+        .create()
 
     private fun setCar(sessionId: Long, carId: Long) = lifecycleScope.launch { sesRepo.setSessionCar(sessionId, carId) }
 }

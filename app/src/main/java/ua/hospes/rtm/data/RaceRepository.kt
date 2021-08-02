@@ -26,14 +26,14 @@ class RaceRepository @Inject constructor(db: AppDatabase) {
 
 
     fun listen(): Flow<List<RaceItem>> = dao.observe()
-            .map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) } }
+        .map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) } }
 
     fun listen(id: Long): Flow<RaceItem> = dao.observe(id)
-            .map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) }
+        .map { it.toDomain(teamDAO, driverDAO, carDAO, sessionDAO) }
 
     suspend fun save(race: RaceItem) = withContext(Dispatchers.IO) {
         Timber.d("Save: $race | Entity: ${race.toEntity()}")
-        dao.save(race.toEntity()).let { Unit }
+        dao.save(race.toEntity()).let { }
     }
 
     suspend fun clear() = withContext(Dispatchers.IO) {

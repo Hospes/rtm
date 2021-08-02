@@ -14,25 +14,25 @@ import ua.hospes.rtm.domain.sessions.Session
 
 @Entity(tableName = "sessions")
 data class SessionEntity(
-        @PrimaryKey(autoGenerate = true) val id: Long = 0,
-        @ColumnInfo(name = "team_id") val teamId: Long,
-        @ColumnInfo(name = "driver_id") val driverId: Long? = null,
-        @ColumnInfo(name = "car_id") val carId: Long? = null,
-        @ColumnInfo(name = "race_start_time") val raceStartTime: Long? = null,
-        @ColumnInfo(name = "start_time") val startTime: Long? = null,
-        @ColumnInfo(name = "end_time") val endTime: Long? = null,
-        @ColumnInfo(name = "type") val type: String
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "team_id") val teamId: Long,
+    @ColumnInfo(name = "driver_id") val driverId: Long? = null,
+    @ColumnInfo(name = "car_id") val carId: Long? = null,
+    @ColumnInfo(name = "race_start_time") val raceStartTime: Long? = null,
+    @ColumnInfo(name = "start_time") val startTime: Long? = null,
+    @ColumnInfo(name = "end_time") val endTime: Long? = null,
+    @ColumnInfo(name = "type") val type: String
 )
 
 internal suspend fun SessionEntity.toDomain(teamDAO: TeamDAO, driverDAO: DriverDAO, carDAO: CarDAO): Session = withContext(Dispatchers.IO) {
     Session(
-            id = id,
-            teamId = teamId,
-            driver = driverId?.let { driverDAO.get(it).toDomain(teamDAO) },
-            car = carId?.let { carDAO.get(it).toDomain() },
-            raceStartTime = raceStartTime,
-            startTime = startTime,
-            endTime = endTime,
-            type = Session.Type.valueOf(type)
+        id = id,
+        teamId = teamId,
+        driver = driverId?.let { driverDAO.get(it).toDomain(teamDAO) },
+        car = carId?.let { carDAO.get(it).toDomain() },
+        raceStartTime = raceStartTime,
+        startTime = startTime,
+        endTime = endTime,
+        type = Session.Type.valueOf(type)
     )
 }

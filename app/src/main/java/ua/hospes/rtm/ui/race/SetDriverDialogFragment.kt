@@ -33,9 +33,9 @@ class SetDriverDialogFragment : DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Select driver")
-            .setItems(drivers.map { it.name }.toTypedArray()) { _, which -> setDriver(sessionId, drivers[which].id) }
-            .create()
+        .setTitle("Select driver")
+        .setItems(drivers.map { it.name }.toTypedArray()) { _, which -> setDriver(sessionId, drivers[which].id) }
+        .create()
 
     private fun setDriver(sessionId: Long, driverId: Long) = lifecycleScope.launch { sesRepo.setSessionDriver(sessionId, driverId) }
 }

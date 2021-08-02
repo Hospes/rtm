@@ -20,30 +20,30 @@ class DriversRepository @Inject constructor(db: AppDatabase) {
 
 
     suspend fun get(): List<Driver> =
-            withContext(Dispatchers.IO) { driverDAO.get().map { it.toDomain(teamDAO) } }
+        withContext(Dispatchers.IO) { driverDAO.get().map { it.toDomain(teamDAO) } }
 
     suspend fun get(vararg ids: Long): List<Driver> =
-            withContext(Dispatchers.IO) { driverDAO.get(*ids).map { it.toDomain(teamDAO) } }
+        withContext(Dispatchers.IO) { driverDAO.get(*ids).map { it.toDomain(teamDAO) } }
 
     suspend fun getNotInRace(teamId: Long): List<Driver> =
-            withContext(Dispatchers.IO) { driverDAO.getNotSelected(teamId).map { it.toDomain(teamDAO) } }
+        withContext(Dispatchers.IO) { driverDAO.getNotSelected(teamId).map { it.toDomain(teamDAO) } }
 
     fun listen(): Flow<List<Driver>> = driverDAO.observe().map { list -> list.map { it.toDomain(teamDAO) } }
 
 
     suspend fun addDriversToTeam(teamId: Long, vararg driverIds: Long) =
-            withContext(Dispatchers.IO) { driverDAO.addDriversToTeam(teamId, driverIds) }
+        withContext(Dispatchers.IO) { driverDAO.addDriversToTeam(teamId, driverIds) }
 
     suspend fun removeDriversFromTeam(teamId: Long) =
-            withContext(Dispatchers.IO) { driverDAO.removeDriversFromTeam(teamId) }
+        withContext(Dispatchers.IO) { driverDAO.removeDriversFromTeam(teamId) }
 
 
     suspend fun save(driver: Driver): Driver =
-            withContext(Dispatchers.IO) { driverDAO.save(driver.toDbEntity()).let { driver.copy(id = it) } }
+        withContext(Dispatchers.IO) { driverDAO.save(driver.toDbEntity()).let { driver.copy(id = it) } }
 
     suspend fun delete(id: Long) =
-            withContext(Dispatchers.IO) { driverDAO.delete(id) }
+        withContext(Dispatchers.IO) { driverDAO.delete(id) }
 
     suspend fun clear() =
-            withContext(Dispatchers.IO) { driverDAO.clear() }
+        withContext(Dispatchers.IO) { driverDAO.clear() }
 }

@@ -8,10 +8,10 @@ import ua.hospes.rtm.db.cars.CarEntity
 
 @Parcelize
 data class Car(
-        val id: Long = 0,
-        val number: Int,
-        val quality: Quality = Quality.NORMAL,
-        val broken: Boolean = false
+    val id: Long = 0,
+    val number: Int,
+    val quality: Quality = Quality.NORMAL,
+    val broken: Boolean = false
 ) : Parcelable {
 
     enum class Quality(@ColorRes val color: Int) {

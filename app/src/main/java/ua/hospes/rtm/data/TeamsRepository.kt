@@ -19,21 +19,21 @@ class TeamsRepository @Inject constructor(db: AppDatabase) {
 
 
     suspend fun get(): List<Team> =
-            withContext(Dispatchers.IO) { dao.get().map { it.toDomain(driverDAO) } }
+        withContext(Dispatchers.IO) { dao.get().map { it.toDomain(driverDAO) } }
 
     suspend fun getNotInRace(): List<Team> =
-            withContext(Dispatchers.IO) { dao.getNotInRace().map { it.toDomain(driverDAO) } }
+        withContext(Dispatchers.IO) { dao.getNotInRace().map { it.toDomain(driverDAO) } }
 
 
     fun listen(): Flow<List<Team>> = dao.observe().map { list -> list.map { it.toDomain(driverDAO) } }
 
 
     suspend fun save(team: Team) =
-            withContext(Dispatchers.IO) { dao.save(team.toDbEntity(), team.drivers.map { it.id }.toLongArray()) }
+        withContext(Dispatchers.IO) { dao.save(team.toDbEntity(), team.drivers.map { it.id }.toLongArray()) }
 
     suspend fun delete(id: Long) =
-            withContext(Dispatchers.IO) { dao.delete(id) }
+        withContext(Dispatchers.IO) { dao.delete(id) }
 
     suspend fun clear() =
-            withContext(Dispatchers.IO) { dao.clear() }
+        withContext(Dispatchers.IO) { dao.clear() }
 }

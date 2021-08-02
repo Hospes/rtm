@@ -15,8 +15,8 @@ class DriverDetailsAdapter : ListAdapter<DriverDetails, DriverDetailsAdapter.MyH
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position), position)
 
-    inner class MyHolder(parent: ViewGroup)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_details, parent, false)) {
+    inner class MyHolder(parent: ViewGroup) :
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_details, parent, false)) {
 
         private val binding = ItemDriverDetailsBinding.bind(itemView)
 

@@ -24,21 +24,21 @@ class SessionsRepository @Inject constructor(db: AppDatabase) {
     private val raceDAO = db.raceDao()
 
     suspend fun get(): List<Session> =
-            withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+        withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
     suspend fun getByTeam(teamId: Long): List<Session> =
-            withContext(Dispatchers.IO) { dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+        withContext(Dispatchers.IO) { dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
     fun listenByRaceId(raceId: Long): Flow<List<Session>> =
-            dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+        dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
 
 
     suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
-            withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }
+        withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }
 
     suspend fun setSessionCar(sessionId: Long, carId: Long) =
-            withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
+        withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
 
     suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
     suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
@@ -51,7 +51,7 @@ class SessionsRepository @Inject constructor(db: AppDatabase) {
     }
 
     suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: Session.Type) =
-            withContext(Dispatchers.IO) { dao.closeCurrentStartNew(raceItemId, currentTime, type) }
+        withContext(Dispatchers.IO) { dao.closeCurrentStartNew(raceItemId, currentTime, type) }
 
     suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
 

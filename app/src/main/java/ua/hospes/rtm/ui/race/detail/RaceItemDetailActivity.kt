@@ -15,20 +15,15 @@ import ua.hospes.rtm.databinding.ActivityRaceItemDetailBinding
 import ua.hospes.rtm.domain.race.models.DriverDetails
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
-import ua.hospes.rtm.utils.extentions.extraNotNull
 
-fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivity::class.java).apply { putExtra(KEY_ID, id) }
-
-private const val KEY_ID = "key_id"
+fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivity::class.java)
+    .apply { putExtra("race_team_id", id) }
 
 @AndroidEntryPoint
 class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail) {
     private val binding by viewBinding(ActivityRaceItemDetailBinding::bind)
     private val viewModel: RaceItemDetailViewModel by viewModels()
-    private val raceItemId by extraNotNull<Long>(KEY_ID)
 
-    private val driversAdapter = DriverDetailsAdapter()
-    private val sessionsAdapter = SessionAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +32,19 @@ class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_det
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val driversAdapter = DriverDetailsAdapter()
         binding.drivers.apply {
             layoutManager = GridLayoutManager(this@RaceItemDetailActivity, 2)
             adapter = driversAdapter
         }
+        val sessionsAdapter = SessionAdapter()
         binding.sessions.apply {
             layoutManager = LinearLayoutManager(this@RaceItemDetailActivity)
             adapter = sessionsAdapter
         }
 
-        viewModel.listenRaceItem().observe(this) { onRaceItem(it) }
-        viewModel.listenSessions().observe(this) { onSessions(it) }
-
-        if (savedInstanceState == null) {
-            viewModel.init(raceItemId)
-        }
+        viewModel.listenRaceItem().observe(this) { onRaceItem(driversAdapter, it) }
+        viewModel.listenSessions().observe(this) { onSessions(sessionsAdapter, it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -60,11 +53,10 @@ class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_det
     }
 
 
-    private fun onRaceItem(item: RaceItem) {
+    private fun onRaceItem(adapter: DriverDetailsAdapter, item: RaceItem) {
         supportActionBar?.title = item.team.name
 
-        val drivers = mutableListOf<DriverDetails>()
-        item.team.drivers.forEach {
+        val drivers = item.team.drivers.map {
             val driverDetails = DriverDetails()
 
             driverDetails.id = it.id
@@ -72,11 +64,11 @@ class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_det
             driverDetails.prevDuration = item.details?.getDriverDuration(it.id) ?: 0L
             driverDetails.session = item.session
 
-            drivers.add(driverDetails);
+            driverDetails
         }
 
-        driversAdapter.submitList(drivers)
+        adapter.submitList(drivers)
     }
 
-    private fun onSessions(list: List<Session>) = sessionsAdapter.submitList(list)
+    private fun onSessions(adapter: SessionAdapter, list: List<Session>) = adapter.submitList(list)
 }

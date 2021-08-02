@@ -7,8 +7,8 @@ import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsSpinnerAdapter
 import ua.hospes.rtm.domain.cars.Car
 
-class CarQualityAdapter(ctx: Context, vararg qualities: Car.Quality)
-    : AbsSpinnerAdapter<Car.Quality, CarQualityAdapter.MyHolder>(ctx, qualities.toList()) {
+class CarQualityAdapter(ctx: Context, vararg qualities: Car.Quality) :
+    AbsSpinnerAdapter<Car.Quality, CarQualityAdapter.MyHolder>(ctx, qualities.toList()) {
 
     override fun onCreateViewHolder(inflater: LayoutInflater): MyHolder = MyHolder(inflater, R.layout.item_color)
 

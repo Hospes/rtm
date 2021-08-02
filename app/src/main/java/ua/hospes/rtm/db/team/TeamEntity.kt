@@ -11,8 +11,8 @@ import ua.hospes.rtm.domain.team.Team
 
 @Entity(tableName = "teams")
 data class TeamEntity(
-        @PrimaryKey(autoGenerate = true) val id: Long = 0,
-        @ColumnInfo(name = "name") val name: String
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "name") val name: String
 ) {
     internal suspend fun toDomain(dao: DriverDAO): Team = withContext(Dispatchers.IO) {
         Team(id, name, dao.getByTeamId(id).map { it.toDomain(this@TeamEntity) }.toMutableList())

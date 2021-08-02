@@ -24,8 +24,9 @@ import ua.hospes.rtm.widgets.SessionTimeView
 //import ua.hospes.undobutton.UndoButtonController
 import java.util.*
 
-class RaceAdapter(context: Context,
-                  private val sessionButtonType: String/*,
+class RaceAdapter(
+    context: Context,
+    private val sessionButtonType: String/*,
                            private val undoButtonController: UndoButtonController<*>? = null*/
 ) : ListAdapter<RaceItem, RaceAdapter.MyHolder>(DIFF_CALLBACK) {
     @ColorInt private val carDefaultColor: Int
@@ -48,10 +49,10 @@ class RaceAdapter(context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = when (sessionButtonType) {
         "next" -> MyHolderNext(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
-                nextClickListener = { onOutClickListener?.invoke(getItem(it)) })
+            itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+            carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+            driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+            nextClickListener = { onOutClickListener?.invoke(getItem(it)) })
         //        "undo" -> MyHolderUndoNext(parent,
         //                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
         //                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
@@ -59,11 +60,11 @@ class RaceAdapter(context: Context,
         //                nextClickListener = { onOutClickListener?.invoke(getItem(it)) },
         //                undoClickListener = { onUndoClickListener?.invoke(getItem(it)) })
         else -> MyHolderPit(parent,
-                itemClickListener = { itemClickListener?.invoke(getItem(it)) },
-                carClickListener = { setCarClickListener?.invoke(getItem(it)) },
-                driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
-                pitClickListener = { onPitClickListener?.invoke(getItem(it)) },
-                outClickListener = { onOutClickListener?.invoke(getItem(it)) })
+            itemClickListener = { itemClickListener?.invoke(getItem(it)) },
+            carClickListener = { setCarClickListener?.invoke(getItem(it)) },
+            driverClickListener = { setDriverClickListener?.invoke(getItem(it)) },
+            pitClickListener = { onPitClickListener?.invoke(getItem(it)) },
+            outClickListener = { onOutClickListener?.invoke(getItem(it)) })
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -122,11 +123,12 @@ class RaceAdapter(context: Context,
     }
 
 
-    abstract inner class MyHolder(parent: ViewGroup, @LayoutRes layoutId: Int,
-                                  itemClickListener: (position: Int) -> Unit,
-                                  carClickListener: (position: Int) -> Unit,
-                                  driverClickListener: (position: Int) -> Unit)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
+    abstract inner class MyHolder(
+        parent: ViewGroup, @LayoutRes layoutId: Int,
+        itemClickListener: (position: Int) -> Unit,
+        carClickListener: (position: Int) -> Unit,
+        driverClickListener: (position: Int) -> Unit
+    ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false)) {
         val btnSessionCar: Button = itemView.findViewById(R.id.btn_session_car)
         val btnSessionDriver: Button = itemView.findViewById(R.id.btn_session_driver)
 
@@ -161,11 +163,12 @@ class RaceAdapter(context: Context,
         //internal open fun undoBind(controller: UndoButtonController<*>, id: Long) {}
     }
 
-    inner class MyHolderNext(parent: ViewGroup,
-                             itemClickListener: (position: Int) -> Unit,
-                             carClickListener: (position: Int) -> Unit,
-                             driverClickListener: (position: Int) -> Unit,
-                             nextClickListener: (position: Int) -> Unit
+    inner class MyHolderNext(
+        parent: ViewGroup,
+        itemClickListener: (position: Int) -> Unit,
+        carClickListener: (position: Int) -> Unit,
+        driverClickListener: (position: Int) -> Unit,
+        nextClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_next, itemClickListener, carClickListener, driverClickListener) {
         init {
             itemView.findViewById<Button>(R.id.btn_next).setOnClickListener {
@@ -175,12 +178,13 @@ class RaceAdapter(context: Context,
         }
     }
 
-    internal inner class MyHolderPit(parent: ViewGroup,
-                                     itemClickListener: (position: Int) -> Unit,
-                                     carClickListener: (position: Int) -> Unit,
-                                     driverClickListener: (position: Int) -> Unit,
-                                     pitClickListener: (position: Int) -> Unit,
-                                     outClickListener: (position: Int) -> Unit
+    internal inner class MyHolderPit(
+        parent: ViewGroup,
+        itemClickListener: (position: Int) -> Unit,
+        carClickListener: (position: Int) -> Unit,
+        driverClickListener: (position: Int) -> Unit,
+        pitClickListener: (position: Int) -> Unit,
+        outClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_pit, itemClickListener, carClickListener, driverClickListener) {
         private val btnPitOut: CustomToggleButton = itemView.findViewById(R.id.btn_pit_out)
 
@@ -199,12 +203,13 @@ class RaceAdapter(context: Context,
         }
     }
 
-    inner class MyHolderUndoNext(parent: ViewGroup,
-                                 itemClickListener: (position: Int) -> Unit,
-                                 carClickListener: (position: Int) -> Unit,
-                                 driverClickListener: (position: Int) -> Unit,
-                                 nextClickListener: (position: Int) -> Unit,
-                                 undoClickListener: (position: Int) -> Unit
+    inner class MyHolderUndoNext(
+        parent: ViewGroup,
+        itemClickListener: (position: Int) -> Unit,
+        carClickListener: (position: Int) -> Unit,
+        driverClickListener: (position: Int) -> Unit,
+        nextClickListener: (position: Int) -> Unit,
+        undoClickListener: (position: Int) -> Unit
     ) : MyHolder(parent, R.layout.item_race_undo_next, itemClickListener, carClickListener, driverClickListener) {
         //val btnNextSession: UndoButton = itemView.findViewById(R.id.btn_next)
 

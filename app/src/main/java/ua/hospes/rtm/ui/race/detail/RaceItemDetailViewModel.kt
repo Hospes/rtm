@@ -1,12 +1,9 @@
 package ua.hospes.rtm.ui.race.detail
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import ua.hospes.rtm.data.RaceRepository
 import ua.hospes.rtm.data.SessionsRepository
 import javax.inject.Inject
@@ -17,10 +14,11 @@ class RaceItemDetailViewModel @Inject constructor(
     private val sessionRepo: SessionsRepository,
     private val raceRepo: RaceRepository
 ) : ViewModel() {
-    private val idLiveData = savedStateHandle.getLiveData<Long>("race_item_id")
+    private val _raceTeamId = savedStateHandle.getLiveData<Long>("race_team_id")
 
-    fun init(id: Long) = with(idLiveData) { value = id }
+    fun listenRaceItem() = _raceTeamId.asFlow().filterNotNull().flatMapLatest { raceRepo.listen(it) }
+        .asLiveData(viewModelScope.coroutineContext)
 
-    fun listenRaceItem() = idLiveData.asFlow().filterNotNull().flatMapConcat { raceRepo.listen(it) }.asLiveData()
-    fun listenSessions() = idLiveData.asFlow().filterNotNull().flatMapConcat { sessionRepo.listenByRaceId(it) }.asLiveData()
+    fun listenSessions() = _raceTeamId.asFlow().filterNotNull().flatMapLatest { sessionRepo.listenByRaceId(it) }
+        .asLiveData(viewModelScope.coroutineContext)
 }

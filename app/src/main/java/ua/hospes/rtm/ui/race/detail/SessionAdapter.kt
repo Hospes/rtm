@@ -16,8 +16,8 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.MyHolder>(DIFF_CALLBA
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) = holder.bind(getItem(position), position)
 
-    inner class MyHolder(parent: ViewGroup)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_race_detail_session, parent, false)) {
+    inner class MyHolder(parent: ViewGroup) :
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_race_detail_session, parent, false)) {
 
         private val binding = ItemRaceDetailSessionBinding.bind(itemView)
 

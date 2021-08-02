@@ -24,8 +24,8 @@ class SelectDriversAdapter : ListAdapter<Driver, SelectDriversAdapter.MyHolder>(
     }
 
 
-    inner class MyHolder(parent: ViewGroup)
-        : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_selectable, parent, false)) {
+    inner class MyHolder(parent: ViewGroup) :
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_driver_selectable, parent, false)) {
 
         private val binding = ItemDriverSelectableBinding.bind(itemView)
 
