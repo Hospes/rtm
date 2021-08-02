@@ -45,7 +45,7 @@ private val RTMLightPalette = lightColors(
     onSecondary = Color.Black,
     surface = Color(0x338b8b8b),
     onSurface = Color.White,
-    onBackground = Color.Black,
+    onBackground = Color.White,
     error = Red800,
     onError = Color.White
 )

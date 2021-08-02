@@ -26,8 +26,6 @@ class EditDriverViewModel @Inject constructor(
     val teams = teamsRepo.listen().asLiveData()
 
 
-    fun initDriver(driver: Driver?) = with(driverLiveData) { value = driver }
-
     suspend fun getDriverTeamIndex() =
         withContext(Dispatchers.Default) { teamsRepo.get().indexOfFirst { it.id == driverLiveData.value?.teamId } }
 

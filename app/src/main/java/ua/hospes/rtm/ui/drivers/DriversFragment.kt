@@ -1,21 +1,19 @@
 package ua.hospes.rtm.ui.drivers
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ua.hospes.rtm.R
 import ua.hospes.rtm.core.ui.AbsMainFragment
-import ua.hospes.rtm.databinding.FragmentDriversBinding
 import ua.hospes.rtm.domain.drivers.Driver
+import ua.hospes.rtm.theme.RTMTheme
 
 @AndroidEntryPoint
-class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
+class DriversFragment : AbsMainFragment() {
     private val viewModel: DriversViewModel by viewModels()
 
 
@@ -27,17 +25,19 @@ class DriversFragment : AbsMainFragment(R.layout.fragment_drivers) {
     override fun setActionBarTitle(): Int = R.string.drivers_title
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentDriversBinding.bind(view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(requireContext()).apply {
+        // Dispose the Composition when viewLifecycleOwner is destroyed
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
 
-        val adapter = DriversAdapter()
-        binding.list.setHasFixedSize(true)
-        binding.list.layoutManager = LinearLayoutManager(context)
-        binding.list.adapter = adapter
-        adapter.itemClickListener = { showEditDriverDialog(it) }
-
-        viewModel.driversLiveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        setContent {
+            RTMTheme {
+                Drivers(openEditDriver = { showEditDriverDialog(it) })
+            }
+        }
     }
 
 

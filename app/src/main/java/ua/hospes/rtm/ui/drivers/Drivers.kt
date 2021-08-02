@@ -83,7 +83,7 @@ private fun Drivers(
             key = { _, item -> item.id }
         ) { i, item ->
             DriverCell(
-                odd = i % 2 != 0,
+                even = i % 2 == 0,
                 driver = item,
                 openEditDriver = openEditDriver
             )
@@ -93,7 +93,7 @@ private fun Drivers(
 
 @Composable
 private fun DriverCell(
-    odd: Boolean = false,
+    even: Boolean = false,
     driver: Driver,
     openEditDriver: (driver: Driver?) -> Unit
 ) {
@@ -101,7 +101,7 @@ private fun DriverCell(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { openEditDriver.invoke(driver) }
-            .background(color = if (odd) MaterialTheme.colors.surface else Color.Transparent)
+            .background(color = if (even) MaterialTheme.colors.surface else Color.Transparent)
             .padding(16.dp)
     ) {
         Text(

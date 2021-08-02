@@ -18,8 +18,6 @@ class EditCarViewModel @Inject constructor(
     val car: LiveData<Car?> = carLiveData
 
 
-    fun initCar(car: Car?) = carLiveData.postValue(car)
-
     suspend fun save(number: Int, quality: Car.Quality, broken: Boolean) =
         repo.save(Car(carLiveData.value?.id ?: 0, number, quality, broken))
 

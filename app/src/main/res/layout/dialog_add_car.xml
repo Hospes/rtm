@@ -60,15 +60,16 @@
               tools:layout_editor_absoluteX="0dp" />
 
     <Button android:id="@+id/btn_delete"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="?attr/buttonBarNegativeButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:text="Delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     <Button android:id="@+id/btn_cancel"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="?attr/buttonBarNeutralButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
@@ -77,9 +78,10 @@
             app:layout_constraintTop_toTopOf="@id/btn_delete" />
 
     <Button android:id="@+id/btn_save"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="?attr/buttonBarPositiveButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:text="Save"
             app:layout_constraintBottom_toBottomOf="@id/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
