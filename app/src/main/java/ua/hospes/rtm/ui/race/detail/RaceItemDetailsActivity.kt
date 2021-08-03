@@ -22,7 +22,7 @@ fun Context.intentRaceItemDetails(id: Long) = Intent(this, RaceItemDetailActivit
 @AndroidEntryPoint
 class RaceItemDetailActivity : AppCompatActivity(R.layout.activity_race_item_detail) {
     private val binding by viewBinding(ActivityRaceItemDetailBinding::bind)
-    private val viewModel: RaceItemDetailViewModel by viewModels()
+    private val viewModel: RaceItemDetailsViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

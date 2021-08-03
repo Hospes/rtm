@@ -57,6 +57,8 @@ subprojects {
         kotlinOptions {
             freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
 
+            freeCompilerArgs += '-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi'
+
             // Enable experimental coroutines APIs, including Flow
             freeCompilerArgs += '-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi'
             freeCompilerArgs += '-Xopt-in=kotlinx.coroutines.FlowPreview'
