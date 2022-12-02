@@ -22,7 +22,7 @@ internal class TimerListController(cs: CoroutineScope) : ReactiveScrollListener(
     private var lastRecalculationTime: Long = 0
 
     init {
-        cs.launch { subject.asFlow().debounce(SKIP_RECALCULATION_DURATION).collect { onActionCall(it) } }
+        cs.launch { subject.debounce(SKIP_RECALCULATION_DURATION).collect { onActionCall(it) } }
     }
 
     private fun onActionCall(recyclerView: RecyclerView) {

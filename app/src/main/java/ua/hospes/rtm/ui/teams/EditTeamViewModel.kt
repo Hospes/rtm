@@ -15,7 +15,7 @@ class EditTeamViewModel @Inject constructor(
     private val repo: TeamsRepository
 ) : ViewModel() {
 
-    private val teamData = savedStateHandle.getLiveData<Team>("team", null)
+    private val teamData = savedStateHandle.getLiveData<Team?>("team", null)
     val team: LiveData<Team?> = teamData
     private val driversData = savedStateHandle.getLiveData<List<Driver>>("drivers", emptyList())
     val drivers: LiveData<List<Driver>?> = driversData

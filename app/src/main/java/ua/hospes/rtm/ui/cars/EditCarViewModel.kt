@@ -14,7 +14,7 @@ class EditCarViewModel @Inject constructor(
     private val repo: CarsRepository
 ) : ViewModel() {
 
-    private val carLiveData = savedStateHandle.getLiveData<Car>("car", null)
+    private val carLiveData = savedStateHandle.getLiveData<Car?>("car", null)
     val car: LiveData<Car?> = carLiveData
 
 

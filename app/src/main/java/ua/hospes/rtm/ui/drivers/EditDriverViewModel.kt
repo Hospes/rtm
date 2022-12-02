@@ -20,7 +20,7 @@ class EditDriverViewModel @Inject constructor(
     private val teamsRepo: TeamsRepository
 ) : ViewModel() {
 
-    private val driverLiveData = savedStateHandle.getLiveData<Driver>("driver", null)
+    private val driverLiveData = savedStateHandle.getLiveData<Driver?>("driver", null)
     val driver: LiveData<Driver?> = driverLiveData
 
     val teams = teamsRepo.listen().asLiveData()
