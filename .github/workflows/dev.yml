@@ -35,7 +35,7 @@ jobs:
       env:
         RTM_FIREBASE_SERVICE_ACCOUNT: ${{ secrets.RTM_FIREBASE_SERVICE_ACCOUNT }}
       run: |
-        echo RTM_FIREBASE_SERVICE_ACCOUNT > racing-time-manager-a0f79d64e4ac.json
+        echo $RTM_FIREBASE_SERVICE_ACCOUNT > racing-time-manager-a0f79d64e4ac.json
 
     - name: Upload Dev build to Firebase distribution
       if: ${{ github.event_name == 'push' }}
