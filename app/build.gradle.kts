@@ -62,20 +62,32 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            versionNameSuffix = "d"
-            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
             signingConfig = signingConfigs.getByName("debug")
+
+            buildConfigField("Boolean", "CRASH_REPORTING", "false")
         }
 
         release {
             isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-
             firebaseAppDistribution {
                 serviceCredentialsFile = "racing-time-manager-ad1811bea75d.json"
                 releaseNotes = gitNotes(gitLatestTag())
             }
+        }
+    }
+
+    flavorDimensions += "type"
+    productFlavors {
+        create("dev") {
+            dimension = "type"
+            applicationIdSuffix = ".dev"
+        }
+
+        create("prod") {
+            dimension = "type"
         }
     }
 

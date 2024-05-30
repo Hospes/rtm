@@ -28,8 +28,8 @@ jobs:
         gradle-home-cache-cleanup: true
         
     - name: Build Dev
-      run: ./gradlew assembleRelease --no-configuration-cache
+      run: ./gradlew assembleDevRelease --no-configuration-cache
               
     - name: Upload Dev build to Firebase distribution
       if: ${{ github.event_name == 'push' }}
-      run: ./gradlew appDistributionUploadRelease
+      run: ./gradlew appDistributionUploadDevRelease

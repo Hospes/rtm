@@ -45,20 +45,12 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:808619692008:android:7b1fe37ae0a4078b",
+        "mobilesdk_app_id": "1:808619692008:android:f9478cc1776a65e35b1e5d",
         "android_client_info": {
-          "package_name": "ua.hospes.rtm.debug"
+          "package_name": "ua.hospes.rtm.dev"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "808619692008-mbt6g2jicmi8phm2636hnv8o3r35jquv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ua.hospes.rtm.debug",
-            "certificate_hash": "d034ba9dd00daae4a466b92ef066381d69714e9e"
-          }
-        },
         {
           "client_id": "808619692008-jrc3f96s9irh6kp4hhm7fji1vu1tn4bg.apps.googleusercontent.com",
           "client_type": 3
