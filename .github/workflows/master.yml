@@ -38,7 +38,13 @@ jobs:
         name: bundle
         path: app/build/outputs/bundle/prodRelease/*.aab
         if-no-files-found: error
-        
+
+    - name: Retrieve the secret and decode it to a file
+      env:
+        RTM_FIREBASE_SERVICE_ACCOUNT: ${{ secrets.RTM_FIREBASE_SERVICE_ACCOUNT }}
+      run: |
+        echo $RTM_FIREBASE_SERVICE_ACCOUNT > racing-time-manager-a0f79d64e4ac.json
+
     - name: Upload release build to Firebase distribution
       run: ./gradlew appDistributionUploadProdRelease
 
