@@ -72,7 +72,7 @@ class RaceFragment : StopWatchFragment(R.layout.fragment_race) {
         adapter.onUndoClickListener = { viewModel.undoLastSession(it) }
         adapter.setCarClickListener = { viewModel.clickSetCar(it) }
         adapter.setDriverClickListener = { viewModel.clickSetDriver(it) }
-        adapter.itemClickListener = { startActivity(context?.intentRaceItemDetails(it.id)) }
+        adapter.itemClickListener = { startActivity(requireContext().intentRaceItemDetails(it.id)) }
 
         timerListController = TimerListController(lifecycleScope).apply { binding.list.addOnScrollListener(this) }
 

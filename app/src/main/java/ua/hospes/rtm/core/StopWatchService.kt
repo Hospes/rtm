@@ -66,7 +66,7 @@ class StopWatchService : Service(), StopWatch.OnStopWatchListener {
     private fun buildNotification(time: String): Notification {
         val startMainActivity = Intent(this, MainActivity::class.java)
             .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }
-        val pi = PendingIntent.getActivity(this, 0, startMainActivity, 0)
+        val pi = PendingIntent.getActivity(this, 0, startMainActivity, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         return NotificationCompat.Builder(this, BuildConfig.NOTIFICATION_CHANNEL_RACE)
             .setContentTitle("Marathon is running: $time")
             .setContentIntent(pi)
