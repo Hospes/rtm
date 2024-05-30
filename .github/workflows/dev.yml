@@ -30,6 +30,13 @@ jobs:
     - name: Build Dev
       run: ./gradlew assembleDevRelease --no-configuration-cache
               
+    - name: Retrieve the secret and decode it to a file
+      if: ${{ github.event_name == 'push' }}
+      env:
+        RTM_FIREBASE_SERVICE_ACCOUNT: ${{ secrets.RTM_FIREBASE_SERVICE_ACCOUNT }}
+      run: |
+        echo RTM_FIREBASE_SERVICE_ACCOUNT > racing-time-manager-a0f79d64e4ac.json
+
     - name: Upload Dev build to Firebase distribution
       if: ${{ github.event_name == 'push' }}
       run: ./gradlew appDistributionUploadDevRelease

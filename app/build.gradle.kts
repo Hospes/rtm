@@ -73,7 +73,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             firebaseAppDistribution {
-                serviceCredentialsFile = "racing-time-manager-ad1811bea75d.json"
+                serviceCredentialsFile = "racing-time-manager-a0f79d64e4ac.json"
                 releaseNotes = gitNotes(gitLatestTag())
             }
         }
