@@ -41,7 +41,6 @@
         <item name="appBarLayoutStyle">@style/Widget.RTM.AppBarLayout</item>
         <!--        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>-->
 
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <!--        <item name="delayedButtonStyle">@style/UndoButton</item>-->
         <item name="android:dialogTheme">@style/Theme.RTM.Dialog</item>
     </style>

@@ -1,13 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 pluginManagement {
-    // build-logic disabled because it takes time every gradle sync to compile plugins
-    // those plugin actually used only in 2 modules :core:base and :core:preferences
-    // unfortunately github actions are pretty slow and each build slowed approx on 2 minutes
-    // because of compiling build-logic folder
-    // Enable it only if project really moves to KMP at least :data module
-    //includeBuild("gradle/build-logic")
-
     repositories {
         google {
             content {

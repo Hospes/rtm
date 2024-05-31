@@ -29,13 +29,6 @@ android {
         multiDexEnabled = true
 
         buildConfigField("String", "NOTIFICATION_CHANNEL_RACE", "\"Race progress\"")
-
-//        javaCompileOptions {
-//            annotationProcessorOptions {
-//                // arguments += ["room.incremental": "true"]
-//                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-//            }
-//        }
     }
 
     buildFeatures {
@@ -100,6 +93,9 @@ android {
 ksp {
     arg("compose-destinations.useComposableVisibility", "true")
     arg("compose-destinations.generateNavGraphs", "false")
+
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -116,21 +112,19 @@ dependencies {
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.activity.compose)
-    implementation("androidx.fragment:fragment-ktx:1.7.1")
-    implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.appcompat)
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
-    implementation("androidx.annotation:annotation:1.8.0")
+    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("com.google.android.material:material:1.12.0")
 
     implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 
-    val room = "2.6.1"
-    implementation("androidx.room:room-runtime:$room")
-    ksp("androidx.room:room-compiler:$room")
-    implementation("androidx.room:room-ktx:$room")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)

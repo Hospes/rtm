@@ -55,11 +55,6 @@ allprojects {
         }
     }
 
-    // Configure kapt
-    //pluginManager.withPlugin(rootProject.libs.plugins.kotlin.kapt.get().pluginId) {
-    //    extensions.getByType<KaptExtension>().correctErrorTypes = true
-    //}
-
     // Configure Android projects
     pluginManager.withPlugin("com.android.application") { configureAndroidProject() }
     pluginManager.withPlugin("com.android.library") { configureAndroidProject() }
@@ -74,11 +69,11 @@ tasks.register<Delete>("clean") {
 
 fun Project.configureAndroidProject() {
     extensions.configure<BaseExtension> {
-        compileSdkVersion(libs.versions.compileSdk.get().toInt())
+        compileSdkVersion(34)
 
         defaultConfig {
-            minSdk = libs.versions.minSdk.get().toInt()
-            targetSdk = libs.versions.targetSdk.get().toInt()
+            minSdk = 23
+            targetSdk = 34
         }
 
         // Can remove this once https://issuetracker.google.com/issues/260059413 is fixed.
