@@ -99,6 +99,9 @@ ksp {
 }
 
 dependencies {
+    implementation(projects.core.base)
+    implementation(projects.data)
+
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
@@ -120,7 +123,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("com.google.android.material:material:1.12.0")
 
-    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
+    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.9")
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

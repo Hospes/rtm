@@ -45,4 +45,8 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 rootProject.name = "rtm"
 
-include(":app")
+include(
+    ":core:base",
+    ":data",
+    ":app",
+)
