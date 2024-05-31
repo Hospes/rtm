@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.data.repo.SessionsRepository
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.utils.extentions.extraNotNull
 import javax.inject.Inject

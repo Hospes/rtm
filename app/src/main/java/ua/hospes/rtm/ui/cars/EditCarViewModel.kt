@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ua.hospes.rtm.data.CarsRepository
+import ua.hospes.rtm.data.repo.CarsRepository
 import ua.hospes.rtm.domain.cars.Car
 import javax.inject.Inject
 

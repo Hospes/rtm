@@ -1,9 +1,9 @@
 package ua.hospes.rtm.domain.race
 
-import ua.hospes.rtm.data.CarsRepository
-import ua.hospes.rtm.data.DriversRepository
-import ua.hospes.rtm.data.RaceRepository
-import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.data.repo.CarsRepository
+import ua.hospes.rtm.data.repo.DriversRepository
+import ua.hospes.rtm.data.repo.RaceRepository
+import ua.hospes.rtm.data.repo.SessionsRepository
 import ua.hospes.rtm.domain.preferences.PreferencesManager
 import javax.inject.Singleton
 

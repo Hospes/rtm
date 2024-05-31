@@ -1,4 +1,4 @@
-package ua.hospes.rtm.db.drivers
+package ua.hospes.rtm.data.db.drivers
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

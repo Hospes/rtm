@@ -93,9 +93,6 @@ android {
 ksp {
     arg("compose-destinations.useComposableVisibility", "true")
     arg("compose-destinations.generateNavGraphs", "false")
-
-    arg("room.incremental", "true")
-    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -124,10 +121,6 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
 
     implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.9")
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
 
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)

@@ -1,9 +1,8 @@
-package ua.hospes.rtm.db.sessions
+package ua.hospes.rtm.data.db.sessions
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import ua.hospes.rtm.db.race.RaceEntity
-import ua.hospes.rtm.domain.sessions.Session
+import ua.hospes.rtm.data.db.race.RaceEntity
 
 @Dao
 interface SessionDAO {
@@ -57,7 +56,7 @@ interface SessionDAO {
 
 
     @Transaction
-    suspend fun closeCurrentStartNew(raceItemId: Long, time: Long, type: Session.Type) {
+    suspend fun closeCurrentStartNew(raceItemId: Long, time: Long, type: SessionEntity.Type) {
         val item = getRaceItem(raceItemId)
 
         val raceStartTime = item.sessionId?.let {
@@ -70,7 +69,7 @@ interface SessionDAO {
                 teamId = item.teamId,
                 raceStartTime = raceStartTime,
                 startTime = time,
-                type = type.name
+                type = type
             )
         )
         saveRace(item.copy(sessionId = newSessionId))
@@ -81,14 +80,14 @@ interface SessionDAO {
     suspend fun resetRace() {
         clear()
         getRaceItems().forEach {
-            val id = save(SessionEntity(teamId = it.teamId, type = Session.Type.TRACK.name))
+            val id = save(SessionEntity(teamId = it.teamId, type = SessionEntity.Type.TRACK))
             saveRace(it.copy(sessionId = id))
         }
     }
 
 
     @Query("SELECT COUNT() FROM sessions WHERE team_id = :teamId AND type = :type")
-    suspend fun teamSessionsCount(teamId: Long, type: String = Session.Type.TRACK.name): Int
+    suspend fun teamSessionsCount(teamId: Long, type: String = SessionEntity.Type.TRACK.name): Int
 
 
     /**

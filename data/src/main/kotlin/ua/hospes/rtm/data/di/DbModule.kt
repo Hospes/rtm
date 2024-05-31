@@ -1,4 +1,4 @@
-package ua.hospes.rtm.di.modules
+package ua.hospes.rtm.data.di
 
 import android.content.Context
 import androidx.room.Room
@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ua.hospes.rtm.BuildConfig
-import ua.hospes.rtm.db.AppDatabase
+import ua.hospes.rtm.data.BuildConfig
+import ua.hospes.rtm.data.db.AppDatabase
 import java.util.concurrent.Executors
 import javax.inject.Singleton
 

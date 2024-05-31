@@ -2,9 +2,9 @@ package ua.hospes.rtm.ui.race
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ua.hospes.rtm.data.RaceRepository
-import ua.hospes.rtm.data.SessionsRepository
-import ua.hospes.rtm.data.TeamsRepository
+import ua.hospes.rtm.data.repo.RaceRepository
+import ua.hospes.rtm.data.repo.SessionsRepository
+import ua.hospes.rtm.data.repo.TeamsRepository
 import ua.hospes.rtm.domain.race.models.RaceItem
 import ua.hospes.rtm.domain.sessions.Session
 import ua.hospes.rtm.domain.team.Team

@@ -1,13 +1,13 @@
-package ua.hospes.rtm.data
+package ua.hospes.rtm.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import ua.hospes.rtm.db.AppDatabase
-import ua.hospes.rtm.db.drivers.DriverDAO
-import ua.hospes.rtm.db.drivers.toDomain
-import ua.hospes.rtm.db.team.TeamDAO
+import ua.hospes.rtm.data.db.AppDatabase
+import ua.hospes.rtm.data.db.drivers.DriverDAO
+import ua.hospes.rtm.data.db.drivers.toDomain
+import ua.hospes.rtm.data.db.team.TeamDAO
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.drivers.toDbEntity
 import javax.inject.Inject

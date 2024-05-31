@@ -1,4 +1,4 @@
-package ua.hospes.rtm.db.race
+package ua.hospes.rtm.data.db.race
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

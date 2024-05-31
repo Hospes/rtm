@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import ua.hospes.rtm.data.RaceRepository
-import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.data.repo.RaceRepository
+import ua.hospes.rtm.data.repo.SessionsRepository
 import ua.hospes.rtm.utils.ObservableLoadingCounter
 import javax.inject.Inject
 

@@ -11,6 +11,8 @@ android {
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
     }
+
+    buildFeatures { buildConfig = true }
 }
 
 configurations {
@@ -23,10 +25,19 @@ configurations {
     }
 }
 
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(projects.core.base)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)

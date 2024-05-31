@@ -6,10 +6,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ua.hospes.rtm.data.CarsRepository
-import ua.hospes.rtm.data.DriversRepository
-import ua.hospes.rtm.data.RaceRepository
-import ua.hospes.rtm.data.SessionsRepository
+import ua.hospes.rtm.data.repo.CarsRepository
+import ua.hospes.rtm.data.repo.DriversRepository
+import ua.hospes.rtm.data.repo.RaceRepository
+import ua.hospes.rtm.data.repo.SessionsRepository
 import ua.hospes.rtm.domain.cars.Car
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.race.models.RaceItem

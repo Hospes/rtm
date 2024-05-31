@@ -7,8 +7,8 @@ import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ua.hospes.rtm.data.DriversRepository
-import ua.hospes.rtm.data.TeamsRepository
+import ua.hospes.rtm.data.repo.DriversRepository
+import ua.hospes.rtm.data.repo.TeamsRepository
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
 import javax.inject.Inject

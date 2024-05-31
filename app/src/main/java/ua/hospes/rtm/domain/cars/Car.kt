@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import kotlinx.parcelize.Parcelize
 import ua.hospes.rtm.R
-import ua.hospes.rtm.db.cars.CarEntity
+import ua.hospes.rtm.data.db.cars.CarEntity
 
 @Parcelize
 data class Car(
@@ -24,5 +24,7 @@ data class Car(
         }
     }
 }
+
+fun CarEntity.toDomain(): Car = Car(id, number, quality, broken)
 
 fun Car.toDbEntity(): CarEntity = CarEntity(id, number, quality, broken)
