@@ -5,15 +5,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ua.hospes.rtm.data.model.CarDto
+import ua.hospes.rtm.data.model.DriverDto
+import ua.hospes.rtm.data.model.RaceDto
+import ua.hospes.rtm.data.model.SessionDto
 import ua.hospes.rtm.data.repo.CarsRepository
 import ua.hospes.rtm.data.repo.DriversRepository
 import ua.hospes.rtm.data.repo.RaceRepository
 import ua.hospes.rtm.data.repo.SessionsRepository
 import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.domain.cars.toDomain
 import ua.hospes.rtm.domain.drivers.Driver
+import ua.hospes.rtm.domain.drivers.toDomain
 import ua.hospes.rtm.domain.race.models.RaceItem
-import ua.hospes.rtm.domain.sessions.Session
+import ua.hospes.rtm.domain.race.models.toDomain
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,16 +32,16 @@ class RaceViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiEvents = MutableLiveData<UIEvent>()
-    val race = raceRepo.listen().asLiveData()
+    val race = raceRepo.listen().map { it.map(RaceDto::toDomain) }.asLiveData()
 
     fun startRace(startTime: Long) = viewModelScope.launch { sessionRepo.startRace(startTime) }
     fun stopRace(stopTime: Long) = viewModelScope.launch { sessionRepo.stopRace(stopTime) }
 
     fun onPit(item: RaceItem, time: Long) =
-        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.PIT) }
+        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, SessionDto.Type.PIT) }
 
     fun onOut(item: RaceItem, time: Long) =
-        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, Session.Type.TRACK) }
+        viewModelScope.launch { sessionRepo.closeCurrentStartNew(item.id, time, SessionDto.Type.TRACK) }
 
     //    fun teamPit(item: RaceItem, time: Long): Observable<Boolean> {
     //        var driverId = -1
@@ -74,14 +81,14 @@ class RaceViewModel @Inject constructor(
 
     fun clickSetCar(item: RaceItem) = viewModelScope.launch {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
-        val items = carsRepo.getNotInRace()
+        val items = carsRepo.getNotInRace().map(CarDto::toDomain)
 
         uiEvents.value = UIEvent.SetCar(id, items)
     }
 
     fun clickSetDriver(item: RaceItem) = viewModelScope.launch {
         val id = item.session?.id ?: throw IllegalStateException("Race team doesn't have session")
-        val items = driversRepo.getNotInRace(item.team.id)
+        val items = driversRepo.getNotInRace(item.team.id).map(DriverDto::toDomain)
 
         uiEvents.value = UIEvent.SetDriver(id, items)
     }

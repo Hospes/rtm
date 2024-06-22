@@ -20,9 +20,9 @@ import ua.hospes.rtm.data.db.team.TeamEntity
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun carDao(): CarDAO
-    abstract fun teamDao(): TeamDAO
-    abstract fun driverDao(): DriverDAO
-    abstract fun sessionDao(): SessionDAO
-    abstract fun raceDao(): RaceDAO
+    internal abstract fun carDao(): CarDAO
+    internal abstract fun teamDao(): TeamDAO
+    internal abstract fun driverDao(): DriverDAO
+    internal abstract fun sessionDao(): SessionDAO
+    internal abstract fun raceDao(): RaceDAO
 }

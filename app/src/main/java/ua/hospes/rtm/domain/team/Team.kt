@@ -1,13 +1,12 @@
 package ua.hospes.rtm.domain.team
 
 import android.os.Parcelable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
-import ua.hospes.rtm.data.db.drivers.DriverDAO
-import ua.hospes.rtm.data.db.team.TeamEntity
+import ua.hospes.rtm.data.model.DriverDto
+import ua.hospes.rtm.data.model.TeamDto
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.drivers.toDomain
+import ua.hospes.rtm.domain.drivers.toDto
 
 @Parcelize
 data class Team(
@@ -16,8 +15,5 @@ data class Team(
     val drivers: List<Driver> = emptyList()
 ) : Parcelable
 
-internal suspend fun TeamEntity.toDomain(dao: DriverDAO): Team = withContext(Dispatchers.IO) {
-    Team(id, name, dao.getByTeamId(id).map { it.toDomain(this@TeamEntity) }.toMutableList())
-}
-
-fun Team.toDbEntity(): TeamEntity = TeamEntity(id, name)
+internal fun TeamDto.toDomain(): Team = Team(id, name, drivers.map(DriverDto::toDomain))
+internal fun Team.toDto(): TeamDto = TeamDto(id, name, drivers.map(Driver::toDto))

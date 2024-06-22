@@ -1,13 +1,12 @@
 package ua.hospes.rtm.domain.race.models
 
-import ua.hospes.rtm.data.db.cars.CarDAO
-import ua.hospes.rtm.data.db.drivers.DriverDAO
-import ua.hospes.rtm.data.db.race.RaceEntity
-import ua.hospes.rtm.data.db.sessions.SessionDAO
-import ua.hospes.rtm.data.db.sessions.toDomain
-import ua.hospes.rtm.data.db.team.TeamDAO
+import ua.hospes.rtm.data.model.RaceDto
 import ua.hospes.rtm.domain.sessions.Session
+import ua.hospes.rtm.domain.sessions.toDomain
+import ua.hospes.rtm.domain.sessions.toDto
 import ua.hospes.rtm.domain.team.Team
+import ua.hospes.rtm.domain.team.toDomain
+import ua.hospes.rtm.domain.team.toDto
 
 data class RaceItem(
     val id: Long = 0,
@@ -17,29 +16,19 @@ data class RaceItem(
     val details: RaceItemDetails? = null
 )
 
-fun RaceItem.toEntity(): RaceEntity = RaceEntity(
+internal fun RaceItem.toDto(): RaceDto = RaceDto(
     id = id,
-    teamId = team.id,
+    team = team.toDto(),
     teamNumber = teamNumber,
-    sessionId = session?.id
+    session = session?.toDto(),
 )
 
-internal suspend fun RaceEntity.toDomain(
-    teamDAO: TeamDAO,
-    driverDAO: DriverDAO,
-    carDAO: CarDAO,
-    sessionDAO: SessionDAO,
-): RaceItem = RaceItem(
+internal fun RaceDto.toDomain(): RaceItem = RaceItem(
     id = id,
     teamNumber = teamNumber,
-    team = teamDAO.get(teamId).toDomain(driverDAO),
-    session = sessionId?.let { sessionDAO.get(it) }?.toDomain(teamDAO, driverDAO, carDAO),
-    details = RaceItemDetails(sessionDAO.teamSessionsCount(teamId) - 1)
-        .apply {
-            sessionDAO.getByTeam(teamId).forEach {
-                val duration = if (it.startTime == null || it.endTime == null) null else it.endTime - it.startTime
-                if (it.driverId == null || duration == null) return@forEach
-                addDriverDuration(it.driverId, duration)
-            }
-        }
+    team = team.toDomain(),
+    session = session?.toDomain(),
+    details = details?.let {
+        RaceItemDetails(pitStops = it.pitStops, completedDriversDuration = it.completedDriversDuration.clone())
+    },
 )

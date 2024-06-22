@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ua.hospes.rtm.data.repo.TeamsRepository
 import ua.hospes.rtm.domain.drivers.Driver
 import ua.hospes.rtm.domain.team.Team
+import ua.hospes.rtm.domain.team.toDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +29,6 @@ class EditTeamViewModel @Inject constructor(
     fun getSelectedDrivers() = driversData.value ?: emptyList()
 
 
-    suspend fun save(name: String) = repo.save(Team(teamData.value?.id ?: 0, name, driversData.value ?: emptyList()))
+    suspend fun save(name: String) = repo.save(Team(teamData.value?.id ?: 0, name, driversData.value ?: emptyList()).toDto())
     suspend fun delete() = teamData.value?.id?.let { repo.delete(it) } ?: Unit
 }

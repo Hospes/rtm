@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "cars")
-data class CarEntity(
+internal data class CarEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "number") val number: Int,
     @ColumnInfo(name = "quality") val quality: Quality = Quality.NORMAL,

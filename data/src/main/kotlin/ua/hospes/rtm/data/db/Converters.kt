@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import ua.hospes.rtm.data.db.cars.CarEntity
 import ua.hospes.rtm.data.db.sessions.SessionEntity
 
-class Converters {
+internal class Converters {
     @TypeConverter
     fun fromCarQualityEnum(quality: CarEntity.Quality): String = quality.name
 

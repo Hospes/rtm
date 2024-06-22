@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import ua.hospes.rtm.data.db.race.RaceEntity
 
 @Dao
-interface SessionDAO {
+internal interface SessionDAO {
     @Query("SELECT * FROM sessions")
     suspend fun get(): List<SessionEntity>
 

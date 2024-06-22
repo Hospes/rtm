@@ -1,59 +1,63 @@
 package ua.hospes.rtm.data.repo
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import ua.hospes.rtm.core.base.util.AppCoroutineDispatchers
 import ua.hospes.rtm.data.db.AppDatabase
 import ua.hospes.rtm.data.db.cars.CarDAO
 import ua.hospes.rtm.data.db.drivers.DriverDAO
 import ua.hospes.rtm.data.db.sessions.SessionDAO
 import ua.hospes.rtm.data.db.sessions.SessionEntity
-import ua.hospes.rtm.data.db.sessions.toDomain
 import ua.hospes.rtm.data.db.team.TeamDAO
-import ua.hospes.rtm.domain.sessions.Session
+import ua.hospes.rtm.data.model.SessionDto
+import ua.hospes.rtm.data.model.toDto
+import ua.hospes.rtm.data.model.toEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SessionsRepository @Inject constructor(db: AppDatabase) {
+class SessionsRepository @Inject constructor(
+    dispatchers: AppCoroutineDispatchers,
+    db: AppDatabase,
+) {
+    private val dispatcher = dispatchers.io
     private val dao: SessionDAO = db.sessionDao()
     private val teamDAO: TeamDAO = db.teamDao()
     private val driverDAO: DriverDAO = db.driverDao()
     private val carDAO: CarDAO = db.carDao()
     private val raceDAO = db.raceDao()
 
-    suspend fun get(): List<Session> =
-        withContext(Dispatchers.IO) { dao.get().map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+    suspend fun get(): List<SessionDto> = withContext(dispatcher) { dao.get().map { it.toDto(teamDAO, driverDAO, carDAO) } }
 
-    suspend fun getByTeam(teamId: Long): List<Session> =
-        withContext(Dispatchers.IO) { dao.getByTeam(teamId).map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+    suspend fun getByTeam(teamId: Long): List<SessionDto> =
+        withContext(dispatcher) { dao.getByTeam(teamId).map { it.toDto(teamDAO, driverDAO, carDAO) } }
 
 
-    fun listenByRaceId(raceId: Long): Flow<List<Session>> =
-        dao.observeByRace(raceId).map { list -> list.map { it.toDomain(teamDAO, driverDAO, carDAO) } }
+    fun listenByRaceId(raceId: Long): Flow<List<SessionDto>> =
+        dao.observeByRace(raceId).map { list -> list.map { it.toDto(teamDAO, driverDAO, carDAO) } }
 
 
     suspend fun setSessionDriver(sessionId: Long, driverId: Long) =
-        withContext(Dispatchers.IO) { dao.setDriver(sessionId, driverId) }
+        withContext(dispatcher) { dao.setDriver(sessionId, driverId) }
 
     suspend fun setSessionCar(sessionId: Long, carId: Long) =
-        withContext(Dispatchers.IO) { dao.setCar(sessionId, carId) }
+        withContext(dispatcher) { dao.setCar(sessionId, carId) }
 
-    suspend fun startRace(time: Long) = withContext(Dispatchers.IO) { dao.startRace(time) }
-    suspend fun stopRace(time: Long) = withContext(Dispatchers.IO) { dao.stopRace(time) }
-    suspend fun resetRace() = withContext(Dispatchers.IO) { dao.resetRace() }
+    suspend fun startRace(time: Long) = withContext(dispatcher) { dao.startRace(time) }
+    suspend fun stopRace(time: Long) = withContext(dispatcher) { dao.stopRace(time) }
+    suspend fun resetRace() = withContext(dispatcher) { dao.resetRace() }
 
 
-    suspend fun newSession(type: Session.Type, teamId: Long): Session = withContext(Dispatchers.IO) {
-        val id = dao.save(SessionEntity(teamId = teamId, type = type.name))
-        Session(id = id, teamId = teamId, type = type)
+    suspend fun newSession(type: SessionDto.Type, teamId: Long): SessionDto = withContext(dispatcher) {
+        val id = dao.save(SessionEntity(teamId = teamId, type = type.toEntity()))
+        SessionDto(id = id, teamId = teamId, type = type)
     }
 
-    suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: Session.Type) =
-        withContext(Dispatchers.IO) { dao.closeCurrentStartNew(raceItemId, currentTime, type) }
+    suspend fun closeCurrentStartNew(raceItemId: Long, currentTime: Long, type: SessionDto.Type) =
+        withContext(dispatcher) { dao.closeCurrentStartNew(raceItemId, currentTime, type.toEntity()) }
 
-    suspend fun clear() = withContext(Dispatchers.IO) { dao.clear() }
+    suspend fun clear() = withContext(dispatcher) { dao.clear() }
 
     //    override fun removeLastSession(teamId: Int): Observable<Session> =
     //            dbStorage.getByTeamId(teamId)

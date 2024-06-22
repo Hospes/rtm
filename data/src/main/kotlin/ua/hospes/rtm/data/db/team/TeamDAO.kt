@@ -4,7 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TeamDAO {
+internal interface TeamDAO {
     @Query("SELECT * FROM teams")
     suspend fun get(): List<TeamEntity>
 

@@ -16,7 +16,7 @@ import ua.hospes.rtm.data.db.team.TeamEntity
         )
     ]
 )
-data class DriverEntity(
+internal data class DriverEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "team_id") val teamId: Long? = null

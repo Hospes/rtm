@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import kotlinx.parcelize.Parcelize
 import ua.hospes.rtm.R
-import ua.hospes.rtm.data.db.cars.CarEntity
+import ua.hospes.rtm.data.model.CarDto
 
 @Parcelize
 data class Car(
@@ -20,11 +20,23 @@ data class Car(
         HIGH(R.color.car_quality_high);
 
         companion object {
-            @JvmStatic fun fromString(s: String): Quality = values().find { it.name.equals(s, ignoreCase = true) } ?: NORMAL
+            @JvmStatic fun fromString(s: String): Quality = entries.find { it.name.equals(s, ignoreCase = true) } ?: NORMAL
         }
     }
 }
 
-fun CarEntity.toDomain(): Car = Car(id, number, quality, broken)
 
-fun Car.toDbEntity(): CarEntity = CarEntity(id, number, quality, broken)
+private fun Car.Quality.toDto(): CarDto.Quality = when (this) {
+    Car.Quality.LOW -> CarDto.Quality.LOW
+    Car.Quality.NORMAL -> CarDto.Quality.NORMAL
+    Car.Quality.HIGH -> CarDto.Quality.HIGH
+}
+
+private fun CarDto.Quality.toDomain(): Car.Quality = when (this) {
+    CarDto.Quality.LOW -> Car.Quality.LOW
+    CarDto.Quality.NORMAL -> Car.Quality.NORMAL
+    CarDto.Quality.HIGH -> Car.Quality.HIGH
+}
+
+internal fun CarDto.toDomain(): Car = Car(id, number, quality.toDomain(), broken)
+internal fun Car.toDto(): CarDto = CarDto(id, number, quality.toDto(), broken)

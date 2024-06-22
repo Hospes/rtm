@@ -4,7 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RaceDAO {
+internal interface RaceDAO {
     @Query("SELECT * FROM race")
     suspend fun get(): List<RaceEntity>
 

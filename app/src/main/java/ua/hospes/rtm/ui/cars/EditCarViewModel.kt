@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ua.hospes.rtm.data.repo.CarsRepository
 import ua.hospes.rtm.domain.cars.Car
+import ua.hospes.rtm.domain.cars.toDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +20,7 @@ class EditCarViewModel @Inject constructor(
 
 
     suspend fun save(number: Int, quality: Car.Quality, broken: Boolean) =
-        repo.save(Car(carLiveData.value?.id ?: 0, number, quality, broken))
+        repo.save(Car(carLiveData.value?.id ?: 0, number, quality, broken).toDto())
 
     suspend fun delete() = carLiveData.value?.id?.let { repo.delete(it) } ?: Unit
 }

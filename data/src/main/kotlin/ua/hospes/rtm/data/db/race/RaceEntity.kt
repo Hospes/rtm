@@ -25,7 +25,7 @@ import ua.hospes.rtm.data.db.team.TeamEntity
         )
     ]
 )
-data class RaceEntity(
+internal data class RaceEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "team_id") val teamId: Long,
     @ColumnInfo(name = "team_number") val teamNumber: Int,
